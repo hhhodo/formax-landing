@@ -44,7 +44,7 @@ body{background:var(--color-canvas);}
 /* ---------- hero (1:1 Figma 142:87) ---------- */
 .hero{position:relative;overflow:hidden;background:var(--color-primary-900);color:var(--on-dark);
   min-height:70vh;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:var(--space-9);}
-.hero__bg{position:absolute;inset:0;background:radial-gradient(80% 60% at 20% 100%, rgba(255,109,14,.55), var(--color-primary-900) 70%);
+.hero__bg{position:absolute;inset:0;background:radial-gradient(90% 70% at 50% 115%, rgba(255,109,14,.7), var(--color-primary-900) 72%);
   z-index:0;}
 .hero__inner{position:relative;z-index:1;padding-top:var(--space-11);}
 .hero__top{margin-bottom:var(--space-9);}
@@ -58,8 +58,10 @@ body{background:var(--color-canvas);}
   display:flex;flex-direction:column;gap:var(--space-3);max-width:360px;}
 .hero__foot-card-top{display:flex;justify-content:space-between;gap:var(--space-3);}
 
-/* ---------- platform ---------- */
-.platform{padding-block:var(--space-11);}
+/* ---------- platform (bg = real Figma radial: cream/tan from top-center, matches
+   142:3419's SVG radialGradient stops 0.45/0.85/1 rgba(231,210,196)/rgba(253,251,247)/rgba(247,247,245)) ---------- */
+.platform{padding-block:var(--space-11);
+  background:radial-gradient(120% 65% at 50% -10%, rgba(231,210,196,1) 45%, rgba(253,251,247,1) 85%, rgba(247,247,245,1) 100%);}
 .platform__grid{align-items:start;}
 .platform__title{margin-block:var(--space-4) var(--space-5);}
 .platform__visual{display:flex;flex-direction:column;gap:var(--space-4);}
@@ -76,8 +78,12 @@ body{background:var(--color-canvas);}
 .feature-card__title{font-weight:var(--fw-strong);}
 .feature-card__img{background:var(--color-placeholder);}
 
-/* ---------- stack (1:1 Figma 142:241 — heading + 4-row label/copy list) ---------- */
-.stack{background:var(--color-primary-900);color:var(--on-dark);padding-block:var(--space-11);}
+/* ---------- stack (1:1 Figma 142:241 — heading + 4-row label/copy list;
+   real node has a full-height orange-duotone photo behind col2, approximated with a matching glow) ---------- */
+.stack{position:relative;overflow:hidden;background:var(--color-primary-900);color:var(--on-dark);padding-block:var(--space-11);}
+.stack::before{content:"";position:absolute;inset:0;z-index:0;
+  background:radial-gradient(70% 90% at 85% 50%, rgba(255,109,14,.45), transparent 70%);}
+.stack .grid{position:relative;z-index:1;}
 .stack__title{color:var(--on-dark);font-weight:var(--fw-base);margin-block:var(--space-4) var(--space-7);}
 .stack__item{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-6);
   padding-block:var(--space-5);border-top:1px solid rgba(243,243,243,.15);}
@@ -87,15 +93,17 @@ body{background:var(--color-canvas);}
 .stack__item-copy{opacity:.4;align-self:end;}
 .stack__img{background:rgba(243,243,243,.1);width:100%;}
 
-/* ---------- cta (1:1 Figma 142:861) ---------- */
-.cta{position:relative;background:var(--color-primary-900);color:var(--on-dark);padding-block:var(--space-10);}
-.cta__mark{position:absolute;top:0;width:6px;height:6px;background:var(--brand-accent);z-index:1;}
+/* ---------- cta (1:1 Figma 142:861 — bg=black + orange duotone photo at col 8/span-5 (right ~42%)) ---------- */
+.cta{position:relative;overflow:hidden;background:#000;color:var(--on-dark);padding-block:var(--space-10);}
+.cta::before{content:"";position:absolute;inset:0;z-index:0;
+  background:radial-gradient(65% 100% at 78% 50%, rgba(255,109,14,.5), transparent 70%);}
+.cta__mark{position:absolute;top:0;width:6px;height:6px;background:var(--brand-accent);z-index:2;}
 .cta__mark--tl{left:var(--gutter);}
 .cta__mark--tr{right:var(--gutter);}
-.cta__inner{position:relative;display:flex;align-items:center;justify-content:space-between;gap:var(--space-7);flex-wrap:wrap;}
-.cta__copy{max-width:560px;}
+.cta__inner{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:var(--space-7);flex-wrap:wrap;}
+.cta__copy{max-width:560px;flex:1 1 460px;}
 .cta__title{color:var(--on-dark);font-weight:var(--fw-base);margin:0;}
-.cta__visual{width:min(100%,420px);flex:none;background:rgba(243,243,243,.1);}
+.cta__visual{width:41.6%;min-width:280px;flex:none;background:rgba(243,243,243,.1);}
 
 /* ---------- quote (1:1 Figma 142:1088 — full-bleed photo, LEFT-aligned quote, not centered) ---------- */
 .quote{position:relative;overflow:hidden;background:var(--color-primary-900);color:var(--on-dark);
