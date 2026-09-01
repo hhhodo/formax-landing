@@ -19,9 +19,9 @@ Hero         — full-bleed (matches Figma 142:87 — headline top-left / cert+n
 Platform     — 4-4-4 (matches Figma 142:3419 — heading / visual+panel / 3 numbered cards)
 Stack        — full-bleed 4-row list (matches Figma 142:241 — heading + 4 stacked label/copy rows)
 CTA          — full-bleed (matches Figma 142:861 — 2-line headline left / large image right, col-8/span-5)
-Quote        — full-bleed
-News         — 4-4-4
-FAQ          — full-bleed (container--narrow)
+Quote        — full-bleed (matches Figma 142:1088 — left-aligned quote over full-bleed photo, max-width 1000px)
+News         — 4-4-4 (matches Figma 142:1137 — light bg, image+tag/date+title+button cards)
+FAQ          — 4-8 offset (matches Figma 142:1216 — title col1-4, list col5-13)
 Footer       — 4-4-4 (matches Figma 142:1364)
 -->
 <!DOCTYPE html>
@@ -177,80 +177,111 @@ Footer       — 4-4-4 (matches Figma 142:1364)
     </div>
   </section>
 
-  <!-- QUOTE -->
+  <!-- QUOTE — 1:1 with Figma 142:1088: full-bleed dark photo bg, top row eyebrow(left)+button(right),
+       big LEFT-aligned quote below, max-width ~1000px (not centered/narrow) -->
   <section class="quote">
-    <div class="quote__mark" aria-hidden="true"></div>
-    <div class="container container--narrow">
-      <p class="badge badge--sharp">업계 전망</p>
+    <div class="img quote__bg" aria-hidden="true"></div>
+    <div class="container quote__top">
+      <span class="badge badge--sharp">THE OPPORTUNITY OF A GENERATION</span>
+      <a href="#" class="btn btn--outline">더 알아보기</a>
+    </div>
+    <div class="container">
       <p class="h1 quote__text">제조업의 디지털 전환은 이 시대 가장 확실한 투자 기회입니다.
         데이터로 연결된 공장이 표준이 되는 것은 이제 시작에 불과합니다.</p>
     </div>
   </section>
 
-  <!-- NEWS -->
+  <!-- NEWS — 1:1 with Figma 142:1137: LIGHT bg (not dark cards), header eyebrow+title col1-4,
+       button col9-12, 3 cards (4-4-4) = image + outlined tag/date + title + "더보기" -->
   <section class="news" id="news">
-    <div class="container">
-      <div class="section-head">
-        <p class="badge badge--sharp">LATEST NEWS</p>
-        <h2 class="h1">최신 소식</h2>
-        <a href="#" class="section-head__link">전체 보기</a>
+    <div class="container grid news__head">
+      <div class="gcell" style="grid-column:1/5">
+        <p class="badge badge--sharp">INSIGHTS FROM THE BLOG</p>
+        <h2 class="h0 news__title">최신 소식</h2>
       </div>
-      <div class="grid news__grid">
-        <article class="gcell news-card" style="grid-column:1/5">
-          <div class="news-card__top">
-            <span class="badge badge--sharp">FUND</span>
-            <span class="body-2 subtle-inverse">2026.02.14</span>
-          </div>
-          <h3 class="h3">FORMAX, 스마트팩토리 전용 펀드 유치</h3>
-          <p class="body-2 subtle-inverse">국내 제조 데이터 플랫폼으로는 최대 규모의 시리즈 B 투자를 유치했습니다.</p>
-        </article>
-        <article class="gcell news-card" style="grid-column:5/9">
-          <div class="news-card__top">
-            <span class="badge badge--sharp">PARTNER</span>
-            <span class="body-2 subtle-inverse">2026.01.29</span>
-          </div>
-          <h3 class="h3">주요 자동화 설비사와 공식 파트너십 체결</h3>
-          <p class="body-2 subtle-inverse">PLC·로봇 제조사와의 표준 연동으로 도입 기간을 60% 단축했습니다.</p>
-        </article>
-        <article class="gcell news-card" style="grid-column:9/13">
-          <div class="news-card__top">
-            <span class="badge badge--sharp">REPORT</span>
-            <span class="body-2 subtle-inverse">2026.01.08</span>
-          </div>
-          <h3 class="h3">2026 제조 운영 데이터 리포트 발간</h3>
-          <p class="body-2 subtle-inverse">300개 현장 데이터를 기반으로 한 산업 벤치마크 리포트를 공개했습니다.</p>
-        </article>
+      <div class="gcell news__head-btn" style="grid-column:9/13">
+        <a href="#" class="btn btn--outline">블로그 방문하기</a>
       </div>
+    </div>
+    <div class="container grid news__grid">
+      <article class="gcell news-card" style="grid-column:1/5">
+        <div class="img img--16-9 news-card__img"></div>
+        <div class="news-card__meta">
+          <span class="news-card__tag">뉴스</span>
+          <span class="news-card__tag">2026.02.14</span>
+        </div>
+        <h3 class="body-1 news-card__title">FORMAX, 스마트팩토리 전용 펀드 유치</h3>
+        <a href="#" class="btn btn--outline btn--sm">더보기</a>
+      </article>
+      <article class="gcell news-card" style="grid-column:5/9">
+        <div class="img img--16-9 news-card__img"></div>
+        <div class="news-card__meta">
+          <span class="news-card__tag">파트너십</span>
+          <span class="news-card__tag">2026.01.29</span>
+        </div>
+        <h3 class="body-1 news-card__title">주요 자동화 설비사와 공식 파트너십 체결</h3>
+        <a href="#" class="btn btn--outline btn--sm">더보기</a>
+      </article>
+      <article class="gcell news-card" style="grid-column:9/13">
+        <div class="img img--16-9 news-card__img"></div>
+        <div class="news-card__meta">
+          <span class="news-card__tag">리포트</span>
+          <span class="news-card__tag">2026.01.08</span>
+        </div>
+        <h3 class="body-1 news-card__title">2026 제조 운영 데이터 리포트 발간</h3>
+        <a href="#" class="btn btn--outline btn--sm">더보기</a>
+      </article>
     </div>
   </section>
 
-  <!-- FAQ -->
+  <!-- FAQ — 1:1 with Figma 142:1216: title col1-4 + button col9-12, list offset to col5-13
+       (asymmetric, empty col1-4 under it) — flat rows, not an accordion (Hard Rules forbid it) -->
   <section class="faq" id="faq">
-    <div class="container container--narrow">
-      <div class="section-head">
-        <p class="badge badge--sharp">FAQ</p>
-        <h2 class="h1">자주 묻는 질문</h2>
+    <div class="container container--wide grid faq__head">
+      <div class="gcell" style="grid-column:1/5">
+        <h2 class="h0">FAQ</h2>
       </div>
-      <div class="faq__list">
+      <div class="gcell faq__head-btn" style="grid-column:9/13">
+        <span class="badge badge--sharp badge--muted">더 궁금한 점이 있으신가요?</span>
+        <a href="#contact" class="btn btn--outline">문의하기</a>
+      </div>
+    </div>
+    <div class="container container--wide grid">
+      <div class="gcell faq__list" style="grid-column:5/13">
         <div class="faq__item">
-          <p class="h3 faq__q">FORMAX는 어떤 회사인가요?</p>
-          <p class="body-2 subtle">FORMAX는 제조 현장의 설비·품질·생산 데이터를 실시간으로 통합해 운영 의사결정을 돕는 산업 데이터 플랫폼입니다.</p>
+          <span class="faq__num">01</span>
+          <div class="faq__body">
+            <p class="body-1 faq__q">FORMAX는 어떤 회사인가요?</p>
+            <p class="body-2 subtle">제조 현장의 설비·품질·생산 데이터를 실시간으로 통합해 운영 의사결정을 돕는 산업 데이터 플랫폼입니다.</p>
+          </div>
         </div>
         <div class="faq__item">
-          <p class="h3 faq__q">어떤 설비와 연동되나요?</p>
-          <p class="body-2 subtle">PLC, MES, ERP, IoT 센서 등 대부분의 표준 산업 프로토콜(OPC-UA, Modbus 등)을 지원합니다.</p>
+          <span class="faq__num">02</span>
+          <div class="faq__body">
+            <p class="body-1 faq__q">어떤 설비와 연동되나요?</p>
+            <p class="body-2 subtle">PLC, MES, ERP, IoT 센서 등 대부분의 표준 산업 프로토콜(OPC-UA, Modbus 등)을 지원합니다.</p>
+          </div>
         </div>
         <div class="faq__item">
-          <p class="h3 faq__q">도입까지 얼마나 걸리나요?</p>
-          <p class="body-2 subtle">표준 연동 기준 평균 4~6주 내 파일럿 라인 적용이 가능합니다.</p>
+          <span class="faq__num">03</span>
+          <div class="faq__body">
+            <p class="body-1 faq__q">도입까지 얼마나 걸리나요?</p>
+            <p class="body-2 subtle">표준 연동 기준 평균 4~6주 내 파일럿 라인 적용이 가능합니다.</p>
+          </div>
         </div>
         <div class="faq__item">
-          <p class="h3 faq__q">보안은 어떻게 관리되나요?</p>
-          <p class="body-2 subtle">망분리 환경을 지원하며, 온프레미스·프라이빗 클라우드 배포를 모두 제공합니다.</p>
+          <span class="faq__num">04</span>
+          <div class="faq__body">
+            <p class="body-1 faq__q">보안은 어떻게 관리되나요?</p>
+            <p class="body-2 subtle">망분리 환경을 지원하며, 온프레미스·프라이빗 클라우드 배포를 모두 제공합니다.</p>
+          </div>
         </div>
         <div class="faq__item">
-          <p class="h3 faq__q">계약은 어떤 방식인가요?</p>
-          <p class="body-2 subtle">라인 수 기준 구독형 과금이며, 파일럿 이후 단계적 확장 계약을 지원합니다.</p>
+          <span class="faq__num">05</span>
+          <div class="faq__body">
+            <p class="body-1 faq__q">계약은 어떤 방식인가요?</p>
+            <p class="body-2 subtle">라인 수 기준 구독형 과금이며, 파일럿 이후 단계적 확장 계약을 지원합니다.</p>
+          </div>
         </div>
       </div>
     </div>
