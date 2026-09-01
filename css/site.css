@@ -4,6 +4,20 @@
   --brand-accent:#ff6d0e;
   --on-dark:#f3f3f3;
 }
+/* Real measured Figma section heights (px, at the 1920px design canvas), scaled fluidly
+   with vw so scroll proportions match the original 1:1 instead of collapsing to fixed
+   design-kit spacing tokens. clamp() floor keeps small screens usable. */
+:root{
+  --h-header:  clamp(72px,  12.9vw, 248px);
+  --h-hero:    clamp(520px, 56.3vw, 1080px);
+  --h-platform:clamp(460px, 52.1vw, 1001px);
+  --h-stack:   clamp(620px, 80.2vw, 1540px);
+  --h-cta:     clamp(420px, 42.5vw, 817px);
+  --h-quote:   clamp(560px, 112.4vw, 2158px);
+  --h-news:    clamp(500px, 44.0vw, 846px);
+  --h-faq:     clamp(420px, 36.2vw, 694px);
+  --h-footer:  clamp(520px, 47.3vw, 908px);
+}
 
 body{background:var(--color-canvas);}
 .subtle-inverse{color:rgba(243,243,243,.6);}
@@ -31,9 +45,10 @@ body{background:var(--color-canvas);}
 /* ---------- image placeholder ---------- */
 .img{border-radius:var(--radius-0);}
 
-/* ---------- nav ---------- */
-.nav{position:sticky;top:0;z-index:50;background:var(--color-primary-900);}
-.nav__bar{display:flex;align-items:center;justify-content:space-between;padding-block:var(--space-4);}
+/* ---------- nav (real Figma header frame = 248px tall, nav row centered inside) ---------- */
+.nav{position:sticky;top:0;z-index:50;background:var(--color-primary-900);height:var(--h-header);
+  display:flex;align-items:center;}
+.nav__bar{display:flex;align-items:center;justify-content:space-between;width:100%;}
 .nav__logo{font-weight:var(--fw-strong);font-size:var(--fs-h3);color:var(--on-dark);}
 .nav__links{display:flex;align-items:center;gap:var(--space-1);}
 .nav__links a{font-size:var(--fs-badge);font-weight:var(--fw-strong);color:var(--on-dark);
@@ -43,7 +58,7 @@ body{background:var(--color-canvas);}
 
 /* ---------- hero (1:1 Figma 142:87) ---------- */
 .hero{position:relative;overflow:hidden;background:var(--color-primary-900);color:var(--on-dark);
-  min-height:70vh;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:var(--space-9);}
+  min-height:var(--h-hero);display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:var(--space-9);}
 .hero__bg{position:absolute;inset:0;background:radial-gradient(90% 70% at 50% 115%, rgba(255,109,14,.7), var(--color-primary-900) 72%);
   z-index:0;}
 .hero__inner{position:relative;z-index:1;padding-top:var(--space-11);}
@@ -60,8 +75,9 @@ body{background:var(--color-canvas);}
 
 /* ---------- platform (bg = real Figma radial: cream/tan from top-center, matches
    142:3419's SVG radialGradient stops 0.45/0.85/1 rgba(231,210,196)/rgba(253,251,247)/rgba(247,247,245)) ---------- */
-.platform{padding-block:var(--space-11);
+.platform{min-height:var(--h-platform);display:flex;align-items:center;padding-block:var(--space-11);
   background:radial-gradient(120% 65% at 50% -10%, rgba(231,210,196,1) 45%, rgba(253,251,247,1) 85%, rgba(247,247,245,1) 100%);}
+.platform > .grid{width:100%;}
 .platform__grid{align-items:start;}
 .platform__title{margin-block:var(--space-4) var(--space-5);}
 .platform__visual{display:flex;flex-direction:column;gap:var(--space-4);}
@@ -80,13 +96,15 @@ body{background:var(--color-canvas);}
 
 /* ---------- stack (1:1 Figma 142:241 — heading + 4-row label/copy list;
    real node has a full-height orange-duotone photo behind col2, approximated with a matching glow) ---------- */
-.stack{position:relative;overflow:hidden;background:var(--color-primary-900);color:var(--on-dark);padding-block:var(--space-11);}
+.stack{position:relative;overflow:hidden;background:var(--color-primary-900);color:var(--on-dark);
+  min-height:var(--h-stack);display:flex;align-items:center;padding-block:var(--space-11);}
+.stack > .grid{width:100%;}
 .stack::before{content:"";position:absolute;inset:0;z-index:0;
   background:radial-gradient(70% 90% at 85% 50%, rgba(255,109,14,.45), transparent 70%);}
 .stack .grid{position:relative;z-index:1;}
 .stack__title{color:var(--on-dark);font-weight:var(--fw-base);margin-block:var(--space-4) var(--space-7);}
-.stack__item{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-6);
-  padding-block:var(--space-5);border-top:1px solid rgba(243,243,243,.15);}
+.stack__item{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-6);align-items:center;
+  padding-block:var(--space-8);border-top:1px solid rgba(243,243,243,.15);}
 .stack__item:last-child{border-bottom:1px solid rgba(243,243,243,.15);}
 .stack__item-title{color:var(--on-dark);font-weight:var(--fw-strong);}
 .stack__item .subtle{color:rgba(243,243,243,.4);}
@@ -94,20 +112,22 @@ body{background:var(--color-canvas);}
 .stack__img{background:rgba(243,243,243,.1);width:100%;}
 
 /* ---------- cta (1:1 Figma 142:861 — bg=black + orange duotone photo at col 8/span-5 (right ~42%)) ---------- */
-.cta{position:relative;overflow:hidden;background:#000;color:var(--on-dark);padding-block:var(--space-10);}
+.cta{position:relative;overflow:hidden;background:#000;color:var(--on-dark);
+  min-height:var(--h-cta);display:flex;align-items:center;padding-block:var(--space-10);}
 .cta::before{content:"";position:absolute;inset:0;z-index:0;
   background:radial-gradient(65% 100% at 78% 50%, rgba(255,109,14,.5), transparent 70%);}
 .cta__mark{position:absolute;top:0;width:6px;height:6px;background:var(--brand-accent);z-index:2;}
 .cta__mark--tl{left:var(--gutter);}
 .cta__mark--tr{right:var(--gutter);}
-.cta__inner{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:var(--space-7);flex-wrap:wrap;}
+.cta__inner{position:relative;z-index:1;width:100%;display:flex;align-items:center;justify-content:space-between;gap:var(--space-7);flex-wrap:wrap;}
 .cta__copy{max-width:560px;flex:1 1 460px;}
 .cta__title{color:var(--on-dark);font-weight:var(--fw-base);margin:0;}
 .cta__visual{width:41.6%;min-width:280px;flex:none;background:rgba(243,243,243,.1);}
 
 /* ---------- quote (1:1 Figma 142:1088 — full-bleed photo, LEFT-aligned quote, not centered) ---------- */
 .quote{position:relative;overflow:hidden;background:var(--color-primary-900);color:var(--on-dark);
-  padding-block:var(--space-11);}
+  min-height:var(--h-quote);display:flex;flex-direction:column;padding-block:var(--space-11);}
+.quote .container:last-child{flex:1;display:flex;align-items:center;}
 .quote__bg{position:absolute;inset:0;z-index:0;
   background:var(--color-primary-900) radial-gradient(70% 90% at 75% 30%, rgba(255,109,14,.5), transparent 70%);}
 .quote .container{position:relative;z-index:1;}
@@ -116,7 +136,7 @@ body{background:var(--color-canvas);}
 .quote__text{font-weight:var(--fw-base);max-width:44ch;color:var(--on-dark);}
 
 /* ---------- news (1:1 Figma 142:1137 — LIGHT bg, image+outline-tag cards) ---------- */
-.news{padding-block:var(--space-11);}
+.news{min-height:var(--h-news);display:flex;flex-direction:column;justify-content:center;padding-block:var(--space-11);}
 .news__head{align-items:end;margin-bottom:var(--space-7);}
 .news__title{margin-top:var(--space-4);}
 .news__head-btn{display:flex;justify-content:flex-end;align-items:flex-end;}
@@ -129,7 +149,7 @@ body{background:var(--color-canvas);}
 .btn--sm{padding:var(--space-2) var(--space-4);}
 
 /* ---------- faq (1:1 Figma 142:1216 — title col1-4, list offset to col5-13) ---------- */
-.faq{padding-block:var(--space-11);}
+.faq{min-height:var(--h-faq);display:flex;flex-direction:column;justify-content:center;padding-block:var(--space-11);}
 .faq__head{align-items:end;margin-bottom:var(--space-7);}
 .faq__head-btn{display:flex;align-items:center;gap:var(--space-4);justify-content:flex-end;}
 .faq__list{display:flex;flex-direction:column;gap:var(--space-1);}
@@ -141,7 +161,9 @@ body{background:var(--color-canvas);}
 
 /* ---------- footer ---------- */
 .footer{position:relative;overflow:hidden;background:var(--color-primary-900);color:var(--on-dark);
-  padding-top:var(--space-11);}
+  min-height:var(--h-footer);display:flex;flex-direction:column;padding-top:var(--space-11);}
+.footer .container{display:flex;flex-direction:column;flex:1;}
+.footer__wordmark{flex:1;display:flex;align-items:center;justify-content:center;margin:0;padding-block:var(--space-6);}
 .footer__mark{position:absolute;inset:auto 0 -20% 0;height:60%;
   background:radial-gradient(60% 100% at 50% 100%, rgba(255,109,14,.28), transparent 70%);}
 .footer .container{position:relative;}
