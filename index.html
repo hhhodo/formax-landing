@@ -14,16 +14,15 @@ fw=700/400
 spacing=space-11
 -->
 <!--
-Header       — full-bleed
-Hero         — full-bleed
-Stats        — 6-6
-Platform     — 4-4-4
-Stack        — 5-7
-CTA          — full-bleed
+Header       — full-bleed (matches Figma 142:17 Navigation)
+Hero         — full-bleed (matches Figma 142:87 — headline top-left / cert+news row bottom)
+Platform     — 4-4-4 (matches Figma 142:3419 — heading / visual+panel / 3 numbered cards)
+Stack        — full-bleed 4-row list (matches Figma 142:241 — heading + 4 stacked label/copy rows)
+CTA          — full-bleed (matches Figma 142:861 — 2-line headline left / large image right, col-8/span-5)
 Quote        — full-bleed
 News         — 4-4-4
 FAQ          — full-bleed (container--narrow)
-Footer       — 4-4-4
+Footer       — 4-4-4 (matches Figma 142:1364)
 -->
 <!DOCTYPE html>
 <html lang="ko">
@@ -56,25 +55,25 @@ Footer       — 4-4-4
 
 <main id="top">
 
-  <!-- HERO -->
+  <!-- HERO — 1:1 with Figma 142:87: headline top-left over full-bleed duotone image,
+       bottom row = cert/partner (left) + lede copy (center) + latest-news card (right) -->
   <section class="hero">
-    <div class="hero__mark" aria-hidden="true"></div>
-    <div class="container">
-      <p class="badge badge--sharp">FORMAX OPERATING SYSTEM</p>
-      <h1 class="display display--md hero__title">정밀함에는<br>타협이 없다</h1>
-      <p class="body-1 measure hero__lede">라인 가동률, 수율, 설비 이상 신호를 하나의 데이터 레이어로 통합합니다.
-        FORMAX는 제조 현장의 모든 초 단위 데이터를 의사결정으로 바꾸는 운영 인텔리전스 플랫폼입니다.</p>
-      <div class="btn-row">
-        <a href="#contact" class="btn btn--solid">데모 신청하기</a>
-        <a href="#platform" class="btn btn--outline">플랫폼 살펴보기</a>
+    <div class="img hero__bg" aria-hidden="true"></div>
+    <div class="container hero__inner">
+      <div class="hero__top">
+        <h1 class="display display--md hero__title">정밀함에는<br>타협이 없다</h1>
+        <div class="btn-row">
+          <a href="#platform" class="btn btn--solid">플랫폼 살펴보기</a>
+          <a href="#contact" class="btn btn--outline">데모 문의하기</a>
+        </div>
       </div>
       <div class="hero__foot">
         <div class="hero__foot-item">
-          <p class="badge badge--sharp">인증 및 파트너</p>
+          <span class="badge badge--sharp">인증 및 파트너</span>
           <div class="img img--16-9 hero__partner-img"></div>
         </div>
         <p class="body-2 hero__foot-copy">FORMAX는 국내 주요 제조사와 함께 설비 데이터를 표준화하는
-          공식 파트너십을 운영하고 있습니다.</p>
+          공식 파트너십을 운영하는 제조 운영 인텔리전스 플랫폼입니다.</p>
         <div class="hero__foot-card">
           <div class="hero__foot-card-top">
             <span class="badge badge--sharp">최근 소식</span>
@@ -82,22 +81,6 @@ Footer       — 4-4-4
           </div>
           <p class="body-2">FORMAX, 2026년 2분기 라인 운영 데이터 리포트를 발표했습니다.</p>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- STATS -->
-  <section class="stats">
-    <div class="container grid stats__grid">
-      <div class="gcell stats__card" style="grid-column:1/7">
-        <p class="badge badge--sharp badge--muted">누적 처리 데이터</p>
-        <p class="h1 stats__value">2.4<span>PB</span></p>
-        <p class="body-2 subtle stats__desc">전국 118개 생산 라인에서 수집된 실시간 설비·품질 데이터를 매일 갱신합니다.</p>
-      </div>
-      <div class="gcell stats__card" style="grid-column:7/13">
-        <p class="badge badge--sharp badge--muted">평균 수율 개선</p>
-        <p class="h1 stats__value">+18.6<span>%</span></p>
-        <p class="body-2 subtle stats__desc">FORMAX 도입 6개월 기준, 고객사 평균 불량률 감소 및 수율 개선 폭입니다.</p>
       </div>
     </div>
   </section>
@@ -154,20 +137,20 @@ Footer       — 4-4-4
         <h2 class="h0 stack__title">제조 현장을 위한<br>통합 스택</h2>
 
         <div class="stack__item">
-          <p class="body-2 stack__item-title">검증된 엔지니어가 설계</p>
-          <p class="body-2 subtle">20년 이상 현장 자동화를 다뤄온 팀이 직접 설계한 아키텍처입니다.</p>
+          <p class="h3 stack__item-title">검증된 엔지니어가<br><span class="subtle">직접 설계</span></p>
+          <p class="body-2 subtle stack__item-copy">20년 이상 현장 자동화를 다뤄온 팀이 직접 설계한 아키텍처입니다.</p>
         </div>
         <div class="stack__item">
-          <p class="body-2 stack__item-title">현장 우위의 데이터</p>
-          <p class="body-2 subtle">PLC부터 센서까지, 초 단위 원시 데이터를 손실 없이 수집합니다.</p>
+          <p class="h3 stack__item-title">현장 우위의<br><span class="subtle">원시 데이터</span></p>
+          <p class="body-2 subtle stack__item-copy">PLC부터 센서까지, 초 단위 원시 데이터를 손실 없이 수집합니다.</p>
         </div>
         <div class="stack__item">
-          <p class="body-2 stack__item-title">실시간 명확성에 집중</p>
-          <p class="body-2 subtle">복잡한 리포트 대신, 지금 무엇을 해야 하는지 바로 보여줍니다.</p>
+          <p class="h3 stack__item-title">실시간<br><span class="subtle">명확성에 집중</span></p>
+          <p class="body-2 subtle stack__item-copy">복잡한 리포트 대신, 지금 무엇을 해야 하는지 바로 보여줍니다.</p>
         </div>
         <div class="stack__item">
-          <p class="body-2 stack__item-title">최고의 파트너와 협력</p>
-          <p class="body-2 subtle">주요 산업 자동화·클라우드 인프라 파트너와 함께 운영됩니다.</p>
+          <p class="h3 stack__item-title">최고의 파트너와<br><span class="subtle">함께 협력</span></p>
+          <p class="body-2 subtle stack__item-copy">주요 산업 자동화·클라우드 인프라 파트너와 함께 운영됩니다.</p>
         </div>
       </div>
 
@@ -177,18 +160,20 @@ Footer       — 4-4-4
     </div>
   </section>
 
-  <!-- CTA -->
+  <!-- CTA — 1:1 with Figma 142:861: black bg, 2-line headline (2nd line dimmed) + buttons
+       left, large duotone image right (col 8/span 5 of 12), 6px accent squares at both corners -->
   <section class="cta">
+    <div class="cta__mark cta__mark--tl" aria-hidden="true"></div>
+    <div class="cta__mark cta__mark--tr" aria-hidden="true"></div>
     <div class="container cta__inner">
       <div class="cta__copy">
-        <p class="badge badge--sharp">FORMAX</p>
-        <h2 class="h0">모두를 위한 제조,<br>복합적으로 확장되는 생산성</h2>
+        <h2 class="h0 cta__title">모두를 위한 제조,<br><span class="subtle-inverse">복합적으로 확장되는 생산성.</span></h2>
         <div class="btn-row">
           <a href="#contact" class="btn btn--solid">지금 시작하기</a>
           <a href="#platform" class="btn btn--outline">플랫폼 문서 보기</a>
         </div>
       </div>
-      <div class="img img--1-1 cta__visual"></div>
+      <div class="img img--4-3 cta__visual"></div>
     </div>
   </section>
 
