@@ -7,10 +7,12 @@
 
 ## 레퍼런스 취득 경로
 
-Figma MCP `get_design_context`로 지정 노드(`node-id=142-2`, 파일 `BrVaTxFSnaAlv6IT2ZRvhs`)를 조회해
-1순위 레퍼런스로 사용했습니다. 다크 네이비/블랙 배경 위 오렌지(`#ff6d0e`) 라디얼 글로우, 근백색
-(`#f3f3f3`) 섹션이 교차하는 핀테크풍 원페이지였으며, 그리드·섹션 순서·카드 구성을 그대로 이식하고
-카피·이미지 소재만 제조/산업 테마로 교체했습니다.
+Figma MCP `get_design_context`를 섹션별로(`142:87` Hero, `142:3419` Platform, `142:1364` Footer,
+`142:17` Navigation 등, `forceCode=true`) 개별 조회해 실제 타이포그래피(Pretendard Regular/Medium,
+88px/68px 헤드라인, 13px uppercase 라벨), 색상(`#ff6d0e` 액센트, `#f3f3f3` 다크 배경 위 텍스트, 카드
+`rgba(0,0,0,.03)` 틴트), 여백(섹션 마진 160px = `--space-11`과 정확히 일치), 버튼/카드 형태(각지고
+둥글리지 않은 사각형, 블러 반투명 아웃라인 버튼)를 확인 후 CHEATSHEET_18_EN 규칙에 맞춰 디자인 키트
+토큰으로 스냅했습니다. 카피·이미지 소재만 제조/산업 테마로 교체했습니다.
 
 | 항목 | Figma 관찰값 | 판정 |
 |---|---|---|
