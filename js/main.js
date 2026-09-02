@@ -96,70 +96,11 @@
     stackLineArt.addEventListener('load', onFrame);
   }
 
-  // ---------- CTA card: locks at the top, grows to black out the whole screen ----------
-  // The 1px sentinel above the sticky card tells us the exact moment it becomes stuck.
-  // Then: lock scroll -> the card's background layer scales up past the header so the
-  // entire screen goes black -> unlock once that growth finishes.
-  const ctaSentinel = document.querySelector('.stack__cta-sentinel');
-  if (ctaSentinel && ctaCard && 'IntersectionObserver' in window && !reduceMotion && desktop) {
-    let locked = false;
-    let expanded = false;
-    let everSeen = false; // guards the observer's initial callback: on page load the
-    // sentinel is far below the fold, so isIntersecting is false from the very start —
-    // indistinguishable from "scrolled past upward" unless we first confirm it was ever
-    // actually visible. Without this, the card expanded + locked scroll immediately on load.
-    const GROW_MS = 450;
-
-    const preventKey = (e) => {
-      if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', ' ', 'Home', 'End'].includes(e.key)) {
-        e.preventDefault();
-      }
-    };
-    const preventWheel = (e) => { e.preventDefault(); };
-    // NOTE: body{position:fixed} was tried for this and it broke the sticky card's
-    // stuck-state the instant it applied (card jumped elsewhere). overflow:hidden
-    // stops scrolling without disturbing anyone's layout.
-    const lockScroll = () => {
-      document.documentElement.style.overflow = 'hidden';
-      document.body.style.overflow = 'hidden';
-      window.addEventListener('wheel', preventWheel, { passive: false });
-      window.addEventListener('touchmove', preventWheel, { passive: false });
-      window.addEventListener('keydown', preventKey);
-    };
-    const unlockScroll = () => {
-      document.documentElement.style.overflow = '';
-      document.body.style.overflow = '';
-      window.removeEventListener('wheel', preventWheel);
-      window.removeEventListener('touchmove', preventWheel);
-      window.removeEventListener('keydown', preventKey);
-    };
-
-    const ctaObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) everSeen = true;
-          const stuck = everSeen && !entry.isIntersecting;
-          if (stuck && !expanded && !locked) {
-            // how much taller than its own box the card must grow to also cover
-            // the header strip above it
-            const h = ctaCard.offsetHeight;
-            const above = ctaCard.getBoundingClientRect().top;
-            ctaCard.style.setProperty('--cta-grow', h ? ((h + Math.max(above, 0)) / h).toFixed(3) : '1.06');
-            expanded = true;
-            locked = true;
-            lockScroll();
-            ctaCard.classList.add('is-expanded');
-            setTimeout(() => { unlockScroll(); locked = false; }, GROW_MS);
-          } else if (!stuck && expanded && !locked) {
-            expanded = false;
-            ctaCard.classList.remove('is-expanded');
-          }
-        });
-      },
-      { threshold: 0, rootMargin: `-${Math.round(parseFloat(getComputedStyle(ctaCard).top) || 0)}px 0px 0px 0px` }
-    );
-    ctaObserver.observe(ctaSentinel);
-  }
+  // CTA card lock/grow-on-scroll (IntersectionObserver + overflow:hidden toggling)
+  // was pulled out entirely — across several attempts it kept re-triggering itself
+  // (flicker), which fed bad values into the rAF loop above and made the sticky
+  // image jitter too. The card still holds at the top via plain CSS position:sticky
+  // (see .stack__cta / .stack__cta-wrap in site.css) — just no lock or grow animation.
 
   // ---------- generic reveal-on-scroll ----------
   const revealTargets = document.querySelectorAll('[data-reveal]');

@@ -208,20 +208,12 @@ img{display:block;max-width:100%;}
    exactly as far as the card has covered the photo — no more, no less */
 .stack__img--line{clip-path:inset(100% 0 0 0);}
 
-/* CTA card wrap: taller than the card+viewport so there's breathing room both
-   before it locks and after it releases (was flush against the header at 180vh). */
-.stack__cta-wrap{position:relative;min-height:260vh;margin-top:calc(var(--u) * 4);}
-.stack__cta-sentinel{position:absolute;top:0;left:0;width:1px;height:1px;}
+/* CTA card wrap: taller than the card+viewport so it holds at the top of the screen
+   (plain position:sticky, no JS) for a good stretch of scroll before releasing. */
+.stack__cta-wrap{position:relative;min-height:260vh;margin-top:calc(var(--u) * 8);}
 .stack__cta{position:sticky;top:calc(var(--u) * 2.29);z-index:2;
   height:calc(100vh - var(--u) * 2.29);display:flex;flex-direction:column;justify-content:center;
-  padding:calc(var(--u) * 2);}
-/* the card's black surface is its own layer so it can GROW past the card's own box
-   (up over the header) without touching layout — it's a solid rect being translated
-   /scaled on the GPU, so the growth costs nothing per frame. Sharp corners, no radius. */
-.stack__cta::before{content:"";position:absolute;inset:0;z-index:-1;background:#0a0605;
-  transform-origin:50% 100%;transform:scaleY(1);
-  transition:transform .45s cubic-bezier(.4,0,.2,1);}
-.stack__cta.is-expanded::before{transform:scaleY(var(--cta-grow,1.06));}
+  padding:calc(var(--u) * 2);background:#0a0605;}
 .stack__cta .mark--tl{top:0;left:0;}
 .stack__cta .mark--tr{top:0;right:0;}
 .stack__cta-title{position:relative;font-size:var(--t-h2);font-weight:400;color:var(--on-dark);
