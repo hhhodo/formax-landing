@@ -91,23 +91,19 @@
     else stackLineArt.addEventListener('load', updateXray);
   }
 
-  // ---------- stack: CTA card locks + grows to fill the screen, scroll disabled meanwhile ----------
+  // ---------- stack: CTA card holds scroll briefly once it locks to the top ----------
   // A 1px sentinel sits right above the sticky card. When it scrolls out of view the
-  // card has just become "stuck" at the top — that's the trigger to lock scroll and
-  // play the grow animation (clip-path shrinking to 0, driven by CSS transition).
+  // card has just become "stuck" at the top — that's the trigger to hold scroll for a
+  // moment. No animation on the card itself (it doesn't move or resize — it's already
+  // full-bleed and sharp-cornered like every other card on this page).
   const ctaSentinel = document.querySelector('.stack__cta-sentinel');
   const ctaCard = document.getElementById('cta');
   if (ctaSentinel && ctaCard && 'IntersectionObserver' in window
       && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
       && !window.matchMedia('(max-width: 1024px)').matches) {
-    let expanded = false;
     let locked = false;
+    const HOLD_MS = 450;
 
-    // NOTE: locking scroll via `body{position:fixed}` was tried first, but that
-    // changes body's own layout/positioning context — which broke the sticky card's
-    // "stuck" calculation the instant it engaged, making it jump to the wrong spot
-    // and expand there. overflow:hidden on <html> blocks scrolling without touching
-    // anyone's layout, so the sticky card stays exactly where it already was.
     const preventScrollKey = (e) => {
       if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', ' ', 'Home', 'End'].includes(e.key)) {
         e.preventDefault();
@@ -129,26 +125,13 @@
       window.removeEventListener('keydown', preventScrollKey);
     };
 
-    const onTransitionEnd = (e) => {
-      if (e.propertyName !== 'clip-path' || !locked) return;
-      ctaCard.removeEventListener('transitionend', onTransitionEnd);
-      unlockScroll();
-      locked = false;
-    };
-
     const ctaObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          const stuck = !entry.isIntersecting;
-          if (stuck && !expanded && !locked) {
-            expanded = true;
+          if (!entry.isIntersecting && !locked) {
             locked = true;
             lockScroll();
-            requestAnimationFrame(() => ctaCard.classList.add('is-expanded'));
-            ctaCard.addEventListener('transitionend', onTransitionEnd);
-          } else if (!stuck && expanded && !locked) {
-            expanded = false;
-            ctaCard.classList.remove('is-expanded');
+            setTimeout(() => { unlockScroll(); locked = false; }, HOLD_MS);
           }
         });
       },
