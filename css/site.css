@@ -170,23 +170,24 @@ img{display:block;max-width:100%;}
   height:calc(100vh - var(--u) * 2.29);max-height:calc(918 / 1920 * 100vw + 200px);
   display:flex;align-items:center;}
 
-/* left rows: each one PINS (position:sticky) for its own tall scroll range —
-   while pinned, .srow__title's fill color sweeps left-to-right (driven by --fill,
-   set from JS scroll progress); once the row's range is used up it releases and
-   the next row scrolls up to take its place and pin in turn. */
-.srow{position:sticky;top:calc(var(--u) * 2.29);min-height:100vh;display:flex;
-  flex-direction:column;justify-content:center;gap:calc(var(--u) * .8);
-  padding-block:calc(var(--u) * 3);}
-/* title full-width on its own (a fixed narrow side-column was breaking the 64px
-   title mid-word), copy sits below it, capped for readable line length */
+/* left rows: NORMAL flow (position:sticky per-row was causing two adjacent rows to
+   render pinned at once — an overlapping-text bug — because a 100vh-tall sticky row
+   has zero scroll buffer against a 100vh viewport, so it never cleanly releases
+   before the next one sticks). Instead each row just scrolls normally, and its
+   title's color-fill animates once via a CSS transition when the row scrolls into
+   view (IntersectionObserver adds .is-filled — see js/main.js). */
+.srow{display:flex;flex-direction:column;justify-content:center;gap:calc(var(--u) * .8);
+  padding-block:calc(var(--u) * 4);}
 .srow__body{display:flex;flex-direction:column;gap:calc(var(--u) * .8);}
 /* fill-clip must be declared on BOTH the title and its <span> — a child element
    only inherits `color`, not the parent's own clipped background, so without its
    own background-image the span rendered fully invisible instead of dim/filled */
+@property --fill{syntax:'<percentage>';inherits:true;initial-value:0%;}
 .srow__title,.srow__title span{
-  background-image:linear-gradient(90deg, var(--fillcolor) var(--fill,0%), var(--dimcolor) var(--fill,0%));
+  background-image:linear-gradient(90deg, var(--fillcolor) var(--fill), var(--dimcolor) var(--fill));
   -webkit-background-clip:text;background-clip:text;color:transparent;
-  -webkit-text-fill-color:transparent;}
+  -webkit-text-fill-color:transparent;transition:--fill 1.4s ease;}
+.srow.is-filled{--fill:100%;}
 .srow__title{font-size:64px;font-weight:500;}
 .srow__title span{display:block;}
 .srow__copy{font-size:24px;line-height:1.5;opacity:.6;max-width:56ch;}
@@ -322,7 +323,6 @@ img{display:block;max-width:100%;}
   .platform__cards{gap:var(--grid-gutter-lg);}
   .stack__visual{order:-1;position:static;height:auto;}
   .stack__img{height:calc(420 / 1920 * 100vw);}
-  .srow{min-height:auto;position:static;}
   .cta__box{flex-direction:column;}
   .cta__visual{width:100%;}
   .hero__foot{grid-template-columns:1fr;gap:calc(var(--u) * 1);}
