@@ -225,8 +225,10 @@ img{display:block;max-width:100%;}
 .srow__copy{font-size:24px;line-height:1.5;opacity:.6;max-width:56ch;}
 .stack .label{font-size:24px;}
 /* tone flip: rows over the light part of the gradient use dark text, rows over
-   the dark part use light text */
-.srow{color:var(--ink);--fillcolor:#000;--dimcolor:rgba(0,0,0,.25);}
+   the dark part use light text — this had collapsed into one rule covering every
+   row, so the bottom (dark-bg) rows were using near-invisible black-on-black dim text */
+.srow:nth-of-type(1),.srow:nth-of-type(2){color:var(--ink);--fillcolor:#000;--dimcolor:rgba(0,0,0,.25);}
+.srow:nth-of-type(3),.srow:nth-of-type(4){color:var(--on-dark);--fillcolor:#f3f3f3;--dimcolor:rgba(243,243,243,.25);}
 :root{--product-w:760px;}
 .stack__img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;}
 /* line-art copy starts fully clipped away; JS sets clip-path every scroll frame to
