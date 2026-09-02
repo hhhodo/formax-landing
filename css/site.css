@@ -132,9 +132,10 @@ img{display:block;max-width:100%;}
 .platform__title{font-size:var(--t-h2);font-weight:400;padding-top:calc(var(--u) * 1);}
 
 /* center column: original black->orange gradient box, text removed, image to be dropped in later */
+/* same gradient stops as .hero, reused verbatim instead of inventing new colors */
 .panel{height:100%;min-height:calc(430 / 1920 * 100vw);
-  background:linear-gradient(180deg, #16110e 0%, #1b1310 42%, #6d3410 76%, #c9722c 92%, #e0accd 100%);
-  background-color:#16110e;}
+  background:radial-gradient(ellipse 105% 72% at 44% 112%,
+    #ff8a2b 0%, #f2731a 14%, #c9550e 30%, #7d3a12 50%, #34201a 70%, #120d0c 86%, #0a0807 100%);}
 
 .platform__cards{display:flex;flex-direction:column;gap:var(--grid-gutter-lg);}
 .pcard{flex:1;display:flex;gap:calc(var(--u) * .71);padding:calc(var(--u) * .71);
