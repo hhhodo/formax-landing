@@ -34,6 +34,7 @@
   let lastCover = -1;
   let lastFill1 = -1;
   let lastFill2 = -1;
+  let lastFill3 = -1;
   let lastNavSolid = null;
   let ticking = false;
 
@@ -131,14 +132,16 @@
       }
     }
 
-    // C) CTA title fills white top-to-bottom / left-to-right (line 1, then line 2)
-    // once the card is pinned. Only after BOTH lines finish does the card start
-    // growing over the header (--cta-cover) with its side padding closing up
-    // (--cta-pad) — all driven purely by scroll position, no locks/observers.
+    // C) CTA title fills white top-to-bottom / left-to-right, one line at a time —
+    // line 2 only starts once line 1 is fully white, line 3 only once line 2 is.
+    // Only after all three finish does the card start growing over the header
+    // (--cta-cover) with its side padding closing up (--cta-pad) — all driven
+    // purely by scroll position, no locks/observers.
     if (ctaCard) {
       const titleProgress = Math.min(1, Math.max(0, (scrollY - ctaPinStart) / ctaTitleRange));
-      const fill1 = Math.round(Math.min(1, titleProgress * 2) * 100);
-      const fill2 = Math.round(Math.min(1, Math.max(0, titleProgress * 2 - 1)) * 100);
+      const fill1 = Math.round(Math.min(1, titleProgress * 3) * 100);
+      const fill2 = Math.round(Math.min(1, Math.max(0, titleProgress * 3 - 1)) * 100);
+      const fill3 = Math.round(Math.min(1, Math.max(0, titleProgress * 3 - 2)) * 100);
       if (fill1 !== lastFill1) {
         lastFill1 = fill1;
         ctaCard.style.setProperty('--cta-fill1', `${fill1}%`);
@@ -146,6 +149,10 @@
       if (fill2 !== lastFill2) {
         lastFill2 = fill2;
         ctaCard.style.setProperty('--cta-fill2', `${fill2}%`);
+      }
+      if (fill3 !== lastFill3) {
+        lastFill3 = fill3;
+        ctaCard.style.setProperty('--cta-fill3', `${fill3}%`);
       }
 
       const coverProgress = Math.min(1, Math.max(0, (scrollY - ctaTitleEnd) / ctaCoverRange));

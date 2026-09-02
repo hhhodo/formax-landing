@@ -259,19 +259,18 @@ img{display:block;max-width:100%;}
   height:var(--cta-cover, 0px);background:#0a0605;}
 .stack__cta .mark--tl{top:0;left:0;}
 .stack__cta .mark--tr{top:0;right:0;}
-/* two-line title fills top-to-bottom / left-to-right in white, driven by scroll
-   (js/main.js sets --cta-fill1 for the first line, --cta-fill2 for the span/second
-   line — line 2 only starts once line 1 has fully filled). Only once BOTH are
-   done does the header-cover growth (--cta-cover) begin. */
+/* three SIBLING lines (not nested parent+child — that made the child render its
+   gradient twice-over, reading darker) each fill left-to-right in white, one after
+   another, driven by scroll (js/main.js sets --cta-fill1/2/3). Only once all three
+   finish does the header-cover growth (--cta-cover) begin. */
 .stack__cta-title{position:relative;font-size:var(--t-h2);font-weight:400;
-  max-width:calc(530 / 1920 * 100vw);min-width:280px;
-  background-image:linear-gradient(90deg, #fff var(--cta-fill1,0%), rgba(255,255,255,.4) var(--cta-fill1,0%));
+  max-width:calc(530 / 1920 * 100vw);min-width:280px;}
+.cta-line{display:block;
   -webkit-background-clip:text;background-clip:text;color:transparent;
   -webkit-text-fill-color:transparent;}
-.stack__cta-title span{display:block;
-  background-image:linear-gradient(90deg, #fff var(--cta-fill2,0%), rgba(255,255,255,.4) var(--cta-fill2,0%));
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-  -webkit-text-fill-color:transparent;}
+.cta-line:nth-child(1){background-image:linear-gradient(90deg, #fff var(--cta-fill1,0%), rgba(255,255,255,.4) var(--cta-fill1,0%));}
+.cta-line:nth-child(2){background-image:linear-gradient(90deg, #fff var(--cta-fill2,0%), rgba(255,255,255,.4) var(--cta-fill2,0%));}
+.cta-line:nth-child(3){background-image:linear-gradient(90deg, #fff var(--cta-fill3,0%), rgba(255,255,255,.4) var(--cta-fill3,0%));}
 
 /* ---------- quote (Figma 142:1088) ----------
    text sits at the TOP; a huge orange bloom fills the rest of the (very tall) section */
