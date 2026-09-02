@@ -21,9 +21,9 @@
   --t-quote:  clamp(21px, 2.08vw, 40px);   /* 40  */
   --t-row:    clamp(19px, 1.67vw, 32px);   /* 32  */
   --t-card:   clamp(16px, 1.25vw, 24px);   /* 24  */
-  --t-body:   clamp(14px, 0.99vw, 19px);   /* 19  */
-  --t-small:  clamp(13px, 0.83vw, 16px);   /* 16  */
-  --t-label:  15px;
+  --t-body:   20px;
+  --t-small:  16px;
+  --t-label:  16px;
   --lh-label: 20px;
 
   /* measured section heights (px @1920) */
