@@ -143,9 +143,22 @@ img{display:block;max-width:100%;}
 
 /* center column: original black->orange gradient box, text removed, image to be dropped in later */
 /* same gradient stops as .hero, reused verbatim instead of inventing new colors */
-.panel{height:100%;min-height:calc(430 / 1920 * 100vw);
+.panel{position:relative;height:100%;min-height:calc(430 / 1920 * 100vw);
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
   background:radial-gradient(ellipse 105% 72% at 44% 112%,
     #ff8a2b 0%, #f2731a 14%, #c9550e 30%, #7d3a12 50%, #34201a 70%, #120d0c 86%, #0a0807 100%);}
+/* part image sits tilted, floating (gentle bob loop) with a soft drop shadow */
+.panel__float{width:62%;max-width:320px;height:auto;
+  transform:rotate(-8deg);
+  filter:drop-shadow(0 28px 34px rgba(0,0,0,.55));
+  animation:panel-float 5s ease-in-out infinite;}
+@keyframes panel-float{
+  0%,100%{transform:rotate(-8deg) translateY(0);}
+  50%{transform:rotate(-5deg) translateY(-16px);}
+}
+@media (prefers-reduced-motion:reduce){
+  .panel__float{animation:none;}
+}
 
 .platform__cards{display:flex;flex-direction:column;gap:var(--grid-gutter-lg);}
 .pcard{flex:1;display:flex;gap:calc(var(--u) * .71);padding:calc(var(--u) * .71);
@@ -153,8 +166,8 @@ img{display:block;max-width:100%;}
 .pcard__text{display:flex;flex-direction:column;gap:calc(var(--u) * .43);flex:1;}
 .pcard__title{font-size:var(--t-card);font-weight:500;}
 .pcard__copy{font-size:20px;opacity:.7;}
-.pcard__img{width:calc(266/603*100%);flex:none;background:
-  linear-gradient(135deg, rgba(255,109,14,.10), rgba(0,0,0,.05));}
+.pcard__img{width:calc(266/603*100%);flex:none;overflow:hidden;background:#000;}
+.pcard__img img{width:100%;height:100%;object-fit:cover;}
 
 /* ---------- stack (Figma 142:241) ----------
    bg runs light → orange → black top-to-bottom; text flips from dark to light with it */
