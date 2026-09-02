@@ -14,13 +14,13 @@
   --container-narrow:100%;
   --grid-gutter-lg: clamp(12px, 1.46vw, 28px);
 
-  /* measured type scale (px @1920) */
-  --t-hero:   clamp(40px, 4.58vw, 88px);   /* 88  */
-  --t-h2:     clamp(30px, 3.54vw, 68px);   /* 68  */
-  --t-cta:    clamp(24px, 2.29vw, 44px);   /* 44  */
-  --t-quote:  clamp(21px, 2.08vw, 40px);   /* 40  */
-  --t-row:    clamp(19px, 1.67vw, 32px);   /* 32  */
-  --t-card:   clamp(16px, 1.25vw, 24px);   /* 24  */
+  /* type scale (px @1920) — bumped up a tier from the literal Figma measurement per feedback,
+     body/small/label stay at the user's fixed 20/16/16 spec */
+  --t-hero:   clamp(46px, 5.2vw, 100px);
+  --t-h2:     clamp(34px, 4.06vw, 78px);
+  --t-cta:    clamp(28px, 2.7vw, 52px);
+  --t-quote:  clamp(24px, 2.5vw, 48px);
+  --t-card:   28px;
   --t-body:   20px;
   --t-small:  16px;
   --t-label:  16px;
@@ -123,7 +123,7 @@ img{display:block;max-width:100%;}
    bg: real measured Figma radialGradient — pale/soft orange, not saturated */
 .platform{position:relative;min-height:var(--h-plat);display:flex;flex-direction:column;
   justify-content:center;gap:calc(var(--u) * 1.5);
-  padding-block:calc(var(--u) * 3);
+  padding-block:var(--space-12);
   background:radial-gradient(140% 78% at 50% -14%,
     rgba(231,210,196,1) 45%, rgba(253,251,247,1) 85%, rgba(247,247,245,1) 100%);}
 .platform__grid{align-items:stretch;}
@@ -141,7 +141,7 @@ img{display:block;max-width:100%;}
 .pcard{flex:1;display:flex;gap:calc(var(--u) * .71);padding:calc(var(--u) * .71);
   background:rgba(0,0,0,.03);min-height:calc(208 / 1920 * 100vw);}
 .pcard__text{display:flex;flex-direction:column;gap:calc(var(--u) * .43);flex:1;}
-.pcard__title{font-size:28px;font-weight:500;}
+.pcard__title{font-size:var(--t-card);font-weight:500;}
 .pcard__copy{font-size:20px;opacity:.7;}
 .pcard__img{width:calc(266/603*100%);flex:none;background:
   linear-gradient(135deg, rgba(255,109,14,.10), rgba(0,0,0,.05));}
@@ -155,10 +155,13 @@ img{display:block;max-width:100%;}
 /* head sits with zero top padding so the orange dot lands at the exact same
    top-left position as every other section's dot (they all use top:0/left:0
    on an unpadded, position:relative wrapper) */
-.stack__head{position:relative;padding-top:0;padding-bottom:calc(var(--u) * 3.8);color:var(--ink);}
-.stack__head .mark{top:0;left:0;}
+.stack__head{position:relative;padding-top:0;padding-bottom:var(--space-7);color:var(--ink);}
+/* mark sits on the raw .container (which owns its own padding), unlike every other
+   section's dot which sits inside an unpadded gcell — offset by the gutter to compensate
+   so it lands at the same inset as the others instead of flush against the true edge */
+.stack__head .mark{top:0;left:var(--gutter);}
 .stack__title{font-size:var(--t-h2);font-weight:400;padding-top:calc(var(--u) * .57);}
-.stack{padding-top:calc(var(--u) * 1);padding-bottom:calc(var(--u) * 3);}
+.stack{padding-block:var(--space-12);}
 .stack__grid{align-items:stretch;}
 .stack__list{display:block;}
 
@@ -167,19 +170,24 @@ img{display:block;max-width:100%;}
   height:calc(100vh - var(--u) * 2.29);max-height:calc(918 / 1920 * 100vw + 200px);
   display:flex;align-items:center;}
 
-/* left rows: tall, generously spaced, snap one at a time as the page scrolls */
-html{scroll-snap-type:y proximity;}
-.srow{scroll-snap-align:start;min-height:70vh;display:flex;flex-direction:column;
-  justify-content:center;gap:calc(var(--u) * .8);padding-block:calc(var(--u) * 3);}
+/* left rows: each one PINS (position:sticky) for its own tall scroll range —
+   while pinned, .srow__title's fill color sweeps left-to-right (driven by --fill,
+   set from JS scroll progress); once the row's range is used up it releases and
+   the next row scrolls up to take its place and pin in turn. */
+.srow{position:sticky;top:calc(var(--u) * 2.29);min-height:160vh;display:flex;
+  flex-direction:column;justify-content:center;gap:calc(var(--u) * .8);
+  padding-block:calc(var(--u) * 3);}
 .srow__body{display:grid;grid-template-columns:calc(325/1030*100%) 1fr;gap:var(--grid-gutter-lg);}
-.srow__title{font-size:40px;font-weight:500;}
-.srow__title span{display:block;opacity:.4;}
+.srow__title{font-size:40px;font-weight:500;
+  background-image:linear-gradient(90deg, var(--fillcolor) var(--fill,0%), var(--dimcolor) var(--fill,0%));
+  -webkit-background-clip:text;background-clip:text;color:transparent;}
+.srow__title span{display:block;}
 .srow__copy{font-size:20px;opacity:.5;max-width:44ch;}
 .stack .label{font-size:24px;}
 /* tone flip: rows over the light part of the gradient use dark text, rows over
    the dark part use light text */
-.srow:nth-of-type(1),.srow:nth-of-type(2){color:var(--ink);}
-.srow:nth-of-type(3),.srow:nth-of-type(4){color:var(--on-dark);}
+.srow:nth-of-type(1),.srow:nth-of-type(2){color:var(--ink);--fillcolor:#000;--dimcolor:rgba(0,0,0,.25);}
+.srow:nth-of-type(3),.srow:nth-of-type(4){color:var(--on-dark);--fillcolor:#f3f3f3;--dimcolor:rgba(243,243,243,.25);}
 .stack__img{width:100%;height:min(calc(918 / 1920 * 100vw), 78%);min-height:260px;
   background:var(--color-placeholder);}
 
@@ -207,21 +215,21 @@ html{scroll-snap-type:y proximity;}
 /* ---------- quote (Figma 142:1088) ----------
    text sits at the TOP; a huge orange bloom fills the rest of the (very tall) section */
 .quote{position:relative;min-height:var(--h-quote);color:var(--on-dark);overflow:hidden;
-  padding-top:calc(var(--u) * 2.2);
+  padding-top:var(--space-12);
   background:
     radial-gradient(ellipse 78% 46% at 50% 66%,
       #ffa04b 0%, #ff6d0e 18%, #d2560c 34%, #7c3409 52%, #2b1509 72%, #0b0705 88%),
     #0b0705;}
 .quote__top{position:relative;display:flex;align-items:center;justify-content:space-between;
   gap:var(--u);padding-block:calc(var(--u) * .8);}
-.quote__top .mark{top:0;left:0;}
+.quote__top .mark{top:0;left:var(--gutter);}
 .quote__text{max-width:calc(1000 / 1920 * 100vw);min-width:280px;
   font-size:var(--t-quote);font-weight:400;padding-top:calc(var(--u) * 2.4);}
 .quote__text em{font-style:normal;color:rgba(243,243,243,.45);}
 
 /* ---------- news (Figma 142:1137) ---------- */
 .news{min-height:var(--h-news);display:flex;flex-direction:column;justify-content:center;
-  gap:calc(var(--u) * 1.86);padding-block:calc(var(--u) * 3);background:#f7f7f5;}
+  gap:var(--space-7);padding-block:var(--space-12);background:#f7f7f5;}
 .news__head{align-items:end;}
 .news__head > .gcell:first-child{position:relative;}
 .news__head .mark{top:0;left:0;}
@@ -239,7 +247,7 @@ html{scroll-snap-type:y proximity;}
 
 /* ---------- faq (Figma 142:1216) ---------- */
 .faq{min-height:var(--h-faq);display:flex;flex-direction:column;justify-content:center;
-  gap:calc(var(--u) * 1.86);padding-block:calc(var(--u) * 3);background:#f7f7f5;}
+  gap:var(--space-7);padding-block:var(--space-12);background:#f7f7f5;}
 .faq__head{align-items:center;}
 .faq__head > .gcell:first-child{position:relative;}
 .faq__head .mark{top:0;left:0;}
@@ -264,7 +272,7 @@ html{scroll-snap-type:y proximity;}
 /* ---------- footer (Figma 142:1364) ----------
    bright orange at the top, fading to black behind the giant wordmark */
 .footer{position:relative;min-height:var(--h-footer);color:var(--on-dark);overflow:hidden;
-  display:flex;flex-direction:column;padding-top:calc(var(--u) * 1.5);
+  display:flex;flex-direction:column;padding-top:var(--space-12);
   background:
     radial-gradient(ellipse 90% 62% at 50% -6%,
       #ffa04b 0%, #ff6d0e 16%, #cc540b 32%, #6d2f09 52%, #21120a 74%, #070505 92%),
@@ -307,7 +315,7 @@ html{scroll-snap-type:y proximity;}
   .platform__cards{gap:var(--grid-gutter-lg);}
   .stack__visual{order:-1;position:static;height:auto;}
   .stack__img{height:calc(420 / 1920 * 100vw);}
-  .srow{min-height:auto;}
+  .srow{min-height:auto;position:static;}
   .cta__box{flex-direction:column;}
   .cta__visual{width:100%;}
   .hero__foot{grid-template-columns:1fr;gap:calc(var(--u) * 1);}

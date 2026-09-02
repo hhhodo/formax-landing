@@ -21,6 +21,47 @@
     });
   });
 
+  // ---------- stack section: per-row pinned scroll, title text-fill progress ----------
+  const stackRows = document.querySelectorAll('.stack .srow');
+  if (stackRows.length) {
+    const rowAbsoluteTop = (el) => {
+      let top = 0;
+      let node = el;
+      while (node) {
+        top += node.offsetTop;
+        node = node.offsetParent;
+      }
+      return top;
+    };
+
+    let stackTicking = false;
+    const updateStackFill = () => {
+      stackTicking = false;
+      stackRows.forEach((row) => {
+        const stickyTop = parseFloat(getComputedStyle(row).top) || 0;
+        const pinStart = rowAbsoluteTop(row) - stickyTop;
+        const pinRange = row.offsetHeight - window.innerHeight;
+        let progress = 0;
+        if (pinRange > 0) {
+          progress = (window.scrollY - pinStart) / pinRange;
+          progress = Math.min(1, Math.max(0, progress));
+        } else {
+          progress = window.scrollY >= pinStart ? 1 : 0;
+        }
+        row.style.setProperty('--fill', `${(progress * 100).toFixed(1)}%`);
+      });
+    };
+    const scheduleStackFill = () => {
+      if (!stackTicking) {
+        stackTicking = true;
+        requestAnimationFrame(updateStackFill);
+      }
+    };
+    updateStackFill();
+    window.addEventListener('scroll', scheduleStackFill, { passive: true });
+    window.addEventListener('resize', scheduleStackFill);
+  }
+
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const revealTargets = document.querySelectorAll('[data-reveal]');
 
