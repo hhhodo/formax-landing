@@ -148,7 +148,7 @@ img{display:block;max-width:100%;}
   background:radial-gradient(ellipse 105% 72% at 44% 112%,
     #ff8a2b 0%, #f2731a 14%, #c9550e 30%, #7d3a12 50%, #34201a 70%, #120d0c 86%, #0a0807 100%);}
 /* part image sits tilted, floating (gentle bob loop) with a soft drop shadow */
-.panel__float{width:62%;max-width:320px;height:auto;
+.panel__float{width:86%;max-width:460px;height:auto;
   transform:rotate(-8deg);
   filter:drop-shadow(0 28px 34px rgba(0,0,0,.55));
   animation:panel-float 5s ease-in-out infinite;}
@@ -166,8 +166,13 @@ img{display:block;max-width:100%;}
 .pcard__text{display:flex;flex-direction:column;gap:calc(var(--u) * .43);flex:1;}
 .pcard__title{font-size:var(--t-card);font-weight:500;}
 .pcard__copy{font-size:20px;opacity:.7;}
-.pcard__img{width:calc(266/603*100%);flex:none;overflow:hidden;background:#000;}
-.pcard__img img{width:100%;height:100%;object-fit:cover;}
+/* order:2 puts the image on the RIGHT, text on the left (was the reverse) */
+.pcard__img{order:2;width:calc(266/603*100%);flex:none;overflow:hidden;}
+.pcard__text{order:1;}
+/* these photos have a plain white studio background; multiply-blending them onto the
+   card's own background makes the white read as transparent (white*bg=bg) without
+   needing an actually-transparent PNG */
+.pcard__img img{width:100%;height:100%;object-fit:cover;mix-blend-mode:multiply;}
 
 /* ---------- stack (Figma 142:241) ----------
    bg runs light → orange → black top-to-bottom; text flips from dark to light with it */
