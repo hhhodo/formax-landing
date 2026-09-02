@@ -135,23 +135,18 @@
       }
     }
 
-    // Quote text: same idea as the Stack row titles — starts at screen-center,
-    // but now split across 3 sibling lines that fill one after another.
+    // Quote text: PINNED (sticky) while this plays, so it can't scroll away before
+    // finishing. getBoundingClientRect() would freeze while stuck (same trap as the
+    // CTA card), so this is driven by absolute scroll position instead, same as the
+    // CTA title fill.
     if (!reduceMotion && quoteText) {
-      const rect = quoteText.getBoundingClientRect();
-      if (rect.bottom > -200 && rect.top < vh + 200) {
-        const startAt = vh * 0.6;
-        const endAt = vh * -0.6;
-        const anchor = rect.top + rect.height / 2;
-        let qp = (startAt - anchor) / (startAt - endAt);
-        qp = Math.min(1, Math.max(0, qp));
-        const qf1 = Math.round(Math.min(1, qp * 3) * 100);
-        const qf2 = Math.round(Math.min(1, Math.max(0, qp * 3 - 1)) * 100);
-        const qf3 = Math.round(Math.min(1, Math.max(0, qp * 3 - 2)) * 100);
-        if (qf1 !== lastQFill1) { lastQFill1 = qf1; quoteText.style.setProperty('--quote-fill1', `${qf1}%`); }
-        if (qf2 !== lastQFill2) { lastQFill2 = qf2; quoteText.style.setProperty('--quote-fill2', `${qf2}%`); }
-        if (qf3 !== lastQFill3) { lastQFill3 = qf3; quoteText.style.setProperty('--quote-fill3', `${qf3}%`); }
-      }
+      const qp = Math.min(1, Math.max(0, (scrollY - quotePinStart) / quoteFillRange));
+      const qf1 = Math.round(Math.min(1, qp * 3) * 100);
+      const qf2 = Math.round(Math.min(1, Math.max(0, qp * 3 - 1)) * 100);
+      const qf3 = Math.round(Math.min(1, Math.max(0, qp * 3 - 2)) * 100);
+      if (qf1 !== lastQFill1) { lastQFill1 = qf1; quoteText.style.setProperty('--quote-fill1', `${qf1}%`); }
+      if (qf2 !== lastQFill2) { lastQFill2 = qf2; quoteText.style.setProperty('--quote-fill2', `${qf2}%`); }
+      if (qf3 !== lastQFill3) { lastQFill3 = qf3; quoteText.style.setProperty('--quote-fill3', `${qf3}%`); }
     }
 
     // x-ray wipe: only the part of the product image the CTA card currently covers
