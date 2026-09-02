@@ -173,21 +173,20 @@ img{display:block;max-width:100%;}
 /* left rows: NORMAL flow (position:sticky per-row was causing two adjacent rows to
    render pinned at once — an overlapping-text bug — because a 100vh-tall sticky row
    has zero scroll buffer against a 100vh viewport, so it never cleanly releases
-   before the next one sticks). Instead each row just scrolls normally, and its
-   title's color-fill animates once via a CSS transition when the row scrolls into
-   view (IntersectionObserver adds .is-filled — see js/main.js). */
+   before the next one sticks). Each row just scrolls normally; its title's
+   color-fill is driven directly from live scroll position every frame (see
+   js/main.js) — not a one-shot trigger — so it visibly sweeps as the row travels
+   through the viewport instead of jumping to 100% the instant it appears. */
 .srow{display:flex;flex-direction:column;justify-content:center;gap:calc(var(--u) * .8);
   padding-block:calc(var(--u) * 4);}
 .srow__body{display:flex;flex-direction:column;gap:calc(var(--u) * .8);}
 /* fill-clip must be declared on BOTH the title and its <span> — a child element
    only inherits `color`, not the parent's own clipped background, so without its
    own background-image the span rendered fully invisible instead of dim/filled */
-@property --fill{syntax:'<percentage>';inherits:true;initial-value:0%;}
 .srow__title,.srow__title span{
-  background-image:linear-gradient(90deg, var(--fillcolor) var(--fill), var(--dimcolor) var(--fill));
+  background-image:linear-gradient(90deg, var(--fillcolor) var(--fill,0%), var(--dimcolor) var(--fill,0%));
   -webkit-background-clip:text;background-clip:text;color:transparent;
-  -webkit-text-fill-color:transparent;transition:--fill 1.4s ease;}
-.srow.is-filled{--fill:100%;}
+  -webkit-text-fill-color:transparent;}
 .srow__title{font-size:64px;font-weight:500;}
 .srow__title span{display:block;}
 .srow__copy{font-size:24px;line-height:1.5;opacity:.6;max-width:56ch;}
