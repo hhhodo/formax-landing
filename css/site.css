@@ -177,7 +177,9 @@ img{display:block;max-width:100%;}
 .srow{position:sticky;top:calc(var(--u) * 2.29);min-height:100vh;display:flex;
   flex-direction:column;justify-content:center;gap:calc(var(--u) * .8);
   padding-block:calc(var(--u) * 3);}
-.srow__body{display:grid;grid-template-columns:calc(220/1030*100%) 1fr;gap:var(--grid-gutter-lg);}
+/* title full-width on its own (a fixed narrow side-column was breaking the 64px
+   title mid-word), copy sits below it, capped for readable line length */
+.srow__body{display:flex;flex-direction:column;gap:calc(var(--u) * .8);}
 /* fill-clip must be declared on BOTH the title and its <span> — a child element
    only inherits `color`, not the parent's own clipped background, so without its
    own background-image the span rendered fully invisible instead of dim/filled */
@@ -187,7 +189,7 @@ img{display:block;max-width:100%;}
   -webkit-text-fill-color:transparent;}
 .srow__title{font-size:64px;font-weight:500;}
 .srow__title span{display:block;}
-.srow__copy{font-size:var(--t-small);line-height:1.5;opacity:.55;max-width:48ch;}
+.srow__copy{font-size:24px;line-height:1.5;opacity:.6;max-width:56ch;}
 .stack .label{font-size:24px;}
 /* tone flip: rows over the light part of the gradient use dark text, rows over
    the dark part use light text */
@@ -337,7 +339,6 @@ img{display:block;max-width:100%;}
   .nav__toggle{display:flex;}
   .hero__inner{padding-top:calc(var(--u) * 2.5);}
   .news__grid > .gcell{grid-column:1/13!important;}
-  .srow__body{grid-template-columns:1fr;}
   .footer__links{grid-template-columns:1fr;}
   .frow summary{height:auto;padding-block:calc(var(--u) * .71);}
   .frow p{padding-left:calc(var(--u) * .71);}
