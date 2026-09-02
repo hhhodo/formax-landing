@@ -165,18 +165,14 @@ img{display:block;max-width:100%;}
 .stack__grid{align-items:stretch;}
 .stack__list{display:block;}
 
-/* right visual: normal flow, NOT sticky — a sticky box stays pinned near the viewport
-   top while scrolling and releases at an unpredictable point, which was leaving a huge
-   dead gap before CTA's wireframe (they were never actually adjacent). Stretched to the
-   full column height instead, so its bottom edge sits exactly at the section's end,
-   flush against CTA's visual that follows immediately after in the document. */
-/* right image PINS in place (position:sticky) while the left column scrolls past it.
-   It releases exactly when Stack's content ends — since Stack/CTA now sit flush with
-   zero gap between them, CTA's own dark panel rises up and visibly covers the image
-   at that exact moment, right where the line-art wireframe (in the same column
-   position) takes over — a photo -> line-art "hand-off" instead of a dead gap. */
+/* right image PINS in place (position:sticky) for the FULL height of this column —
+   which now spans the 4 rows AND the CTA card, since the CTA card is merged into
+   .stack__list as normal-flow content below the rows instead of being a separate
+   section. So the image stays genuinely frozen at the same screen position the
+   whole time; only the CTA card (normal flow, left column) scrolls up past it. */
 .stack__visual{position:sticky;top:calc(var(--u) * 2.29);align-self:flex-start;
   height:calc(100vh - var(--u) * 2.29);display:flex;align-items:center;justify-content:center;}
+.stack__imgwrap{position:relative;width:100%;max-width:var(--product-w);aspect-ratio:1/1;}
 
 /* left rows: NORMAL flow (position:sticky per-row was causing two adjacent rows to
    render pinned at once — an overlapping-text bug — because a 100vh-tall sticky row
@@ -204,32 +200,25 @@ img{display:block;max-width:100%;}
 .srow:nth-of-type(1),.srow:nth-of-type(2){color:var(--ink);--fillcolor:#000;--dimcolor:rgba(0,0,0,.25);}
 .srow:nth-of-type(3),.srow:nth-of-type(4){color:var(--on-dark);--fillcolor:#f3f3f3;--dimcolor:rgba(243,243,243,.25);}
 :root{--product-w:520px;}
-.stack__img{width:100%;max-width:var(--product-w);height:auto;aspect-ratio:1/1;object-fit:contain;
-  flex:none;}
+/* the two images sit exactly on top of each other (absolute, inset:0) and crossfade
+   via opacity — .stack__imgwrap.is-xray is toggled by an IntersectionObserver on
+   the CTA card (js/main.js), reversible both ways as you scroll past it */
+.stack__img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;
+  transition:opacity .5s ease;}
+.stack__img--photo{opacity:1;}
+.stack__img--line{opacity:0;filter:url(#lineArt);}
+.stack__imgwrap.is-xray .stack__img--photo{opacity:0;}
+.stack__imgwrap.is-xray .stack__img--line{opacity:.9;}
 
-/* ---------- cta (Figma 142:861) ----------
-   No gap, no margin trick: Stack's bottom padding is 0 and this section's top padding
-   is 0 too, so its wireframe visual sits flush against Stack's image with nothing
-   between them — that adjacency alone reads as the image continuing into outline form. */
-.cta{background:#000;color:var(--on-dark);
-  padding-inline:var(--u);padding-top:0;padding-bottom:var(--u);min-height:var(--h-cta);
-  display:flex;}
-.cta__box{position:relative;flex:1;display:flex;align-items:stretch;justify-content:space-between;
-  gap:var(--u);padding-inline:calc(var(--u) * 1);padding-block:0 calc(var(--u) * 1);
-  background:rgba(240,239,238,.04);overflow:hidden;}
-.cta__box .mark--tl{top:0;left:0;}
-.cta__box .mark--tr{top:0;right:0;}
-.cta__copy{position:relative;display:flex;flex-direction:column;justify-content:center;
-  max-width:calc(530 / 1920 * 100vw);min-width:280px;}
-.cta__copy .mark{top:0;left:0;}
-.cta__title{font-size:var(--t-h2);font-weight:400;padding-top:calc(var(--u) * 1);}
-.cta__title span{color:rgba(242,242,242,.4);}
-/* same column proportion, same top-aligned position, and the SAME max-width as
-   Stack's sticky image, so this genuinely reads as that image continuing downward */
-.cta__visual{width:calc(4/12*100%);min-width:240px;align-self:stretch;
-  display:flex;align-items:flex-start;justify-content:center;overflow:hidden;}
-.cta__lineart{width:100%;max-width:var(--product-w);height:auto;aspect-ratio:1/1;
-  object-fit:contain;filter:url(#lineArt);opacity:.9;}
+/* CTA card — merged into .stack__list as normal-flow content right after the rows,
+   in the SAME (left) column as the rows, not overlapping the sticky image's column.
+   Styled as a distinct dark card so it still visibly "rises" over the section. */
+.stack__cta{position:relative;margin-top:calc(var(--u) * 2);padding:calc(var(--u) * 2);
+  padding-bottom:calc(var(--u) * 6);background:rgba(0,0,0,.35);overflow:hidden;}
+.stack__cta .mark--tl{top:0;left:0;}
+.stack__cta .mark--tr{top:0;right:0;}
+.stack__cta-title{font-size:var(--t-h2);font-weight:400;color:var(--on-dark);}
+.stack__cta-title span{color:rgba(242,242,242,.4);}
 
 /* ---------- quote (Figma 142:1088) ----------
    text sits at the TOP; a huge orange bloom fills the rest of the (very tall) section */
@@ -333,9 +322,7 @@ img{display:block;max-width:100%;}
   .faq__head > .gcell,.faq__list,.footer__grid > .gcell{grid-column:1/13!important;}
   .platform__cards{gap:var(--grid-gutter-lg);}
   .stack__visual{order:-1;position:static;height:auto;padding-block:calc(var(--u) * 2);}
-  .stack__img{max-width:340px;}
-  .cta__box{flex-direction:column;}
-  .cta__visual{width:100%;}
+  .stack__imgwrap{max-width:340px;}
   .hero__foot{grid-template-columns:1fr;gap:calc(var(--u) * 1);}
   .hero__card{justify-self:start;width:100%;}
   .news__headbtn,.faq__headbtn{justify-content:flex-start;}

@@ -60,6 +60,22 @@
     }
   }
 
+  // ---------- stack: crossfade the sticky image to its x-ray/line-art render while
+  // the CTA card is on screen (image itself never moves — it's still sticky/frozen) ----------
+  const stackImgWrap = document.getElementById('stackImgWrap');
+  const stackCta = document.getElementById('cta');
+  if (stackImgWrap && stackCta && 'IntersectionObserver' in window) {
+    const xrayObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          stackImgWrap.classList.toggle('is-xray', entry.isIntersecting);
+        });
+      },
+      { threshold: 0, rootMargin: '-45% 0px -45% 0px' }
+    );
+    xrayObserver.observe(stackCta);
+  }
+
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const revealTargets = document.querySelectorAll('[data-reveal]');
 

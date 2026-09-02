@@ -153,7 +153,12 @@ Footer   — 908px — 4-4-4 + giant edge-to-edge wordmark
     </div>
   </section>
 
-  <!-- STACK — Figma 142:241 -->
+  <!-- STACK + CTA merged into ONE scroll unit — Figma 142:241 / 142:861.
+       The right-side image is sticky for the FULL height of this section (rows +
+       CTA card), so it stays visually frozen in place the whole time. Scrolling
+       into the CTA card crossfades it from the real photo to its x-ray/line-art
+       render (same image, edge-detection filter) instead of swapping to a
+       different, separately-positioned element. -->
   <section class="stack" id="stack">
     <div class="container stack__head">
       <span class="mark" aria-hidden="true"></span>
@@ -190,30 +195,22 @@ Footer   — 908px — 4-4-4 + giant edge-to-edge wordmark
             <p class="srow__copy">주요 산업 자동화 설비사, 클라우드 인프라 파트너와 공동으로 검증된 연동 규격을 운영합니다. 신규 파트너십도 같은 규격을 기준으로 검증하기 때문에, 확장할 때마다 별도 연동 작업을 처음부터 다시 하지 않아도 됩니다.</p>
           </div>
         </div>
+
+        <!-- CTA card: normal flow content that follows the rows, rises into view
+             like a card, in the SAME column as the rows (not overlapping the
+             image's column) -->
+        <div class="stack__cta" id="cta">
+          <span class="mark mark--tl" aria-hidden="true"></span>
+          <span class="mark mark--tr" aria-hidden="true"></span>
+          <h2 class="stack__cta-title">모두를 위한 제조,<br><span>복합적으로 확장되는 생산성.</span></h2>
+        </div>
       </div>
 
       <div class="gcell stack__visual" style="grid-column:9/13">
-        <img class="stack__img" src="assets/images/stack-product.png" alt="FORMAX CNC 가공 부품" loading="lazy">
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA — Figma 142:861. Overlaps the bottom of Stack (negative margin-top) so the
-       wireframe visual reads as a continuation of Stack's product image sliding into
-       outline form underneath this section. -->
-  <section class="cta" id="cta">
-    <div class="cta__box">
-      <span class="mark mark--tl" aria-hidden="true"></span>
-      <span class="mark mark--tr" aria-hidden="true"></span>
-      <div class="cta__copy">
-        <span class="mark" aria-hidden="true"></span>
-        <h2 class="cta__title">모두를 위한 제조,<br><span>복합적으로 확장되는 생산성.</span></h2>
-      </div>
-      <!-- the SAME photo as Stack's sticky image, run through an edge-detection SVG
-           filter — a genuine line-art derived from that exact image, same size/crop,
-           so it reads as the photo continuing in outline form under the card -->
-      <div class="cta__visual">
-        <img src="assets/images/stack-product.png" alt="" class="cta__lineart" aria-hidden="true">
+        <div class="stack__imgwrap" id="stackImgWrap">
+          <img class="stack__img stack__img--photo" src="assets/images/stack-product.png" alt="FORMAX CNC 가공 부품" loading="lazy">
+          <img class="stack__img stack__img--line" src="assets/images/stack-product.png" alt="" aria-hidden="true">
+        </div>
       </div>
     </div>
   </section>
