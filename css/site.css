@@ -44,7 +44,7 @@ body{background:#f7f7f5;color:var(--ink);font-size:var(--t-body);font-weight:400
 img{display:block;max-width:100%;}
 
 /* ---------- shared atoms ---------- */
-.label{display:inline-block;font-size:var(--t-label);font-weight:500;
+.label{display:inline-block;font-size:var(--t-label);font-weight:400;
   text-transform:uppercase;}
 .label--dim{opacity:.6;}
 .mark{position:absolute;width:6px;height:6px;background:var(--accent);}
@@ -53,7 +53,7 @@ img{display:block;max-width:100%;}
 .ico--dark{background:var(--ink);}
 
 .btn{display:inline-flex;align-items:center;gap:0;height:calc(var(--u) * 1.21);
-  font-size:var(--t-label);font-weight:500;text-transform:uppercase;
+  font-size:var(--t-label);font-weight:400;text-transform:uppercase;
   border-radius:0;white-space:nowrap;}
 .btn > .ico{margin-left:calc(var(--u) * .57);}
 .btn--light{background:var(--on-dark);color:var(--ink);padding-inline:calc(var(--u) * .57);}
@@ -70,13 +70,13 @@ img{display:block;max-width:100%;}
 
 .chip{display:inline-flex;align-items:center;justify-content:center;gap:4px;
   width:calc(var(--u) * 1.07);height:calc(var(--u) * .79);background:rgba(0,0,0,.1);
-  font-size:var(--t-label);font-weight:500;color:rgba(0,0,0,.6);flex:none;}
+  font-size:var(--t-label);font-weight:400;color:rgba(0,0,0,.6);flex:none;}
 .chip i{width:4px;height:4px;background:rgba(0,0,0,.6);}
 
 /* ---------- topbar + nav (Figma 142:13 / 142:17) ---------- */
 .topbar{background:#0b0908;color:rgba(243,243,243,.55);}
 .topbar__inner{height:calc(var(--u) * 1.71);display:flex;align-items:center;
-  font-size:var(--t-label);text-transform:uppercase;font-weight:500;}
+  font-size:var(--t-label);text-transform:uppercase;font-weight:400;}
 .topbar a{color:var(--on-dark);text-decoration:underline;}
 
 /* color-invert nav: transparent + mix-blend-mode:difference against whatever section
@@ -89,12 +89,12 @@ img{display:block;max-width:100%;}
    the hero is already dark so blend-mode would read white too, but a flat solid bar
    reads cleaner than a blended one right at the very top of the page. */
 .nav.nav--solid{background:#0a0807;mix-blend-mode:normal;}
-.nav__bar{height:calc(var(--u) * 2.29);display:flex;align-items:center;justify-content:space-between;}
-.nav__logo{font-size:var(--t-body);font-weight:500;color:#fff;}
+.nav__bar{height:calc(var(--u) * 2.8);display:flex;align-items:center;justify-content:space-between;}
+.nav__logo{font-size:28px;font-weight:400;color:#fff;}
 .nav__links{display:flex;align-items:center;gap:2px;}
-.nav__links a{display:inline-flex;align-items:center;height:calc(var(--u) * 1.21);
+.nav__links a{display:inline-flex;align-items:center;height:calc(var(--u) * 1.5);
   padding-inline:calc(var(--u) * .57);
-  font-size:var(--t-label);font-weight:500;text-transform:uppercase;
+  font-size:18px;font-weight:400;text-transform:uppercase;
   color:#fff;}
 .nav__links-last{gap:calc(var(--u) * .57);}
 .nav__toggle{display:none;flex-direction:column;gap:5px;background:none;border:0;padding:6px;}
@@ -126,7 +126,7 @@ img{display:block;max-width:100%;}
 .hero__card-top{display:flex;justify-content:space-between;align-items:center;}
 .hero__card-body{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;
   padding-top:calc(var(--u) * .57);}
-.hero__card-title{font-size:var(--t-card);font-weight:500;}
+.hero__card-title{font-size:var(--t-card);font-weight:400;}
 .ico--glass{background:var(--on-dark);}
 
 /* ---------- platform (Figma 142:3419) ----------
@@ -164,19 +164,14 @@ img{display:block;max-width:100%;}
 .pcard{flex:1;display:flex;gap:calc(var(--u) * .71);padding:calc(var(--u) * .71);
   background:rgba(0,0,0,.03);min-height:calc(208 / 1920 * 100vw);}
 .pcard__text{display:flex;flex-direction:column;gap:calc(var(--u) * .43);flex:1;}
-.pcard__title{font-size:var(--t-card);font-weight:500;}
+.pcard__title{font-size:var(--t-card);font-weight:400;}
 .pcard__copy{font-size:20px;opacity:.7;}
-/* order:2 puts the image on the RIGHT, text on the left (was the reverse) */
-/* background:#fff + isolation:isolate give the multiply blend below a neutral white
-   surface of its own to blend against — without them it was blending straight through
-   the near-transparent card onto the section's orange gradient, tinting the metal orange */
-.pcard__img{order:2;width:calc(266/603*100%);flex:none;overflow:hidden;
-  background:#fff;isolation:isolate;}
+/* order:2 puts the image on the RIGHT, text on the left (was the reverse).
+   No blend-mode, no extra background layer — the photos already have their own
+   opaque white studio background baked in, so they just render as plain images. */
+.pcard__img{order:2;width:calc(266/603*100%);flex:none;overflow:hidden;}
 .pcard__text{order:1;}
-/* these photos have a plain white studio background; multiply-blending them onto the
-   card's own background makes the white read as transparent (white*bg=bg) without
-   needing an actually-transparent PNG */
-.pcard__img img{width:100%;height:100%;object-fit:cover;mix-blend-mode:multiply;}
+.pcard__img img{width:100%;height:100%;object-fit:cover;}
 
 /* ---------- stack (Figma 142:241) ----------
    bg runs light → orange → black top-to-bottom; text flips from dark to light with it */
@@ -202,8 +197,8 @@ img{display:block;max-width:100%;}
    Two copies sit in the same grid area: the photo UNDER the card (z-1, gets covered)
    and the line-art ON TOP of the card (z-3, clipped by JS to exactly the covered
    region). The card itself is z-2 in between. */
-.stack__visual{position:sticky;top:calc(var(--u) * 2.29);align-self:flex-start;
-  height:calc(100vh - var(--u) * 2.29);display:flex;align-items:center;justify-content:center;
+.stack__visual{position:sticky;top:calc(var(--u) * 2.8);align-self:flex-start;
+  height:calc(100vh - var(--u) * 2.8);display:flex;align-items:center;justify-content:center;
   z-index:1;}
 .stack__visual--line{z-index:3;pointer-events:none;}
 .stack__imgwrap{position:relative;width:100%;max-width:var(--product-w);aspect-ratio:1/1;}
@@ -225,7 +220,7 @@ img{display:block;max-width:100%;}
   background-image:linear-gradient(90deg, var(--fillcolor) var(--fill,0%), var(--dimcolor) var(--fill,0%));
   -webkit-background-clip:text;background-clip:text;color:transparent;
   -webkit-text-fill-color:transparent;}
-.srow__title{font-size:64px;font-weight:500;}
+.srow__title{font-size:64px;font-weight:400;}
 .srow__title span{display:block;}
 .srow__copy{font-size:24px;line-height:1.5;opacity:.6;max-width:56ch;}
 .stack .label{font-size:24px;}
@@ -242,8 +237,8 @@ img{display:block;max-width:100%;}
 /* CTA card wrap: taller than the card+viewport so it holds at the top of the screen
    (plain position:sticky, no JS) for a good stretch of scroll before releasing. */
 .stack__cta-wrap{position:relative;min-height:260vh;margin-top:calc(var(--u) * 8);}
-.stack__cta{position:sticky;top:calc(var(--u) * 2.29);z-index:2;
-  height:calc(100vh - var(--u) * 2.29);display:flex;flex-direction:column;justify-content:center;
+.stack__cta{position:sticky;top:calc(var(--u) * 2.8);z-index:2;
+  height:calc(100vh - var(--u) * 2.8);display:flex;flex-direction:column;justify-content:center;
   padding:calc(var(--u) * 2);background:#0a0605;}
 /* cover: a plain block sitting flush above the card's own top edge, growing taller as
    the user keeps scrolling near the end of the pin range (--cta-cover, px, written every
@@ -288,8 +283,8 @@ img{display:block;max-width:100%;}
 .ncard__meta{display:flex;justify-content:space-between;width:100%;}
 .tag{display:inline-flex;align-items:center;height:calc(var(--u) * 1.07);
   padding-inline:calc(var(--u) * .29);border:1px solid rgba(0,0,0,.15);
-  font-size:var(--t-label);font-weight:500;text-transform:uppercase;}
-.ncard__title{font-size:var(--t-card);font-weight:500;}
+  font-size:var(--t-label);font-weight:400;text-transform:uppercase;}
+.ncard__title{font-size:var(--t-card);font-weight:400;}
 
 /* ---------- faq (Figma 142:1216) ---------- */
 .faq{min-height:var(--h-faq);display:flex;flex-direction:column;justify-content:center;
@@ -304,7 +299,7 @@ img{display:block;max-width:100%;}
 .frow summary{list-style:none;display:flex;align-items:center;gap:var(--u);cursor:pointer;
   height:calc(var(--u) * 2.64);padding-inline:calc(var(--u) * .71);}
 .frow summary::-webkit-details-marker{display:none;}
-.frow__q{flex:1;font-size:var(--t-body);font-weight:500;}
+.frow__q{flex:1;font-size:var(--t-body);font-weight:400;}
 .frow__ico{position:relative;width:calc(var(--u) * 1.21);height:calc(var(--u) * 1.21);
   background:var(--ink);flex:none;}
 .frow__ico::before,.frow__ico::after{content:"";position:absolute;inset:0;margin:auto;
@@ -326,18 +321,18 @@ img{display:block;max-width:100%;}
 .footer__grid{align-items:stretch;}
 .footer__col{position:relative;display:flex;flex-direction:column;gap:calc(var(--u) * .57);}
 .footer__col .mark{top:0;left:0;background:var(--on-dark);}
-.footer__lead{font-size:var(--t-card);font-weight:500;padding-top:calc(var(--u) * .8);}
+.footer__lead{font-size:var(--t-card);font-weight:400;padding-top:calc(var(--u) * .8);}
 .footer__form{display:flex;align-items:center;gap:8px;
   padding-bottom:calc(var(--u) * .57);border-bottom:1px solid rgba(243,243,243,.25);}
 .footer__form input{flex:1;min-width:0;background:none;border:0;color:var(--on-dark);
-  font:inherit;font-size:var(--t-body);font-weight:500;padding:0;}
+  font:inherit;font-size:var(--t-body);font-weight:400;padding:0;}
 .footer__form input::placeholder{color:rgba(243,243,243,.55);}
 .footer__form input:focus{outline:none;}
 .footer__note{font-size:var(--t-label);text-transform:uppercase;
   color:rgba(243,243,243,.6);margin-top:auto;}
-.footer__note b{color:var(--on-dark);font-weight:500;}
+.footer__note b{color:var(--on-dark);font-weight:400;}
 .footer__links{display:grid;grid-template-columns:1fr 1fr;gap:4px calc(var(--u) * .57);}
-.footer__links a{font-size:var(--t-body);font-weight:500;color:var(--on-dark);}
+.footer__links a{font-size:var(--t-body);font-weight:400;color:var(--on-dark);}
 .footer__links a:hover{text-decoration:underline;}
 .footer__legal{display:flex;gap:calc(var(--u) * .43);margin-top:auto;
   font-size:var(--t-label);text-transform:uppercase;color:rgba(243,243,243,.6);}
@@ -348,7 +343,7 @@ img{display:block;max-width:100%;}
   align-self:flex-end;}
 .footer__col:last-child > .label{margin-top:auto;}
 
-.footer__wordmark{margin-top:auto;font-size:26.5vw;font-weight:500;
+.footer__wordmark{margin-top:auto;font-size:26.5vw;font-weight:400;
   text-align:center;white-space:nowrap;
   background:linear-gradient(180deg, #ffb173 0%, #ff6d0e 42%, #b34c0b 72%, #4d2208 100%);
   -webkit-background-clip:text;background-clip:text;color:transparent;
