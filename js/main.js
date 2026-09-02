@@ -81,11 +81,12 @@
       }
     }
 
-    // B) row title color-fill: wider start/end window = later start, slower sweep,
-    // so it's actually visible instead of finishing before you notice it.
+    // B) row title color-fill: narrow band centered on the viewport's vertical
+    // middle, so the sweep plays out specifically as the title crosses screen-center
+    // instead of gradually over the whole time it's on screen.
     if (!reduceMotion) {
-      const startAt = vh * 1.15;
-      const endAt = vh * -0.15;
+      const startAt = vh * 0.62;
+      const endAt = vh * 0.38;
       for (let i = 0; i < stackRows.length; i += 1) {
         const item = stackRows[i];
         const rect = (item.title || item.row).getBoundingClientRect();
