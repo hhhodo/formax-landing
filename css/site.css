@@ -232,7 +232,7 @@ img{display:block;max-width:100%;}
    (e.g. rgba(0,0,0,.25)) blends with whatever's behind it and comes out a different
    apparent brightness at every row. A fixed opaque gray renders identically everywhere. */
 /* all rows unified to black text (no light/dark tone-flip by row position) */
-.srow{color:var(--ink);--fillcolor:#000;--dimcolor:#808080;}
+.srow{color:var(--ink);--fillcolor:#000;--dimcolor:rgba(0,0,0,.5);}
 :root{--product-w:760px;}
 .stack__img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;}
 /* line-art copy starts fully clipped away; JS sets clip-path every scroll frame to
@@ -245,7 +245,11 @@ img{display:block;max-width:100%;}
 .stack__cta-wrap{position:relative;min-height:260vh;margin-top:calc(var(--u) * 8);}
 .stack__cta{position:sticky;top:calc(var(--u) * 2.8);z-index:2;
   height:calc(100vh - var(--u) * 2.8);display:flex;flex-direction:column;justify-content:center;
-  padding:calc(var(--u) * 2);background:#0a0605;}
+  padding-block:calc(var(--u) * 2);
+  /* --cta-pad shrinks with scroll (js/main.js) so the left/right margin closes up
+     as the card grows toward full-bleed, instead of staying fixed forever */
+  padding-inline:var(--cta-pad, calc(var(--u) * 2));
+  background:#0a0605;}
 /* cover: a plain block sitting flush above the card's own top edge, growing taller as
    the user keeps scrolling near the end of the pin range (--cta-cover, px, written every
    scroll frame — same continuous technique as the row-fill/x-ray effects, no locks or
@@ -255,9 +259,19 @@ img{display:block;max-width:100%;}
   height:var(--cta-cover, 0px);background:#0a0605;}
 .stack__cta .mark--tl{top:0;left:0;}
 .stack__cta .mark--tr{top:0;right:0;}
-.stack__cta-title{position:relative;font-size:var(--t-h2);font-weight:400;color:var(--on-dark);
-  max-width:calc(530 / 1920 * 100vw);min-width:280px;}
-.stack__cta-title span{color:rgba(242,242,242,.4);}
+/* two-line title fills top-to-bottom / left-to-right in white, driven by scroll
+   (js/main.js sets --cta-fill1 for the first line, --cta-fill2 for the span/second
+   line — line 2 only starts once line 1 has fully filled). Only once BOTH are
+   done does the header-cover growth (--cta-cover) begin. */
+.stack__cta-title{position:relative;font-size:var(--t-h2);font-weight:400;
+  max-width:calc(530 / 1920 * 100vw);min-width:280px;
+  background-image:linear-gradient(90deg, #fff var(--cta-fill1,0%), rgba(255,255,255,.4) var(--cta-fill1,0%));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  -webkit-text-fill-color:transparent;}
+.stack__cta-title span{display:block;
+  background-image:linear-gradient(90deg, #fff var(--cta-fill2,0%), rgba(255,255,255,.4) var(--cta-fill2,0%));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  -webkit-text-fill-color:transparent;}
 
 /* ---------- quote (Figma 142:1088) ----------
    text sits at the TOP; a huge orange bloom fills the rest of the (very tall) section */
