@@ -170,7 +170,11 @@ img{display:block;max-width:100%;}
    dead gap before CTA's wireframe (they were never actually adjacent). Stretched to the
    full column height instead, so its bottom edge sits exactly at the section's end,
    flush against CTA's visual that follows immediately after in the document. */
-.stack__visual{align-self:stretch;display:flex;align-items:flex-end;}
+/* the real product photo is a plain 1:1 square shot, not a tall canister — sit it at
+   the bottom of the column at its own natural (capped) size instead of stretching a
+   placeholder box to fill the whole tall column height */
+.stack__visual{align-self:stretch;display:flex;align-items:flex-end;justify-content:center;
+  padding-bottom:calc(var(--u) * 2);}
 
 /* left rows: NORMAL flow (position:sticky per-row was causing two adjacent rows to
    render pinned at once — an overlapping-text bug — because a 100vh-tall sticky row
@@ -197,8 +201,8 @@ img{display:block;max-width:100%;}
    the dark part use light text */
 .srow:nth-of-type(1),.srow:nth-of-type(2){color:var(--ink);--fillcolor:#000;--dimcolor:rgba(0,0,0,.25);}
 .srow:nth-of-type(3),.srow:nth-of-type(4){color:var(--on-dark);--fillcolor:#f3f3f3;--dimcolor:rgba(243,243,243,.25);}
-.stack__img{width:100%;height:auto;align-self:stretch;flex:1;min-height:260px;
-  background:var(--color-placeholder);}
+.stack__img{width:100%;max-width:520px;height:auto;aspect-ratio:1/1;object-fit:contain;
+  flex:none;}
 
 /* ---------- cta (Figma 142:861) ----------
    No gap, no margin trick: Stack's bottom padding is 0 and this section's top padding
@@ -323,7 +327,7 @@ img{display:block;max-width:100%;}
   .faq__head > .gcell,.faq__list,.footer__grid > .gcell{grid-column:1/13!important;}
   .platform__cards{gap:var(--grid-gutter-lg);}
   .stack__visual{order:-1;}
-  .stack__img{height:calc(420 / 1920 * 100vw);}
+  .stack__img{max-width:340px;}
   .cta__box{flex-direction:column;}
   .cta__visual{width:100%;}
   .hero__foot{grid-template-columns:1fr;gap:calc(var(--u) * 1);}
