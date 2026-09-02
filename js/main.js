@@ -87,7 +87,7 @@
     // already half-done by the time the title reaches the middle.
     if (!reduceMotion) {
       const startAt = vh * 0.5;
-      const endAt = vh * 0.15;
+      const endAt = vh * -0.35;
       for (let i = 0; i < stackRows.length; i += 1) {
         const item = stackRows[i];
         const rect = (item.title || item.row).getBoundingClientRect();
