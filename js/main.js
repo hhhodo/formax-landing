@@ -1,6 +1,8 @@
 (() => {
+  const nav = document.getElementById('nav');
   const navToggle = document.getElementById('navToggle');
   const navLinks = document.getElementById('navLinks');
+  const hero = document.querySelector('.hero');
 
   navToggle.addEventListener('click', () => {
     const isOpen = navLinks.classList.toggle('is-open');
@@ -15,16 +17,10 @@
   });
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const desktop = !window.matchMedia('(max-width: 1024px)').matches;
 
   // =====================================================================
-  // ONE scroll loop for everything. Previously nav / row-fill / x-ray each
-  // registered their own scroll listener with their own rAF, so every frame
-  // ran three callbacks and wrote styles even for elements far off screen —
-  // and they wrote sub-pixel values (.toFixed(1)), forcing a repaint of the
-  // text-clipped gradients and the 800px image on changes nobody can see.
-  // Now: single rAF, skip anything off screen, round to whole units, and
-  // bail out entirely when the value hasn't actually changed.
+  // ONE scroll loop for everything, single rAF, off-screen elements skipped,
+  // values rounded and only written when actually changed.
   // =====================================================================
   const stackRows = [...document.querySelectorAll('.stack .srow')].map((row) => ({
     row,
@@ -33,20 +29,63 @@
   }));
   const stackLineArt = document.getElementById('stackLineArt');
   const ctaCard = document.getElementById('cta');
+  const ctaWrap = ctaCard ? ctaCard.closest('.stack__cta-wrap') : null;
   let lastXray = -1;
+  let lastCover = -1;
+  let lastNavSolid = null;
   let ticking = false;
 
   if (reduceMotion) {
     stackRows.forEach(({ row }) => row.style.setProperty('--fill', '100%'));
   }
 
+  // ---- cached (layout-dependent) values, recomputed only on load/resize ----
+  const stickyTopPx = ctaCard ? parseFloat(getComputedStyle(ctaCard).top) || 0 : 0;
+  let heroBottom = 0;
+  let ctaPinStart = 0;
+  let ctaPinEnd = 0;
+  let ctaCoverRange = 1;
+
+  const absoluteTop = (el) => {
+    let top = 0;
+    let node = el;
+    while (node) {
+      top += node.offsetTop;
+      node = node.offsetParent;
+    }
+    return top;
+  };
+
+  const recomputeLayout = () => {
+    if (hero) heroBottom = absoluteTop(hero) + hero.offsetHeight;
+    if (ctaCard && ctaWrap) {
+      ctaPinStart = absoluteTop(ctaCard) - stickyTopPx;
+      ctaPinEnd = absoluteTop(ctaWrap) + ctaWrap.offsetHeight - ctaCard.offsetHeight - stickyTopPx;
+      ctaCoverRange = Math.max(1, Math.min(window.innerHeight * 0.6, ctaPinEnd - ctaPinStart));
+    }
+  };
+  recomputeLayout();
+
   const onFrame = () => {
     ticking = false;
     const vh = window.innerHeight;
+    const scrollY = window.scrollY;
 
+    // A) header stays a solid black bar over the (dark) hero; once scrolled past it,
+    // switch to transparent + mix-blend-mode:difference so it auto-inverts per section.
+    if (nav) {
+      const solid = scrollY < heroBottom - stickyTopPx;
+      if (solid !== lastNavSolid) {
+        lastNavSolid = solid;
+        nav.classList.toggle('nav--solid', solid);
+      }
+    }
+
+    // B) row title color-fill: wider start/end window = later start, slower sweep,
+    // so it's actually visible instead of finishing before you notice it.
     if (!reduceMotion) {
-      const startAt = vh * 0.85;
-      const endAt = vh * 0.25;
+      const startAt = vh * 1.15;
+      const endAt = vh * -0.15;
       for (let i = 0; i < stackRows.length; i += 1) {
         const item = stackRows[i];
         const rect = (item.title || item.row).getBoundingClientRect();
@@ -61,6 +100,8 @@
       }
     }
 
+    // x-ray wipe: only the part of the product image the CTA card currently covers
+    // shows as line-art.
     if (stackLineArt && ctaCard) {
       const imgRect = stackLineArt.getBoundingClientRect();
       if (imgRect.height && imgRect.bottom > -200 && imgRect.top < vh + 200) {
@@ -73,6 +114,20 @@
         }
       }
     }
+
+    // C) card "grows" over the header near the end of its pinned hold — driven purely
+    // by scroll position (no locks, no IntersectionObserver), so it can't re-trigger
+    // itself or fight the sticky positioning like the earlier version did.
+    if (ctaCard && stickyTopPx > 0) {
+      const coverStart = ctaPinEnd - ctaCoverRange;
+      let progress = (scrollY - coverStart) / ctaCoverRange;
+      progress = Math.min(1, Math.max(0, progress));
+      const coverPx = Math.round(progress * stickyTopPx);
+      if (coverPx !== lastCover) {
+        lastCover = coverPx;
+        ctaCard.style.setProperty('--cta-cover', `${coverPx}px`);
+      }
+    }
   };
 
   const schedule = () => {
@@ -83,16 +138,10 @@
   };
   onFrame();
   window.addEventListener('scroll', schedule, { passive: true });
-  window.addEventListener('resize', schedule);
+  window.addEventListener('resize', () => { recomputeLayout(); schedule(); });
   if (stackLineArt && !stackLineArt.complete) {
-    stackLineArt.addEventListener('load', onFrame);
+    stackLineArt.addEventListener('load', () => { recomputeLayout(); onFrame(); });
   }
-
-  // CTA card lock/grow-on-scroll (IntersectionObserver + overflow:hidden toggling)
-  // was pulled out entirely — across several attempts it kept re-triggering itself
-  // (flicker), which fed bad values into the rAF loop above and made the sticky
-  // image jitter too. The card still holds at the top via plain CSS position:sticky
-  // (see .stack__cta / .stack__cta-wrap in site.css) — just no lock or grow animation.
 
   // ---------- generic reveal-on-scroll ----------
   const revealTargets = document.querySelectorAll('[data-reveal]');

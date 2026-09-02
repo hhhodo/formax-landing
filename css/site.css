@@ -85,17 +85,21 @@ img{display:block;max-width:100%;}
    zero JS/scroll-tracking (no more fragile "detect when X is behind the header" logic). */
 .nav{position:sticky;top:0;left:0;right:0;z-index:50;background:transparent;
   mix-blend-mode:difference;}
+/* solid black while over the hero (js/main.js toggles this based on scroll position) —
+   the hero is already dark so blend-mode would read white too, but a flat solid bar
+   reads cleaner than a blended one right at the very top of the page. */
+.nav.nav--solid{background:#0a0807;mix-blend-mode:normal;}
 .nav__bar{height:calc(var(--u) * 2.29);display:flex;align-items:center;justify-content:space-between;}
-.nav__logo{font-size:var(--t-body);font-weight:500;color:#222;}
+.nav__logo{font-size:var(--t-body);font-weight:500;color:#fff;}
 .nav__links{display:flex;align-items:center;gap:2px;}
 .nav__links a{display:inline-flex;align-items:center;height:calc(var(--u) * 1.21);
   padding-inline:calc(var(--u) * .57);
   font-size:var(--t-label);font-weight:500;text-transform:uppercase;
-  color:#222;}
+  color:#fff;}
 .nav__links-last{gap:calc(var(--u) * .57);}
 .nav__toggle{display:none;flex-direction:column;gap:5px;background:none;border:0;padding:6px;}
-.nav__toggle span{width:22px;height:2px;background:#222;}
-.nav .ico{background:#222;}
+.nav__toggle span{width:22px;height:2px;background:#fff;}
+.nav .ico{background:#fff;}
 
 /* ---------- hero (Figma 142:87) ----------
    bg: near-black top, bright orange bloom rising from below the bottom edge */
@@ -219,6 +223,13 @@ img{display:block;max-width:100%;}
 .stack__cta{position:sticky;top:calc(var(--u) * 2.29);z-index:2;
   height:calc(100vh - var(--u) * 2.29);display:flex;flex-direction:column;justify-content:center;
   padding:calc(var(--u) * 2);background:#0a0605;}
+/* cover: a plain block sitting flush above the card's own top edge, growing taller as
+   the user keeps scrolling near the end of the pin range (--cta-cover, px, written every
+   scroll frame — same continuous technique as the row-fill/x-ray effects, no locks or
+   observers) until it's tall enough to paint solid black behind the nav bar too. The
+   nav's own mix-blend-mode:difference then does the color flip automatically. */
+.stack__cta-cover{position:absolute;left:0;right:0;bottom:100%;
+  height:var(--cta-cover, 0px);background:#0a0605;}
 .stack__cta .mark--tl{top:0;left:0;}
 .stack__cta .mark--tr{top:0;right:0;}
 .stack__cta-title{position:relative;font-size:var(--t-h2);font-weight:400;color:var(--on-dark);
