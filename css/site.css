@@ -174,7 +174,7 @@ img{display:block;max-width:100%;}
    while pinned, .srow__title's fill color sweeps left-to-right (driven by --fill,
    set from JS scroll progress); once the row's range is used up it releases and
    the next row scrolls up to take its place and pin in turn. */
-.srow{position:sticky;top:calc(var(--u) * 2.29);min-height:160vh;display:flex;
+.srow{position:sticky;top:calc(var(--u) * 2.29);min-height:100vh;display:flex;
   flex-direction:column;justify-content:center;gap:calc(var(--u) * .8);
   padding-block:calc(var(--u) * 3);}
 .srow__body{display:grid;grid-template-columns:calc(220/1030*100%) 1fr;gap:var(--grid-gutter-lg);}
@@ -185,9 +185,9 @@ img{display:block;max-width:100%;}
   background-image:linear-gradient(90deg, var(--fillcolor) var(--fill,0%), var(--dimcolor) var(--fill,0%));
   -webkit-background-clip:text;background-clip:text;color:transparent;
   -webkit-text-fill-color:transparent;}
-.srow__title{font-size:40px;font-weight:500;}
+.srow__title{font-size:64px;font-weight:500;}
 .srow__title span{display:block;}
-.srow__copy{font-size:60px;line-height:1.25;opacity:.5;max-width:none;}
+.srow__copy{font-size:var(--t-small);line-height:1.5;opacity:.55;max-width:48ch;}
 .stack .label{font-size:24px;}
 /* tone flip: rows over the light part of the gradient use dark text, rows over
    the dark part use light text */
