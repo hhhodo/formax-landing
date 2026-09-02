@@ -153,28 +153,30 @@ img{display:block;max-width:100%;}
   background:linear-gradient(180deg,
     #f7f7f5 0%, #faead9 9%, #f6b477 20%, #ff8a2b 32%,
     #ff6d0e 45%, #d1560c 58%, #7b3409 72%, #2b1408 86%, #0a0605 100%);}
-.stack__head{position:relative;padding-block:calc(var(--u) * 1) calc(var(--u) * 3.8);}
+.stack__head{position:relative;padding-block:calc(var(--u) * 1) calc(var(--u) * 3.8);color:var(--ink);}
 .stack__head .mark{top:0;left:0;}
 .stack__title{font-size:var(--t-h2);font-weight:400;padding-top:calc(var(--u) * .57);}
 .stack__grid{flex:1;align-items:stretch;}
-.stack__list{display:flex;flex-direction:column;justify-content:space-between;
-  gap:calc(var(--u) * 1.5);}
-.srow{display:flex;flex-direction:column;gap:calc(var(--u) * .43);
-  padding-block:calc(var(--u) * 1);}
+.stack__list{display:block;}
+
+/* sticky-stacking rows: each row pins under the header and the next one scrolls
+   up to cover it, matching the Figma scroll-stack effect */
+.srow{position:sticky;top:calc(var(--u) * 2.29);display:flex;flex-direction:column;
+  gap:calc(var(--u) * .43);padding-block:calc(var(--u) * 1.3);
+  background:#0f0b09;color:var(--on-dark);}
+.srow:nth-of-type(1){z-index:1;}
+.srow:nth-of-type(2){z-index:2;}
+.srow:nth-of-type(3){z-index:3;}
+.srow:nth-of-type(4){z-index:4;}
 .srow__body{display:grid;grid-template-columns:calc(325/1030*100%) 1fr;gap:var(--grid-gutter-lg);}
-.srow__title{font-size:var(--t-row);font-weight:500;}
+.srow__title{font-size:40px;font-weight:500;}
 .srow__title span{display:block;opacity:.4;}
-.srow__copy{font-size:var(--t-small);opacity:.5;max-width:44ch;}
-/* tone flip: first rows sit on the light part of the gradient, last rows on the dark part */
-.srow:nth-of-type(1),.srow:nth-of-type(2){color:var(--ink);}
-.srow:nth-of-type(3),.srow:nth-of-type(4){color:var(--on-dark);}
-.stack__head{color:var(--ink);}
+.srow__copy{font-size:20px;opacity:.5;max-width:44ch;}
+.stack .label{font-size:24px;}
+
 .stack__visual{display:flex;align-items:center;}
 .stack__img{width:100%;height:min(calc(918 / 1920 * 100vw), 78%);min-height:260px;
-  background:
-    radial-gradient(60% 42% at 50% 22%, rgba(255,255,255,.55), rgba(255,255,255,0) 70%),
-    linear-gradient(160deg, #f6e2d2 0%, #d9a273 26%, #8d5a34 52%, #4a2a18 74%, #241209 100%);
-  background-color:#8d5a34;}
+  background:var(--color-placeholder);}
 
 /* ---------- cta (Figma 142:861) ---------- */
 .cta{background:#000;color:var(--on-dark);padding:var(--u);min-height:var(--h-cta);
