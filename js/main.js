@@ -102,23 +102,31 @@
       && !window.matchMedia('(max-width: 1024px)').matches) {
     let expanded = false;
     let locked = false;
-    let lockedScrollY = 0;
 
+    // NOTE: locking scroll via `body{position:fixed}` was tried first, but that
+    // changes body's own layout/positioning context — which broke the sticky card's
+    // "stuck" calculation the instant it engaged, making it jump to the wrong spot
+    // and expand there. overflow:hidden on <html> blocks scrolling without touching
+    // anyone's layout, so the sticky card stays exactly where it already was.
+    const preventScrollKey = (e) => {
+      if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', ' ', 'Home', 'End'].includes(e.key)) {
+        e.preventDefault();
+      }
+    };
+    const preventScrollWheel = (e) => { e.preventDefault(); };
     const lockScroll = () => {
-      lockedScrollY = window.scrollY;
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${lockedScrollY}px`;
-      document.body.style.left = '0';
-      document.body.style.right = '0';
-      document.body.style.width = '100%';
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+      window.addEventListener('wheel', preventScrollWheel, { passive: false });
+      window.addEventListener('touchmove', preventScrollWheel, { passive: false });
+      window.addEventListener('keydown', preventScrollKey);
     };
     const unlockScroll = () => {
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.left = '';
-      document.body.style.right = '';
-      document.body.style.width = '';
-      window.scrollTo(0, lockedScrollY);
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+      window.removeEventListener('wheel', preventScrollWheel);
+      window.removeEventListener('touchmove', preventScrollWheel);
+      window.removeEventListener('keydown', preventScrollKey);
     };
 
     const onTransitionEnd = (e) => {
