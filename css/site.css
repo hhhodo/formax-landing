@@ -120,12 +120,12 @@ img{display:block;max-width:100%;}
 .ico--glass{background:var(--on-dark);}
 
 /* ---------- platform (Figma 142:3419) ----------
-   bg: bright orange (was a dull tan radial — brightened per feedback) */
+   bg: real measured Figma radialGradient — pale/soft orange, not saturated */
 .platform{position:relative;min-height:var(--h-plat);display:flex;flex-direction:column;
   justify-content:center;gap:calc(var(--u) * 1.5);
   padding-block:calc(var(--u) * 3);
   background:radial-gradient(140% 78% at 50% -14%,
-    #ffb877 0%, #ff8a2b 45%, #ff6d0e 100%);}
+    rgba(231,210,196,1) 45%, rgba(253,251,247,1) 85%, rgba(247,247,245,1) 100%);}
 .platform__grid{align-items:stretch;}
 .platform__intro{position:relative;}
 .platform__intro .mark{top:0;left:0;}
