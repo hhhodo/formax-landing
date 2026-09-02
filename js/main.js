@@ -31,6 +31,8 @@
   const ctaCard = document.getElementById('cta');
   const ctaWrap = ctaCard ? ctaCard.closest('.stack__cta-wrap') : null;
   const quoteText = document.querySelector('.quote__text');
+  const quotePin = document.querySelector('.quote__pin');
+  const quoteWrap = quotePin ? quotePin.closest('.quote__pin-wrap') : null;
   let lastXray = -1;
   let lastCover = -1;
   let lastFill1 = -1;
@@ -59,6 +61,8 @@
   let ctaTitleEnd = 0;
   let ctaTitleRange = 1;
   let ctaCoverRange = 1;
+  let quotePinStart = 0;
+  let quoteFillRange = 1;
   // captured before any --cta-pad override exists, so this reads the CSS fallback
   // (calc(var(--u)*2)) resolved to real px — can't parse --u itself via
   // getComputedStyle since custom properties return their literal authored string,
@@ -86,6 +90,11 @@
       ctaTitleRange = Math.max(1, Math.min(window.innerHeight * 0.9, totalPin * 0.6));
       ctaTitleEnd = ctaPinStart + ctaTitleRange;
       ctaCoverRange = Math.max(1, ctaPinEnd - ctaTitleEnd);
+    }
+    if (quotePin && quoteWrap) {
+      quotePinStart = absoluteTop(quotePin) - stickyTopPx;
+      const quotePinEnd = absoluteTop(quoteWrap) + quoteWrap.offsetHeight - quotePin.offsetHeight - stickyTopPx;
+      quoteFillRange = Math.max(1, Math.min(window.innerHeight * 1.5, quotePinEnd - quotePinStart));
     }
   };
   recomputeLayout();

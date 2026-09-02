@@ -48,7 +48,6 @@ Footer   — 908px — 4-4-4 + giant edge-to-edge wordmark
       <a href="#stack">솔루션</a>
       <a href="#cta">사업기회</a>
       <a href="#news">뉴스</a>
-      <a href="#platform" class="nav__links-last">운영 대시보드<i class="ico"></i></a>
     </nav>
     <button class="nav__toggle" id="navToggle" aria-label="메뉴 열기" aria-expanded="false">
       <span></span><span></span><span></span>
@@ -230,14 +229,17 @@ Footer   — 908px — 4-4-4 + giant edge-to-edge wordmark
     <div class="container quote__top">
       <span class="mark" aria-hidden="true"></span>
       <span class="label">한 세대에 한 번 오는 기회</span>
-      <a href="#" class="btn btn--glass btn--sm">더 알아보기<i class="ico ico--glass"></i></a>
     </div>
-    <div class="container">
-      <p class="quote__text">
-        <span class="q-line">제조업의 디지털 전환은 이 시대 가장 확실한 <em>투자 기회</em>입니다.</span>
-        <span class="q-line">데이터로 연결된 공장이 산업의 표준 인프라가 되는 흐름은,</span>
-        <span class="q-line">이제 막 시작됐습니다.</span>
-      </p>
+    <!-- text stays PINNED (sticky) while the wrap's extra height gives the fill
+         animation room to actually finish before the section scrolls away -->
+    <div class="quote__pin-wrap">
+      <div class="container quote__pin">
+        <p class="quote__text">
+          <span class="q-line">제조업의 디지털 전환은 이 시대 가장 확실한 <em>투자 기회</em>입니다.</span>
+          <span class="q-line">데이터로 연결된 공장이 산업의 표준 인프라가 되는 흐름은,</span>
+          <span class="q-line">이제 막 시작됐습니다.</span>
+        </p>
+      </div>
     </div>
   </section>
 

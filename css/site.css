@@ -282,6 +282,10 @@ img{display:block;max-width:100%;}
 .quote__top{position:relative;display:flex;align-items:center;justify-content:space-between;
   gap:var(--u);padding-block:calc(var(--u) * .8);}
 .quote__top .mark{top:0;left:var(--gutter);}
+/* pinned while the fill plays out — min-height gives it scroll room to hold instead
+   of scrolling away before the animation finishes */
+.quote__pin-wrap{position:relative;min-height:220vh;}
+.quote__pin{position:sticky;top:calc(var(--u) * 2.8);}
 .quote__text{max-width:calc(1000 / 1920 * 100vw);min-width:280px;
   font-size:var(--t-quote);font-weight:400;padding-top:calc(var(--u) * 2.4);}
 .quote__text em{font-style:normal;}
@@ -389,6 +393,8 @@ img{display:block;max-width:100%;}
   .stack__imgwrap{max-width:340px;}
   .stack__cta-wrap{min-height:auto;margin-top:calc(var(--u) * 2);}
   .stack__cta{position:static;height:auto;padding-bottom:calc(var(--u) * 3);}
+  .quote__pin-wrap{min-height:auto;}
+  .quote__pin{position:static;}
   .hero__foot{grid-template-columns:1fr;gap:calc(var(--u) * 1);}
   .hero__card{justify-self:start;width:100%;}
   .news__headbtn,.faq__headbtn{justify-content:flex-start;}
