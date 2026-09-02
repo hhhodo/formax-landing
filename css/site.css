@@ -201,12 +201,12 @@ img{display:block;max-width:100%;}
    the dark part use light text */
 .srow:nth-of-type(1),.srow:nth-of-type(2){color:var(--ink);--fillcolor:#000;--dimcolor:rgba(0,0,0,.25);}
 .srow:nth-of-type(3),.srow:nth-of-type(4){color:var(--on-dark);--fillcolor:#f3f3f3;--dimcolor:rgba(243,243,243,.25);}
-:root{--product-w:520px;}
+:root{--product-w:760px;}
 .stack__img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;}
 /* line-art copy starts fully clipped away; JS sets clip-path every scroll frame to
    inset(<distance from image top down to the card's top edge>) so it is revealed
    exactly as far as the card has covered the photo — no more, no less */
-.stack__img--line{filter:url(#lineArt);clip-path:inset(100% 0 0 0);}
+.stack__img--line{clip-path:inset(100% 0 0 0);}
 
 /* CTA card — full-width grid row below the list, opaque so it genuinely covers the
    pinned photo as it rises */

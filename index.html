@@ -40,17 +40,6 @@ Footer   — 908px — 4-4-4 + giant edge-to-edge wordmark
 <link rel="stylesheet" href="css/site.css">
 </head>
 <body>
-<!-- edge-detection filter applied to the SAME product photo in the CTA section,
-     so the wireframe there is genuinely derived from that image, not a redrawn icon -->
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <filter id="lineArt" color-interpolation-filters="sRGB">
-    <feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0"/>
-    <feConvolveMatrix order="3" preserveAlpha="true"
-      kernelMatrix="-1 -1 -1 -1 8 -1 -1 -1 -1"/>
-    <feComponentTransfer><feFuncA type="linear" slope="6"/></feComponentTransfer>
-  </filter>
-</svg>
-
 <header class="nav" id="nav">
   <div class="container nav__bar">
     <a href="#top" class="nav__logo">FORMAX</a>
@@ -166,7 +155,7 @@ Footer   — 908px — 4-4-4 + giant edge-to-edge wordmark
     </div>
 
     <div class="container grid stack__grid">
-      <div class="gcell stack__list" style="grid-column:1/9;grid-row:1">
+      <div class="gcell stack__list" style="grid-column:1/8;grid-row:1">
         <div class="srow">
           <span class="label">ENGINEERING</span>
           <div class="srow__body">
@@ -204,7 +193,7 @@ Footer   — 908px — 4-4-4 + giant edge-to-edge wordmark
            3. lineart (z-3) — sits ON the card, clipped by JS to exactly the region
                               the card currently covers, so only the covered part of
                               the image turns into wireframe -->
-      <div class="gcell stack__visual" style="grid-column:9/13;grid-row:1/3">
+      <div class="gcell stack__visual" style="grid-column:8/13;grid-row:1/3">
         <div class="stack__imgwrap">
           <img class="stack__img stack__img--photo" src="assets/images/stack-product.png" alt="FORMAX CNC 가공 부품">
         </div>
@@ -217,9 +206,9 @@ Footer   — 908px — 4-4-4 + giant edge-to-edge wordmark
         <h2 class="stack__cta-title">모두를 위한 제조,<br><span>복합적으로 확장되는 생산성.</span></h2>
       </div>
 
-      <div class="gcell stack__visual stack__visual--line" style="grid-column:9/13;grid-row:1/3" aria-hidden="true">
+      <div class="gcell stack__visual stack__visual--line" style="grid-column:8/13;grid-row:1/3" aria-hidden="true">
         <div class="stack__imgwrap">
-          <img class="stack__img stack__img--line" id="stackLineArt" src="assets/images/stack-product.png" alt="">
+          <img class="stack__img stack__img--line" id="stackLineArt" src="assets/images/stack-product-line.png" alt="">
         </div>
       </div>
     </div>
