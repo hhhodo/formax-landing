@@ -104,6 +104,10 @@
   if (ctaSentinel && ctaCard && 'IntersectionObserver' in window && !reduceMotion && desktop) {
     let locked = false;
     let expanded = false;
+    let everSeen = false; // guards the observer's initial callback: on page load the
+    // sentinel is far below the fold, so isIntersecting is false from the very start —
+    // indistinguishable from "scrolled past upward" unless we first confirm it was ever
+    // actually visible. Without this, the card expanded + locked scroll immediately on load.
     const GROW_MS = 450;
 
     const preventKey = (e) => {
@@ -133,7 +137,8 @@
     const ctaObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          const stuck = !entry.isIntersecting;
+          if (entry.isIntersecting) everSeen = true;
+          const stuck = everSeen && !entry.isIntersecting;
           if (stuck && !expanded && !locked) {
             // how much taller than its own box the card must grow to also cover
             // the header strip above it
