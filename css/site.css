@@ -135,7 +135,7 @@ img{display:block;max-width:100%;}
   justify-content:center;gap:calc(var(--u) * 1.5);
   padding-block:var(--space-12);
   background:radial-gradient(140% 78% at 50% -14%,
-    rgba(231,210,196,1) 45%, rgba(253,251,247,1) 85%, rgba(247,247,245,1) 100%);}
+    #ffcd9c 0%, #ffe3c2 45%, #fef7ee 80%, #fbf8f4 100%);}
 .platform__grid{align-items:stretch;}
 .platform__intro{position:relative;}
 .platform__intro .mark{top:0;left:0;}
@@ -167,7 +167,11 @@ img{display:block;max-width:100%;}
 .pcard__title{font-size:var(--t-card);font-weight:500;}
 .pcard__copy{font-size:20px;opacity:.7;}
 /* order:2 puts the image on the RIGHT, text on the left (was the reverse) */
-.pcard__img{order:2;width:calc(266/603*100%);flex:none;overflow:hidden;}
+/* background:#fff + isolation:isolate give the multiply blend below a neutral white
+   surface of its own to blend against — without them it was blending straight through
+   the near-transparent card onto the section's orange gradient, tinting the metal orange */
+.pcard__img{order:2;width:calc(266/603*100%);flex:none;overflow:hidden;
+  background:#fff;isolation:isolate;}
 .pcard__text{order:1;}
 /* these photos have a plain white studio background; multiply-blending them onto the
    card's own background makes the white read as transparent (white*bg=bg) without
