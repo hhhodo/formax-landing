@@ -161,14 +161,16 @@ img{display:block;max-width:100%;}
    so it lands at the same inset as the others instead of flush against the true edge */
 .stack__head .mark{top:0;left:var(--gutter);}
 .stack__title{font-size:var(--t-h2);font-weight:400;padding-top:calc(var(--u) * .57);}
-.stack{padding-block:var(--space-12);}
+.stack{padding-top:var(--space-12);padding-bottom:0;}
 .stack__grid{align-items:stretch;}
 .stack__list{display:block;}
 
-/* right visual pins in place while the left column scrolls past it */
-.stack__visual{position:sticky;top:calc(var(--u) * 2.29);align-self:flex-start;
-  height:calc(100vh - var(--u) * 2.29);max-height:calc(918 / 1920 * 100vw + 200px);
-  display:flex;align-items:center;}
+/* right visual: normal flow, NOT sticky — a sticky box stays pinned near the viewport
+   top while scrolling and releases at an unpredictable point, which was leaving a huge
+   dead gap before CTA's wireframe (they were never actually adjacent). Stretched to the
+   full column height instead, so its bottom edge sits exactly at the section's end,
+   flush against CTA's visual that follows immediately after in the document. */
+.stack__visual{align-self:stretch;display:flex;align-items:flex-end;}
 
 /* left rows: NORMAL flow (position:sticky per-row was causing two adjacent rows to
    render pinned at once — an overlapping-text bug — because a 100vh-tall sticky row
@@ -195,18 +197,19 @@ img{display:block;max-width:100%;}
    the dark part use light text */
 .srow:nth-of-type(1),.srow:nth-of-type(2){color:var(--ink);--fillcolor:#000;--dimcolor:rgba(0,0,0,.25);}
 .srow:nth-of-type(3),.srow:nth-of-type(4){color:var(--on-dark);--fillcolor:#f3f3f3;--dimcolor:rgba(243,243,243,.25);}
-.stack__img{width:100%;height:min(calc(918 / 1920 * 100vw), 78%);min-height:260px;
+.stack__img{width:100%;height:auto;align-self:stretch;flex:1;min-height:260px;
   background:var(--color-placeholder);}
 
 /* ---------- cta (Figma 142:861) ----------
-   Pulled up over the bottom of Stack (negative margin-top, higher z-index, same
-   near-black bg) so the wireframe visual reads as Stack's product image continuing
-   down in outline form instead of a hard section break. */
-.cta{position:relative;z-index:2;background:#000;color:var(--on-dark);
-  padding:var(--u);min-height:var(--h-cta);margin-top:calc(var(--u) * -6);
+   No gap, no margin trick: Stack's bottom padding is 0 and this section's top padding
+   is 0 too, so its wireframe visual sits flush against Stack's image with nothing
+   between them — that adjacency alone reads as the image continuing into outline form. */
+.cta{background:#000;color:var(--on-dark);
+  padding-inline:var(--u);padding-top:0;padding-bottom:var(--u);min-height:var(--h-cta);
   display:flex;}
 .cta__box{position:relative;flex:1;display:flex;align-items:stretch;justify-content:space-between;
-  gap:var(--u);padding:calc(var(--u) * 1);background:rgba(240,239,238,.04);overflow:hidden;}
+  gap:var(--u);padding-inline:calc(var(--u) * 1);padding-block:0 calc(var(--u) * 1);
+  background:rgba(240,239,238,.04);overflow:hidden;}
 .cta__box .mark--tl{top:0;left:0;}
 .cta__box .mark--tr{top:0;right:0;}
 .cta__copy{position:relative;display:flex;flex-direction:column;justify-content:center;
@@ -216,7 +219,7 @@ img{display:block;max-width:100%;}
 .cta__title span{color:rgba(242,242,242,.4);}
 .cta__visual{width:calc(760/1864*100%);min-width:240px;align-self:stretch;
   display:flex;align-items:flex-start;justify-content:center;overflow:hidden;}
-.cta__visual svg{width:100%;height:auto;max-width:420px;margin-top:calc(var(--u) * -3);}
+.cta__visual svg{width:100%;height:auto;max-width:420px;}
 
 /* ---------- quote (Figma 142:1088) ----------
    text sits at the TOP; a huge orange bloom fills the rest of the (very tall) section */
@@ -319,7 +322,7 @@ img{display:block;max-width:100%;}
   .platform__grid > .gcell,.stack__grid > .gcell,.news__head > .gcell,
   .faq__head > .gcell,.faq__list,.footer__grid > .gcell{grid-column:1/13!important;}
   .platform__cards{gap:var(--grid-gutter-lg);}
-  .stack__visual{order:-1;position:static;height:auto;}
+  .stack__visual{order:-1;}
   .stack__img{height:calc(420 / 1920 * 100vw);}
   .cta__box{flex-direction:column;}
   .cta__visual{width:100%;}
