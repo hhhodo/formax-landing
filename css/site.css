@@ -79,9 +79,7 @@ img{display:block;max-width:100%;}
   font-size:var(--t-label);text-transform:uppercase;font-weight:500;}
 .topbar a{color:var(--on-dark);text-decoration:underline;}
 
-.nav{position:sticky;top:0;left:0;right:0;z-index:50;background:transparent;
-  transition:background .2s ease;}
-.nav.is-scrolled{background:#0b0908;}
+.nav{position:sticky;top:0;left:0;right:0;z-index:50;background:#0b0908;}
 .nav__bar{height:calc(var(--u) * 2.29);display:flex;align-items:center;justify-content:space-between;}
 .nav__logo{font-size:var(--t-body);font-weight:500;color:var(--on-dark);}
 .nav__links{display:flex;align-items:center;gap:2px;}
@@ -133,18 +131,19 @@ img{display:block;max-width:100%;}
 .platform__intro .mark{top:0;left:0;}
 .platform__title{font-size:var(--t-h2);font-weight:400;padding-top:calc(var(--u) * 1);}
 
-/* center column: plain bright-orange box, image to be dropped in later */
+/* center column: original black->orange gradient box, text removed, image to be dropped in later */
 .panel{height:100%;min-height:calc(430 / 1920 * 100vw);
-  background:linear-gradient(160deg, #ff9a3d 0%, #ff6d0e 100%);}
+  background:linear-gradient(180deg, #16110e 0%, #1b1310 42%, #6d3410 76%, #c9722c 92%, #e0accd 100%);
+  background-color:#16110e;}
 
 .platform__cards{display:flex;flex-direction:column;gap:var(--grid-gutter-lg);}
-.pcard{flex:1;display:flex;flex-direction:column;gap:calc(var(--u) * .57);
-  padding:calc(var(--u) * .71);background:rgba(0,0,0,.03);min-height:calc(208 / 1920 * 100vw);}
-.pcard__text{display:flex;flex-direction:column;gap:calc(var(--u) * .29);}
-.pcard__title{font-size:var(--t-body);font-weight:500;}
-.pcard__copy{font-size:var(--t-small);opacity:.7;}
-.pcard__img{width:100%;flex:1;min-height:60px;background:
-  linear-gradient(135deg, rgba(255,109,14,.16), rgba(0,0,0,.05));}
+.pcard{flex:1;display:flex;gap:calc(var(--u) * .71);padding:calc(var(--u) * .71);
+  background:rgba(0,0,0,.03);min-height:calc(208 / 1920 * 100vw);}
+.pcard__text{display:flex;flex-direction:column;gap:calc(var(--u) * .43);flex:1;}
+.pcard__title{font-size:28px;font-weight:500;}
+.pcard__copy{font-size:20px;opacity:.7;}
+.pcard__img{width:calc(266/603*100%);flex:none;background:
+  linear-gradient(135deg, rgba(255,109,14,.10), rgba(0,0,0,.05));}
 
 /* ---------- stack (Figma 142:241) ----------
    bg runs light → orange → black top-to-bottom; text flips from dark to light with it */
