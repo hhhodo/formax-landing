@@ -81,12 +81,12 @@
       }
     }
 
-    // B) row title color-fill: band centered on the viewport's vertical middle
-    // (0.62/0.38 was too narrow — 0.24vh of scroll made the sweep feel instant).
-    // Widened so it still finishes as the title crosses screen-center, but the
-    // sweep itself is actually visible/slow.
+    // B) row title color-fill STARTS exactly at screen-center (not while still
+    // entering from below) and finishes as it continues up toward the top —
+    // so the sweep is something you actually watch happen, not something that's
+    // already half-done by the time the title reaches the middle.
     if (!reduceMotion) {
-      const startAt = vh * 0.85;
+      const startAt = vh * 0.5;
       const endAt = vh * 0.15;
       for (let i = 0; i < stackRows.length; i += 1) {
         const item = stackRows[i];
