@@ -165,13 +165,15 @@ img{display:block;max-width:100%;}
 .stack__grid{align-items:stretch;}
 .stack__list{display:block;}
 
-/* right image PINS in place (position:sticky) for the FULL height of this column —
-   which now spans the 4 rows AND the CTA card, since the CTA card is merged into
-   .stack__list as normal-flow content below the rows instead of being a separate
-   section. So the image stays genuinely frozen at the same screen position the
-   whole time; only the CTA card (normal flow, left column) scrolls up past it. */
+/* right image PINS in place (position:sticky) across BOTH grid rows — the list row
+   and the CTA card row — so it stays frozen at one screen position the whole time.
+   Two copies sit in the same grid area: the photo UNDER the card (z-1, gets covered)
+   and the line-art ON TOP of the card (z-3, clipped by JS to exactly the covered
+   region). The card itself is z-2 in between. */
 .stack__visual{position:sticky;top:calc(var(--u) * 2.29);align-self:flex-start;
-  height:calc(100vh - var(--u) * 2.29);display:flex;align-items:center;justify-content:center;}
+  height:calc(100vh - var(--u) * 2.29);display:flex;align-items:center;justify-content:center;
+  z-index:1;}
+.stack__visual--line{z-index:3;pointer-events:none;}
 .stack__imgwrap{position:relative;width:100%;max-width:var(--product-w);aspect-ratio:1/1;}
 
 /* left rows: NORMAL flow (position:sticky per-row was causing two adjacent rows to
@@ -200,24 +202,21 @@ img{display:block;max-width:100%;}
 .srow:nth-of-type(1),.srow:nth-of-type(2){color:var(--ink);--fillcolor:#000;--dimcolor:rgba(0,0,0,.25);}
 .srow:nth-of-type(3),.srow:nth-of-type(4){color:var(--on-dark);--fillcolor:#f3f3f3;--dimcolor:rgba(243,243,243,.25);}
 :root{--product-w:520px;}
-/* the two images sit exactly on top of each other (absolute, inset:0) and crossfade
-   via opacity — .stack__imgwrap.is-xray is toggled by an IntersectionObserver on
-   the CTA card (js/main.js), reversible both ways as you scroll past it */
-.stack__img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;
-  transition:opacity .5s ease;}
-.stack__img--photo{opacity:1;}
-.stack__img--line{opacity:0;filter:url(#lineArt);}
-.stack__imgwrap.is-xray .stack__img--photo{opacity:0;}
-.stack__imgwrap.is-xray .stack__img--line{opacity:.9;}
+.stack__img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;}
+/* line-art copy starts fully clipped away; JS sets clip-path every scroll frame to
+   inset(<distance from image top down to the card's top edge>) so it is revealed
+   exactly as far as the card has covered the photo — no more, no less */
+.stack__img--line{filter:url(#lineArt);clip-path:inset(100% 0 0 0);}
 
-/* CTA card — merged into .stack__list as normal-flow content right after the rows,
-   in the SAME (left) column as the rows, not overlapping the sticky image's column.
-   Styled as a distinct dark card so it still visibly "rises" over the section. */
-.stack__cta{position:relative;margin-top:calc(var(--u) * 2);padding:calc(var(--u) * 2);
-  padding-bottom:calc(var(--u) * 6);background:rgba(0,0,0,.35);overflow:hidden;}
+/* CTA card — full-width grid row below the list, opaque so it genuinely covers the
+   pinned photo as it rises */
+.stack__cta{position:relative;z-index:2;margin-top:calc(var(--u) * 4);
+  padding:calc(var(--u) * 2);padding-bottom:calc(var(--u) * 8);
+  min-height:70vh;background:#0a0605;overflow:hidden;}
 .stack__cta .mark--tl{top:0;left:0;}
 .stack__cta .mark--tr{top:0;right:0;}
-.stack__cta-title{font-size:var(--t-h2);font-weight:400;color:var(--on-dark);}
+.stack__cta-title{font-size:var(--t-h2);font-weight:400;color:var(--on-dark);
+  max-width:calc(530 / 1920 * 100vw);min-width:280px;}
 .stack__cta-title span{color:rgba(242,242,242,.4);}
 
 /* ---------- quote (Figma 142:1088) ----------
@@ -321,8 +320,14 @@ img{display:block;max-width:100%;}
   .platform__grid > .gcell,.stack__grid > .gcell,.news__head > .gcell,
   .faq__head > .gcell,.faq__list,.footer__grid > .gcell{grid-column:1/13!important;}
   .platform__cards{gap:var(--grid-gutter-lg);}
+  /* single column: drop the x-ray overlay layer entirely and let the photo sit
+     inline above the rows (the wipe only makes sense in the two-column pinned layout) */
+  .stack__grid > .gcell{grid-row:auto!important;}
   .stack__visual{order:-1;position:static;height:auto;padding-block:calc(var(--u) * 2);}
+  .stack__visual--line{display:none;}
   .stack__imgwrap{max-width:340px;}
+  .stack__cta{min-height:auto;margin-top:calc(var(--u) * 2);
+    padding-bottom:calc(var(--u) * 3);}
   .hero__foot{grid-template-columns:1fr;gap:calc(var(--u) * 1);}
   .hero__card{justify-self:start;width:100%;}
   .news__headbtn,.faq__headbtn{justify-content:flex-start;}

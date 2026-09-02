@@ -60,20 +60,35 @@
     }
   }
 
-  // ---------- stack: crossfade the sticky image to its x-ray/line-art render while
-  // the CTA card is on screen (image itself never moves — it's still sticky/frozen) ----------
-  const stackImgWrap = document.getElementById('stackImgWrap');
+  // ---------- stack: x-ray wipe ----------
+  // The photo is pinned (sticky) and the CTA card rises over it. The line-art copy of
+  // the SAME image sits above the card and is clipped to start exactly at the card's
+  // top edge — so only the part of the image the card currently covers shows as
+  // wireframe, and the boundary tracks the card as it scrolls.
+  const stackLineArt = document.getElementById('stackLineArt');
   const stackCta = document.getElementById('cta');
-  if (stackImgWrap && stackCta && 'IntersectionObserver' in window) {
-    const xrayObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          stackImgWrap.classList.toggle('is-xray', entry.isIntersecting);
-        });
-      },
-      { threshold: 0, rootMargin: '-45% 0px -45% 0px' }
-    );
-    xrayObserver.observe(stackCta);
+  if (stackLineArt && stackCta) {
+    let xrayTicking = false;
+    const updateXray = () => {
+      xrayTicking = false;
+      const imgRect = stackLineArt.getBoundingClientRect();
+      if (!imgRect.height) return;
+      const cardTop = stackCta.getBoundingClientRect().top;
+      let boundary = cardTop - imgRect.top;
+      boundary = Math.min(Math.max(boundary, 0), imgRect.height);
+      stackLineArt.style.clipPath = `inset(${boundary.toFixed(1)}px 0 0 0)`;
+    };
+    const scheduleXray = () => {
+      if (!xrayTicking) {
+        xrayTicking = true;
+        requestAnimationFrame(updateXray);
+      }
+    };
+    updateXray();
+    window.addEventListener('scroll', scheduleXray, { passive: true });
+    window.addEventListener('resize', scheduleXray);
+    if (stackLineArt.complete) updateXray();
+    else stackLineArt.addEventListener('load', updateXray);
   }
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
