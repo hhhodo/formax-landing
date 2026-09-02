@@ -199,11 +199,16 @@ Footer   — 908px — 4-4-4 + giant edge-to-edge wordmark
         </div>
       </div>
 
-      <!-- CTA card: full-width row below the list, rises up over the pinned image -->
-      <div class="gcell stack__cta" id="cta" style="grid-column:1/13;grid-row:2">
-        <span class="mark mark--tl" aria-hidden="true"></span>
-        <span class="mark mark--tr" aria-hidden="true"></span>
-        <h2 class="stack__cta-title">모두를 위한 제조,<br><span>복합적으로 확장되는 생산성.</span></h2>
+      <!-- CTA card: rises up covering the pinned image, then once it reaches the top
+           of the viewport it LOCKS there (sticky) filling the whole screen black and
+           holds for a beat before releasing into the next section. The wrap below
+           gives it the extra scroll room to hold that lock. -->
+      <div class="gcell stack__cta-wrap" style="grid-column:1/13;grid-row:2">
+        <div class="stack__cta" id="cta">
+          <span class="mark mark--tl" aria-hidden="true"></span>
+          <span class="mark mark--tr" aria-hidden="true"></span>
+          <h2 class="stack__cta-title">모두를 위한 제조,<br><span>복합적으로 확장되는 생산성.</span></h2>
+        </div>
       </div>
 
       <div class="gcell stack__visual stack__visual--line" style="grid-column:8/13;grid-row:1/3" aria-hidden="true">
