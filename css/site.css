@@ -177,12 +177,17 @@ img{display:block;max-width:100%;}
 .srow{position:sticky;top:calc(var(--u) * 2.29);min-height:160vh;display:flex;
   flex-direction:column;justify-content:center;gap:calc(var(--u) * .8);
   padding-block:calc(var(--u) * 3);}
-.srow__body{display:grid;grid-template-columns:calc(325/1030*100%) 1fr;gap:var(--grid-gutter-lg);}
-.srow__title{font-size:40px;font-weight:500;
+.srow__body{display:grid;grid-template-columns:calc(220/1030*100%) 1fr;gap:var(--grid-gutter-lg);}
+/* fill-clip must be declared on BOTH the title and its <span> — a child element
+   only inherits `color`, not the parent's own clipped background, so without its
+   own background-image the span rendered fully invisible instead of dim/filled */
+.srow__title,.srow__title span{
   background-image:linear-gradient(90deg, var(--fillcolor) var(--fill,0%), var(--dimcolor) var(--fill,0%));
-  -webkit-background-clip:text;background-clip:text;color:transparent;}
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  -webkit-text-fill-color:transparent;}
+.srow__title{font-size:40px;font-weight:500;}
 .srow__title span{display:block;}
-.srow__copy{font-size:20px;opacity:.5;max-width:44ch;}
+.srow__copy{font-size:60px;line-height:1.25;opacity:.5;max-width:none;}
 .stack .label{font-size:24px;}
 /* tone flip: rows over the light part of the gradient use dark text, rows over
    the dark part use light text */
