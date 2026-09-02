@@ -170,11 +170,13 @@ img{display:block;max-width:100%;}
    dead gap before CTA's wireframe (they were never actually adjacent). Stretched to the
    full column height instead, so its bottom edge sits exactly at the section's end,
    flush against CTA's visual that follows immediately after in the document. */
-/* the real product photo is a plain 1:1 square shot, not a tall canister — sit it at
-   the bottom of the column at its own natural (capped) size instead of stretching a
-   placeholder box to fill the whole tall column height */
-.stack__visual{align-self:stretch;display:flex;align-items:flex-end;justify-content:center;
-  padding-bottom:calc(var(--u) * 2);}
+/* right image PINS in place (position:sticky) while the left column scrolls past it.
+   It releases exactly when Stack's content ends — since Stack/CTA now sit flush with
+   zero gap between them, CTA's own dark panel rises up and visibly covers the image
+   at that exact moment, right where the line-art wireframe (in the same column
+   position) takes over — a photo -> line-art "hand-off" instead of a dead gap. */
+.stack__visual{position:sticky;top:calc(var(--u) * 2.29);align-self:flex-start;
+  height:calc(100vh - var(--u) * 2.29);display:flex;align-items:center;justify-content:center;}
 
 /* left rows: NORMAL flow (position:sticky per-row was causing two adjacent rows to
    render pinned at once — an overlapping-text bug — because a 100vh-tall sticky row
@@ -221,9 +223,11 @@ img{display:block;max-width:100%;}
 .cta__copy .mark{top:0;left:0;}
 .cta__title{font-size:var(--t-h2);font-weight:400;padding-top:calc(var(--u) * 1);}
 .cta__title span{color:rgba(242,242,242,.4);}
-.cta__visual{width:calc(760/1864*100%);min-width:240px;align-self:stretch;
-  display:flex;align-items:flex-start;justify-content:center;overflow:hidden;}
-.cta__visual svg{width:100%;height:auto;max-width:420px;}
+/* same column proportion as Stack's sticky image (~1/3 of the row) so the wireframe
+   lands in the same place the photo just was */
+.cta__visual{width:calc(4/12*100%);min-width:240px;align-self:stretch;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.cta__visual svg{width:100%;height:auto;max-width:440px;}
 
 /* ---------- quote (Figma 142:1088) ----------
    text sits at the TOP; a huge orange bloom fills the rest of the (very tall) section */
@@ -326,7 +330,7 @@ img{display:block;max-width:100%;}
   .platform__grid > .gcell,.stack__grid > .gcell,.news__head > .gcell,
   .faq__head > .gcell,.faq__list,.footer__grid > .gcell{grid-column:1/13!important;}
   .platform__cards{gap:var(--grid-gutter-lg);}
-  .stack__visual{order:-1;}
+  .stack__visual{order:-1;position:static;height:auto;padding-block:calc(var(--u) * 2);}
   .stack__img{max-width:340px;}
   .cta__box{flex-direction:column;}
   .cta__visual{width:100%;}
