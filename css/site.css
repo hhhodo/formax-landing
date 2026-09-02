@@ -61,8 +61,8 @@ img{display:block;max-width:100%;}
   margin-right:calc(var(--u) * -.57);position:relative;}
 .btn--light .ico--accent::after{content:"";position:absolute;inset:0;margin:auto;
   width:16px;height:16px;background:var(--on-dark);}
-.btn--glass{background:rgba(240,239,238,.1);color:var(--on-dark);
-  backdrop-filter:blur(20px);padding-inline:calc(var(--u) * .57);}
+.btn--glass{background:rgba(240,239,238,.14);color:var(--on-dark);
+  padding-inline:calc(var(--u) * .57);}
 .btn--tint{background:rgba(0,0,0,.1);color:var(--ink);padding-inline:calc(var(--u) * .57);}
 .btn--panel{background:rgba(255,255,255,.85);color:var(--ink);justify-content:space-between;
   width:100%;padding-inline:calc(var(--u) * .57);}
@@ -84,7 +84,7 @@ img{display:block;max-width:100%;}
 .nav__logo{font-size:var(--t-body);font-weight:500;color:var(--on-dark);}
 .nav__links{display:flex;align-items:center;gap:2px;}
 .nav__links a{display:inline-flex;align-items:center;height:calc(var(--u) * 1.21);
-  padding-inline:calc(var(--u) * .57);background:rgba(240,239,238,.1);backdrop-filter:blur(20px);
+  padding-inline:calc(var(--u) * .57);background:rgba(240,239,238,.14);
   font-size:var(--t-label);font-weight:500;text-transform:uppercase;
   color:var(--on-dark);}
 .nav__links-last{gap:calc(var(--u) * .57);}
@@ -110,7 +110,7 @@ img{display:block;max-width:100%;}
 .hero__foot{display:grid;grid-template-columns:repeat(3, 1fr);
   gap:var(--grid-gutter-lg);align-items:stretch;}
 .hero__card{position:relative;display:flex;flex-direction:column;justify-content:space-between;
-  background:rgba(41,39,38,.45);backdrop-filter:blur(20px);
+  background:rgba(41,39,38,.62);
   padding:calc(var(--u) * .71);width:100%;min-height:calc(var(--u) * 4.2);}
 .hero__card .mark{top:0;left:0;}
 .hero__card-top{display:flex;justify-content:space-between;align-items:center;}
@@ -214,10 +214,17 @@ img{display:block;max-width:100%;}
 .stack__cta-sentinel{position:absolute;top:0;left:0;width:1px;height:1px;}
 .stack__cta{position:sticky;top:calc(var(--u) * 2.29);z-index:2;
   height:calc(100vh - var(--u) * 2.29);display:flex;flex-direction:column;justify-content:center;
-  padding:calc(var(--u) * 2);background:#0a0605;overflow:hidden;}
+  padding:calc(var(--u) * 2);}
+/* the card's black surface is its own layer so it can GROW past the card's own box
+   (up over the header) without touching layout — it's a solid rect being translated
+   /scaled on the GPU, so the growth costs nothing per frame. Sharp corners, no radius. */
+.stack__cta::before{content:"";position:absolute;inset:0;z-index:-1;background:#0a0605;
+  transform-origin:50% 100%;transform:scaleY(1);
+  transition:transform .45s cubic-bezier(.4,0,.2,1);}
+.stack__cta.is-expanded::before{transform:scaleY(var(--cta-grow,1.06));}
 .stack__cta .mark--tl{top:0;left:0;}
 .stack__cta .mark--tr{top:0;right:0;}
-.stack__cta-title{font-size:var(--t-h2);font-weight:400;color:var(--on-dark);
+.stack__cta-title{position:relative;font-size:var(--t-h2);font-weight:400;color:var(--on-dark);
   max-width:calc(530 / 1920 * 100vw);min-width:280px;}
 .stack__cta-title span{color:rgba(242,242,242,.4);}
 

@@ -3,12 +3,6 @@
   const navToggle = document.getElementById('navToggle');
   const navLinks = document.getElementById('navLinks');
 
-  const onScroll = () => {
-    nav.classList.toggle('is-scrolled', window.scrollY > 40);
-  };
-  onScroll();
-  window.addEventListener('scroll', onScroll, { passive: true });
-
   navToggle.addEventListener('click', () => {
     const isOpen = navLinks.classList.toggle('is-open');
     navToggle.setAttribute('aria-expanded', String(isOpen));
@@ -21,117 +15,139 @@
     });
   });
 
-  // ---------- stack section: title color-fill tracks live scroll position ----------
-  // Rows are normal-flow (not sticky), so getBoundingClientRect() genuinely changes
-  // every scroll tick — safe to use directly, unlike the earlier sticky version where
-  // it stayed frozen while pinned. Fill starts as the row's title enters the lower
-  // part of the viewport and finishes as it approaches the upper part, so the sweep
-  // is visible for the whole time the row is comfortably on screen.
-  const stackRows = document.querySelectorAll('.stack .srow');
-  if (stackRows.length) {
-    const reduceMotionStack = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduceMotionStack) {
-      stackRows.forEach((row) => row.style.setProperty('--fill', '100%'));
-    } else {
-      let stackTicking = false;
-      const updateStackFill = () => {
-        stackTicking = false;
-        const vh = window.innerHeight;
-        const startAt = vh * 0.85;
-        const endAt = vh * 0.25;
-        stackRows.forEach((row) => {
-          const title = row.querySelector('.srow__title');
-          const rect = (title || row).getBoundingClientRect();
-          const anchor = rect.top + rect.height / 2;
-          let progress = (startAt - anchor) / (startAt - endAt);
-          progress = Math.min(1, Math.max(0, progress));
-          row.style.setProperty('--fill', `${(progress * 100).toFixed(1)}%`);
-        });
-      };
-      const scheduleStackFill = () => {
-        if (!stackTicking) {
-          stackTicking = true;
-          requestAnimationFrame(updateStackFill);
-        }
-      };
-      updateStackFill();
-      window.addEventListener('scroll', scheduleStackFill, { passive: true });
-      window.addEventListener('resize', scheduleStackFill);
-    }
-  }
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const desktop = !window.matchMedia('(max-width: 1024px)').matches;
 
-  // ---------- stack: x-ray wipe ----------
-  // The photo is pinned (sticky) and the CTA card rises over it. The line-art copy of
-  // the SAME image sits above the card and is clipped to start exactly at the card's
-  // top edge — so only the part of the image the card currently covers shows as
-  // wireframe, and the boundary tracks the card as it scrolls.
+  // =====================================================================
+  // ONE scroll loop for everything. Previously nav / row-fill / x-ray each
+  // registered their own scroll listener with their own rAF, so every frame
+  // ran three callbacks and wrote styles even for elements far off screen —
+  // and they wrote sub-pixel values (.toFixed(1)), forcing a repaint of the
+  // text-clipped gradients and the 800px image on changes nobody can see.
+  // Now: single rAF, skip anything off screen, round to whole units, and
+  // bail out entirely when the value hasn't actually changed.
+  // =====================================================================
+  const stackRows = [...document.querySelectorAll('.stack .srow')].map((row) => ({
+    row,
+    title: row.querySelector('.srow__title'),
+    last: -1,
+  }));
   const stackLineArt = document.getElementById('stackLineArt');
-  const stackCta = document.getElementById('cta');
-  if (stackLineArt && stackCta) {
-    let xrayTicking = false;
-    const updateXray = () => {
-      xrayTicking = false;
-      const imgRect = stackLineArt.getBoundingClientRect();
-      if (!imgRect.height) return;
-      const cardTop = stackCta.getBoundingClientRect().top;
-      let boundary = cardTop - imgRect.top;
-      boundary = Math.min(Math.max(boundary, 0), imgRect.height);
-      stackLineArt.style.clipPath = `inset(${boundary.toFixed(1)}px 0 0 0)`;
-    };
-    const scheduleXray = () => {
-      if (!xrayTicking) {
-        xrayTicking = true;
-        requestAnimationFrame(updateXray);
-      }
-    };
-    updateXray();
-    window.addEventListener('scroll', scheduleXray, { passive: true });
-    window.addEventListener('resize', scheduleXray);
-    if (stackLineArt.complete) updateXray();
-    else stackLineArt.addEventListener('load', updateXray);
+  const ctaCard = document.getElementById('cta');
+  let lastNavScrolled = null;
+  let lastXray = -1;
+  let ticking = false;
+
+  if (reduceMotion) {
+    stackRows.forEach(({ row }) => row.style.setProperty('--fill', '100%'));
   }
 
-  // ---------- stack: CTA card holds scroll briefly once it locks to the top ----------
-  // A 1px sentinel sits right above the sticky card. When it scrolls out of view the
-  // card has just become "stuck" at the top — that's the trigger to hold scroll for a
-  // moment. No animation on the card itself (it doesn't move or resize — it's already
-  // full-bleed and sharp-cornered like every other card on this page).
-  const ctaSentinel = document.querySelector('.stack__cta-sentinel');
-  const ctaCard = document.getElementById('cta');
-  if (ctaSentinel && ctaCard && 'IntersectionObserver' in window
-      && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      && !window.matchMedia('(max-width: 1024px)').matches) {
-    let locked = false;
-    const HOLD_MS = 450;
+  const onFrame = () => {
+    ticking = false;
+    const vh = window.innerHeight;
 
-    const preventScrollKey = (e) => {
+    const scrolled = window.scrollY > 40;
+    if (scrolled !== lastNavScrolled) {
+      lastNavScrolled = scrolled;
+      nav.classList.toggle('is-scrolled', scrolled);
+    }
+
+    if (!reduceMotion) {
+      const startAt = vh * 0.85;
+      const endAt = vh * 0.25;
+      for (let i = 0; i < stackRows.length; i += 1) {
+        const item = stackRows[i];
+        const rect = (item.title || item.row).getBoundingClientRect();
+        if (rect.bottom < -200 || rect.top > vh + 200) continue; // off screen: skip
+        const anchor = rect.top + rect.height / 2;
+        let pct = Math.round(((startAt - anchor) / (startAt - endAt)) * 100);
+        pct = Math.min(100, Math.max(0, pct));
+        if (pct !== item.last) {
+          item.last = pct;
+          item.row.style.setProperty('--fill', `${pct}%`);
+        }
+      }
+    }
+
+    if (stackLineArt && ctaCard) {
+      const imgRect = stackLineArt.getBoundingClientRect();
+      if (imgRect.height && imgRect.bottom > -200 && imgRect.top < vh + 200) {
+        const cardTop = ctaCard.getBoundingClientRect().top;
+        let boundary = Math.round(cardTop - imgRect.top);
+        boundary = Math.min(Math.max(boundary, 0), Math.round(imgRect.height));
+        if (boundary !== lastXray) {
+          lastXray = boundary;
+          stackLineArt.style.clipPath = `inset(${boundary}px 0 0 0)`;
+        }
+      }
+    }
+  };
+
+  const schedule = () => {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(onFrame);
+    }
+  };
+  onFrame();
+  window.addEventListener('scroll', schedule, { passive: true });
+  window.addEventListener('resize', schedule);
+  if (stackLineArt && !stackLineArt.complete) {
+    stackLineArt.addEventListener('load', onFrame);
+  }
+
+  // ---------- CTA card: locks at the top, grows to black out the whole screen ----------
+  // The 1px sentinel above the sticky card tells us the exact moment it becomes stuck.
+  // Then: lock scroll -> the card's background layer scales up past the header so the
+  // entire screen goes black -> unlock once that growth finishes.
+  const ctaSentinel = document.querySelector('.stack__cta-sentinel');
+  if (ctaSentinel && ctaCard && 'IntersectionObserver' in window && !reduceMotion && desktop) {
+    let locked = false;
+    let expanded = false;
+    const GROW_MS = 450;
+
+    const preventKey = (e) => {
       if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', ' ', 'Home', 'End'].includes(e.key)) {
         e.preventDefault();
       }
     };
-    const preventScrollWheel = (e) => { e.preventDefault(); };
+    const preventWheel = (e) => { e.preventDefault(); };
+    // NOTE: body{position:fixed} was tried for this and it broke the sticky card's
+    // stuck-state the instant it applied (card jumped elsewhere). overflow:hidden
+    // stops scrolling without disturbing anyone's layout.
     const lockScroll = () => {
       document.documentElement.style.overflow = 'hidden';
       document.body.style.overflow = 'hidden';
-      window.addEventListener('wheel', preventScrollWheel, { passive: false });
-      window.addEventListener('touchmove', preventScrollWheel, { passive: false });
-      window.addEventListener('keydown', preventScrollKey);
+      window.addEventListener('wheel', preventWheel, { passive: false });
+      window.addEventListener('touchmove', preventWheel, { passive: false });
+      window.addEventListener('keydown', preventKey);
     };
     const unlockScroll = () => {
       document.documentElement.style.overflow = '';
       document.body.style.overflow = '';
-      window.removeEventListener('wheel', preventScrollWheel);
-      window.removeEventListener('touchmove', preventScrollWheel);
-      window.removeEventListener('keydown', preventScrollKey);
+      window.removeEventListener('wheel', preventWheel);
+      window.removeEventListener('touchmove', preventWheel);
+      window.removeEventListener('keydown', preventKey);
     };
 
     const ctaObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (!entry.isIntersecting && !locked) {
+          const stuck = !entry.isIntersecting;
+          if (stuck && !expanded && !locked) {
+            // how much taller than its own box the card must grow to also cover
+            // the header strip above it
+            const h = ctaCard.offsetHeight;
+            const above = ctaCard.getBoundingClientRect().top;
+            ctaCard.style.setProperty('--cta-grow', h ? ((h + Math.max(above, 0)) / h).toFixed(3) : '1.06');
+            expanded = true;
             locked = true;
             lockScroll();
-            setTimeout(() => { unlockScroll(); locked = false; }, HOLD_MS);
+            ctaCard.classList.add('is-expanded');
+            setTimeout(() => { unlockScroll(); locked = false; }, GROW_MS);
+          } else if (!stuck && expanded && !locked) {
+            expanded = false;
+            ctaCard.classList.remove('is-expanded');
           }
         });
       },
@@ -140,9 +156,8 @@
     ctaObserver.observe(ctaSentinel);
   }
 
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // ---------- generic reveal-on-scroll ----------
   const revealTargets = document.querySelectorAll('[data-reveal]');
-
   if (reduceMotion || !('IntersectionObserver' in window)) {
     revealTargets.forEach((el) => el.classList.add('is-visible'));
   } else {
