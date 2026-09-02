@@ -79,17 +79,23 @@ img{display:block;max-width:100%;}
   font-size:var(--t-label);text-transform:uppercase;font-weight:500;}
 .topbar a{color:var(--on-dark);text-decoration:underline;}
 
-.nav{position:sticky;top:0;left:0;right:0;z-index:50;background:#0b0908;}
+/* color-invert nav: transparent + mix-blend-mode:difference against whatever section
+   is scrolled underneath it. difference(white, light-bg) reads black, difference(white,
+   dark-bg) stays white — so the nav auto-flips black<->white section by section with
+   zero JS/scroll-tracking (no more fragile "detect when X is behind the header" logic). */
+.nav{position:sticky;top:0;left:0;right:0;z-index:50;background:transparent;
+  mix-blend-mode:difference;}
 .nav__bar{height:calc(var(--u) * 2.29);display:flex;align-items:center;justify-content:space-between;}
-.nav__logo{font-size:var(--t-body);font-weight:500;color:var(--on-dark);}
+.nav__logo{font-size:var(--t-body);font-weight:500;color:#fff;}
 .nav__links{display:flex;align-items:center;gap:2px;}
 .nav__links a{display:inline-flex;align-items:center;height:calc(var(--u) * 1.21);
-  padding-inline:calc(var(--u) * .57);background:rgba(240,239,238,.14);
+  padding-inline:calc(var(--u) * .57);
   font-size:var(--t-label);font-weight:500;text-transform:uppercase;
-  color:var(--on-dark);}
+  color:#fff;}
 .nav__links-last{gap:calc(var(--u) * .57);}
 .nav__toggle{display:none;flex-direction:column;gap:5px;background:none;border:0;padding:6px;}
-.nav__toggle span{width:22px;height:2px;background:var(--on-dark);}
+.nav__toggle span{width:22px;height:2px;background:#fff;}
+.nav .ico{background:#fff;}
 
 /* ---------- hero (Figma 142:87) ----------
    bg: near-black top, bright orange bloom rising from below the bottom edge */
@@ -199,8 +205,7 @@ img{display:block;max-width:100%;}
 .stack .label{font-size:24px;}
 /* tone flip: rows over the light part of the gradient use dark text, rows over
    the dark part use light text */
-.srow:nth-of-type(1),.srow:nth-of-type(2){color:var(--ink);--fillcolor:#000;--dimcolor:rgba(0,0,0,.25);}
-.srow:nth-of-type(3),.srow:nth-of-type(4){color:var(--on-dark);--fillcolor:#f3f3f3;--dimcolor:rgba(243,243,243,.25);}
+.srow{color:var(--ink);--fillcolor:#000;--dimcolor:rgba(0,0,0,.25);}
 :root{--product-w:760px;}
 .stack__img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;}
 /* line-art copy starts fully clipped away; JS sets clip-path every scroll frame to
@@ -335,7 +340,9 @@ img{display:block;max-width:100%;}
   .footer__grid > .gcell + .gcell{margin-top:calc(var(--u) * 1.5);}
 }
 @media (max-width:768px){
-  .nav{position:sticky;top:0;background:#0b0908;}
+  /* solid bg + normal blending on mobile — the color-invert trick only makes sense
+     against the thin transparent bar; the slide-out menu needs to stay readable */
+  .nav{position:sticky;top:0;background:#0b0908;mix-blend-mode:normal;}
   .nav__links{position:fixed;inset:60px 0 0 0;background:#0b0908;flex-direction:column;
     align-items:stretch;padding:var(--gutter);gap:4px;transform:translateX(100%);
     transition:transform .25s ease;}

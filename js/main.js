@@ -1,5 +1,4 @@
 (() => {
-  const nav = document.getElementById('nav');
   const navToggle = document.getElementById('navToggle');
   const navLinks = document.getElementById('navLinks');
 
@@ -34,7 +33,6 @@
   }));
   const stackLineArt = document.getElementById('stackLineArt');
   const ctaCard = document.getElementById('cta');
-  let lastNavScrolled = null;
   let lastXray = -1;
   let ticking = false;
 
@@ -45,12 +43,6 @@
   const onFrame = () => {
     ticking = false;
     const vh = window.innerHeight;
-
-    const scrolled = window.scrollY > 40;
-    if (scrolled !== lastNavScrolled) {
-      lastNavScrolled = scrolled;
-      nav.classList.toggle('is-scrolled', scrolled);
-    }
 
     if (!reduceMotion) {
       const startAt = vh * 0.85;
