@@ -91,6 +91,64 @@
     else stackLineArt.addEventListener('load', updateXray);
   }
 
+  // ---------- stack: CTA card locks + grows to fill the screen, scroll disabled meanwhile ----------
+  // A 1px sentinel sits right above the sticky card. When it scrolls out of view the
+  // card has just become "stuck" at the top — that's the trigger to lock scroll and
+  // play the grow animation (clip-path shrinking to 0, driven by CSS transition).
+  const ctaSentinel = document.querySelector('.stack__cta-sentinel');
+  const ctaCard = document.getElementById('cta');
+  if (ctaSentinel && ctaCard && 'IntersectionObserver' in window
+      && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      && !window.matchMedia('(max-width: 1024px)').matches) {
+    let expanded = false;
+    let locked = false;
+    let lockedScrollY = 0;
+
+    const lockScroll = () => {
+      lockedScrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${lockedScrollY}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.width = '100%';
+    };
+    const unlockScroll = () => {
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.width = '';
+      window.scrollTo(0, lockedScrollY);
+    };
+
+    const onTransitionEnd = (e) => {
+      if (e.propertyName !== 'clip-path' || !locked) return;
+      ctaCard.removeEventListener('transitionend', onTransitionEnd);
+      unlockScroll();
+      locked = false;
+    };
+
+    const ctaObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const stuck = !entry.isIntersecting;
+          if (stuck && !expanded && !locked) {
+            expanded = true;
+            locked = true;
+            lockScroll();
+            requestAnimationFrame(() => ctaCard.classList.add('is-expanded'));
+            ctaCard.addEventListener('transitionend', onTransitionEnd);
+          } else if (!stuck && expanded && !locked) {
+            expanded = false;
+            ctaCard.classList.remove('is-expanded');
+          }
+        });
+      },
+      { threshold: 0, rootMargin: `-${Math.round(parseFloat(getComputedStyle(ctaCard).top) || 0)}px 0px 0px 0px` }
+    );
+    ctaObserver.observe(ctaSentinel);
+  }
+
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const revealTargets = document.querySelectorAll('[data-reveal]');
 

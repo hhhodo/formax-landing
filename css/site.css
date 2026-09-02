@@ -208,13 +208,18 @@ img{display:block;max-width:100%;}
    exactly as far as the card has covered the photo — no more, no less */
 .stack__img--line{clip-path:inset(100% 0 0 0);}
 
-/* CTA card wrap: taller than the card itself so the card has scroll room to sit
-   LOCKED at the top of the viewport (fully covering it, screen goes black) for a
-   beat before this row ends and the next section takes over. */
-.stack__cta-wrap{position:relative;min-height:calc(180vh);margin-top:calc(var(--u) * 4);}
+/* CTA card wrap: taller than the card+viewport so there's breathing room both
+   before it locks and after it releases (was flush against the header at 180vh). */
+.stack__cta-wrap{position:relative;min-height:260vh;margin-top:calc(var(--u) * 4);}
+.stack__cta-sentinel{position:absolute;top:0;left:0;width:1px;height:1px;}
 .stack__cta{position:sticky;top:calc(var(--u) * 2.29);z-index:2;
   height:calc(100vh - var(--u) * 2.29);display:flex;flex-direction:column;justify-content:center;
-  padding:calc(var(--u) * 2);background:#0a0605;overflow:hidden;}
+  padding:calc(var(--u) * 2);background:#0a0605;overflow:hidden;
+  /* starts as a framed, rounded box inset from the edges; .is-expanded grows it to
+     a true full-bleed screen — an actual size change, not an opacity fade */
+  clip-path:inset(5% 4% 5% 4% round 20px);
+  transition:clip-path .8s cubic-bezier(.4,0,.2,1);}
+.stack__cta.is-expanded{clip-path:inset(0 0 0 0 round 0);}
 .stack__cta .mark--tl{top:0;left:0;}
 .stack__cta .mark--tr{top:0;right:0;}
 .stack__cta-title{font-size:var(--t-h2);font-weight:400;color:var(--on-dark);
@@ -329,7 +334,8 @@ img{display:block;max-width:100%;}
   .stack__visual--line{display:none;}
   .stack__imgwrap{max-width:340px;}
   .stack__cta-wrap{min-height:auto;margin-top:calc(var(--u) * 2);}
-  .stack__cta{position:static;height:auto;padding-bottom:calc(var(--u) * 3);}
+  .stack__cta{position:static;height:auto;padding-bottom:calc(var(--u) * 3);
+    clip-path:none;transition:none;}
   .hero__foot{grid-template-columns:1fr;gap:calc(var(--u) * 1);}
   .hero__card{justify-self:start;width:100%;}
   .news__headbtn,.faq__headbtn{justify-content:flex-start;}
