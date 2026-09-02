@@ -284,7 +284,16 @@ img{display:block;max-width:100%;}
 .quote__top .mark{top:0;left:var(--gutter);}
 .quote__text{max-width:calc(1000 / 1920 * 100vw);min-width:280px;
   font-size:var(--t-quote);font-weight:400;padding-top:calc(var(--u) * 2.4);}
-.quote__text em{font-style:normal;color:rgba(243,243,243,.45);}
+.quote__text em{font-style:normal;}
+/* three sibling lines, same technique as the Stack/CTA titles (never nest a fill-clip
+   element inside another one — it double-applies the gradient). Fills white
+   line-by-line as you scroll, driven by --quote-fill1/2/3 (js/main.js). */
+.q-line{display:block;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  -webkit-text-fill-color:transparent;}
+.q-line:nth-child(1){background-image:linear-gradient(90deg, #fff var(--quote-fill1,0%), rgba(255,255,255,.5) var(--quote-fill1,0%));}
+.q-line:nth-child(2){background-image:linear-gradient(90deg, #fff var(--quote-fill2,0%), rgba(255,255,255,.5) var(--quote-fill2,0%));}
+.q-line:nth-child(3){background-image:linear-gradient(90deg, #fff var(--quote-fill3,0%), rgba(255,255,255,.5) var(--quote-fill3,0%));}
 
 /* ---------- news (Figma 142:1137) ---------- */
 .news{min-height:var(--h-news);display:flex;flex-direction:column;justify-content:center;

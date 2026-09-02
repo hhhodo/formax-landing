@@ -30,16 +30,25 @@
   const stackLineArt = document.getElementById('stackLineArt');
   const ctaCard = document.getElementById('cta');
   const ctaWrap = ctaCard ? ctaCard.closest('.stack__cta-wrap') : null;
+  const quoteText = document.querySelector('.quote__text');
   let lastXray = -1;
   let lastCover = -1;
   let lastFill1 = -1;
   let lastFill2 = -1;
   let lastFill3 = -1;
+  let lastQFill1 = -1;
+  let lastQFill2 = -1;
+  let lastQFill3 = -1;
   let lastNavSolid = null;
   let ticking = false;
 
   if (reduceMotion) {
     stackRows.forEach(({ row }) => row.style.setProperty('--fill', '100%'));
+    if (quoteText) {
+      quoteText.style.setProperty('--quote-fill1', '100%');
+      quoteText.style.setProperty('--quote-fill2', '100%');
+      quoteText.style.setProperty('--quote-fill3', '100%');
+    }
   }
 
   // ---- cached (layout-dependent) values, recomputed only on load/resize ----
@@ -114,6 +123,25 @@
           item.last = pct;
           item.row.style.setProperty('--fill', `${pct}%`);
         }
+      }
+    }
+
+    // Quote text: same idea as the Stack row titles — starts at screen-center,
+    // but now split across 3 sibling lines that fill one after another.
+    if (!reduceMotion && quoteText) {
+      const rect = quoteText.getBoundingClientRect();
+      if (rect.bottom > -200 && rect.top < vh + 200) {
+        const startAt = vh * 0.6;
+        const endAt = vh * -0.6;
+        const anchor = rect.top + rect.height / 2;
+        let qp = (startAt - anchor) / (startAt - endAt);
+        qp = Math.min(1, Math.max(0, qp));
+        const qf1 = Math.round(Math.min(1, qp * 3) * 100);
+        const qf2 = Math.round(Math.min(1, Math.max(0, qp * 3 - 1)) * 100);
+        const qf3 = Math.round(Math.min(1, Math.max(0, qp * 3 - 2)) * 100);
+        if (qf1 !== lastQFill1) { lastQFill1 = qf1; quoteText.style.setProperty('--quote-fill1', `${qf1}%`); }
+        if (qf2 !== lastQFill2) { lastQFill2 = qf2; quoteText.style.setProperty('--quote-fill2', `${qf2}%`); }
+        if (qf3 !== lastQFill3) { lastQFill3 = qf3; quoteText.style.setProperty('--quote-fill3', `${qf3}%`); }
       }
     }
 
