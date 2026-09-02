@@ -213,15 +213,14 @@ img{display:block;max-width:100%;}
 .srow{display:flex;flex-direction:column;justify-content:center;gap:calc(var(--u) * .8);
   padding-block:calc(var(--u) * 4);}
 .srow__body{display:flex;flex-direction:column;gap:calc(var(--u) * .8);}
-/* fill-clip must be declared on BOTH the title and its <span> — a child element
-   only inherits `color`, not the parent's own clipped background, so without its
-   own background-image the span rendered fully invisible instead of dim/filled */
-.srow__title,.srow__title span{
+/* two SIBLING lines (same fix as the CTA title — nesting a <span> inside the fill-clip
+   parent made it apply the gradient twice, rendering it visibly darker). Each .s-line
+   gets its own copy of the same gradient rule, no double-application. */
+.srow__title{font-size:64px;font-weight:400;}
+.s-line{display:block;
   background-image:linear-gradient(90deg, var(--fillcolor) var(--fill,0%), var(--dimcolor) var(--fill,0%));
   -webkit-background-clip:text;background-clip:text;color:transparent;
   -webkit-text-fill-color:transparent;}
-.srow__title{font-size:64px;font-weight:400;}
-.srow__title span{display:block;}
 .srow__copy{font-size:24px;line-height:1.5;opacity:.6;max-width:56ch;}
 .stack .label{font-size:24px;}
 /* tone flip: rows over the light part of the gradient use dark text, rows over
