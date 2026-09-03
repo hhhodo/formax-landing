@@ -42,30 +42,64 @@
   let ticking = false;
   let quoteLocked = false;
   let quotePlayed = false;
+  let quoteAccum = 0; // "virtual" scroll distance fed by wheel/touch/key while locked
+  const QUOTE_DRIVE_PX = 1200; // wheel/touch px needed to fill all 4 pieces
 
-  // Generic scroll lock: overflow:hidden blocks scrolling without touching anyone's
-  // layout (a body{position:fixed} version was tried elsewhere in this file's history
-  // and it broke sticky positioning the instant it engaged — don't repeat that).
-  const preventKey = (e) => {
-    if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', ' ', 'Home', 'End'].includes(e.key)) {
-      e.preventDefault();
-    }
+  const quoteEyebrow = document.querySelector('.quote-eyebrow');
+  const seg = (t, i) => Math.round(Math.min(1, Math.max(0, t * 4 - i)) * 100);
+  const setQuoteFill = (t) => {
+    // t: 0..1 overall, 4 pieces in reading order — eyebrow label first, then the
+    // three body lines.
+    if (quoteEyebrow) quoteEyebrow.style.setProperty('--quote-fill0', `${seg(t, 0)}%`);
+    quoteText.style.setProperty('--quote-fill1', `${seg(t, 1)}%`);
+    quoteText.style.setProperty('--quote-fill2', `${seg(t, 2)}%`);
+    quoteText.style.setProperty('--quote-fill3', `${seg(t, 3)}%`);
   };
-  const preventWheel = (e) => { e.preventDefault(); };
-  const lockScroll = () => {
-    document.documentElement.style.overflow = 'hidden';
-    document.body.style.overflow = 'hidden';
-    window.addEventListener('wheel', preventWheel, { passive: false });
-    window.addEventListener('touchmove', preventWheel, { passive: false });
-    window.addEventListener('keydown', preventKey);
+
+  // Scroll is blocked by intercepting the input events themselves (wheel/touch/key)
+  // instead of touching html/body overflow — an overflow:hidden attempt broke the
+  // sticky nav's positioning (it vanished) the instant it engaged. This way nothing
+  // about the page's own layout ever changes during the lock.
+  let touchStartY = 0;
+  const onWheel = (e) => {
+    e.preventDefault();
+    quoteAccum = Math.min(QUOTE_DRIVE_PX, Math.max(0, quoteAccum + e.deltaY));
+    setQuoteFill(quoteAccum / QUOTE_DRIVE_PX);
+    if (quoteAccum >= QUOTE_DRIVE_PX) finishQuoteLock();
   };
-  const unlockScroll = () => {
-    document.documentElement.style.overflow = '';
-    document.body.style.overflow = '';
-    window.removeEventListener('wheel', preventWheel);
-    window.removeEventListener('touchmove', preventWheel);
-    window.removeEventListener('keydown', preventKey);
+  const onTouchStart = (e) => { touchStartY = e.touches[0].clientY; };
+  const onTouchMove = (e) => {
+    e.preventDefault();
+    const y = e.touches[0].clientY;
+    const delta = touchStartY - y;
+    touchStartY = y;
+    quoteAccum = Math.min(QUOTE_DRIVE_PX, Math.max(0, quoteAccum + delta * 2));
+    setQuoteFill(quoteAccum / QUOTE_DRIVE_PX);
+    if (quoteAccum >= QUOTE_DRIVE_PX) finishQuoteLock();
   };
+  const onKey = (e) => {
+    if (!['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', ' '].includes(e.key)) return;
+    e.preventDefault();
+    const dir = e.key === 'ArrowUp' ? -1 : 1;
+    quoteAccum = Math.min(QUOTE_DRIVE_PX, Math.max(0, quoteAccum + dir * 120));
+    setQuoteFill(quoteAccum / QUOTE_DRIVE_PX);
+    if (quoteAccum >= QUOTE_DRIVE_PX) finishQuoteLock();
+  };
+  function startQuoteLock() {
+    quoteLocked = true;
+    window.addEventListener('wheel', onWheel, { passive: false });
+    window.addEventListener('touchstart', onTouchStart, { passive: true });
+    window.addEventListener('touchmove', onTouchMove, { passive: false });
+    window.addEventListener('keydown', onKey);
+  }
+  function finishQuoteLock() {
+    quotePlayed = true;
+    quoteLocked = false;
+    window.removeEventListener('wheel', onWheel);
+    window.removeEventListener('touchstart', onTouchStart);
+    window.removeEventListener('touchmove', onTouchMove);
+    window.removeEventListener('keydown', onKey);
+  }
 
   if (reduceMotion) {
     stackRows.forEach(({ row }) => row.style.setProperty('--fill', '100%'));
@@ -73,6 +107,7 @@
       quoteText.style.setProperty('--quote-fill1', '100%');
       quoteText.style.setProperty('--quote-fill2', '100%');
       quoteText.style.setProperty('--quote-fill3', '100%');
+      if (quoteEyebrow) quoteEyebrow.style.setProperty('--quote-fill0', '100%');
     }
   }
 
@@ -160,29 +195,13 @@
     }
 
     // Quote text: scroll STOPS the instant the pinned text reaches the top (plain
-    // scrollY threshold check here — no IntersectionObserver, which is what caused
-    // the self-retriggering flicker bug elsewhere in this file's history). While
-    // locked, the 3 lines fill one-by-one on a fixed timer (scroll is blocked, so
-    // scroll position can't drive it); once done, scroll unlocks and continues.
+    // scrollY threshold check — no IntersectionObserver, which is what caused a
+    // self-retriggering flicker bug elsewhere in this file's history). While locked,
+    // the eyebrow + 3 body lines fill in order as the user keeps scrolling/swiping —
+    // driven by accumulated wheel/touch/key input, not a fixed timer, so it still
+    // reads as a genuine scroll-driven animation instead of something automatic.
     if (!reduceMotion && quoteText && !quotePlayed && !quoteLocked && scrollY >= quotePinStart) {
-      quoteLocked = true;
-      lockScroll();
-      const QUOTE_ANIM_MS = 2400;
-      const start = performance.now();
-      const step = (now) => {
-        const t = Math.min(1, (now - start) / QUOTE_ANIM_MS);
-        quoteText.style.setProperty('--quote-fill1', `${Math.round(Math.min(1, t * 3) * 100)}%`);
-        quoteText.style.setProperty('--quote-fill2', `${Math.round(Math.min(1, Math.max(0, t * 3 - 1)) * 100)}%`);
-        quoteText.style.setProperty('--quote-fill3', `${Math.round(Math.min(1, Math.max(0, t * 3 - 2)) * 100)}%`);
-        if (t < 1) {
-          requestAnimationFrame(step);
-        } else {
-          quotePlayed = true;
-          quoteLocked = false;
-          unlockScroll();
-        }
-      };
-      requestAnimationFrame(step);
+      startQuoteLock();
     }
 
     // x-ray wipe: only the part of the product image the CTA card currently covers
