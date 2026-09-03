@@ -286,7 +286,10 @@ img{display:block;max-width:100%;}
     #0b0705;}
 .quote__top{position:relative;display:flex;align-items:center;justify-content:space-between;
   gap:var(--u);padding-block:calc(var(--u) * .8);}
-.quote__top .mark{top:0;left:var(--gutter);}
+/* .quote__top now lives INSIDE .quote__pin (itself already a padded .container),
+   not as a container of its own — so the mark is inset by 0, not --gutter, matching
+   every other section's gcell-based dot (their padding also comes from an ancestor) */
+.quote__top .mark{top:0;left:0;}
 /* eyebrow label fills first, ahead of the three body lines — same fill-clip technique */
 .quote-eyebrow{
   -webkit-background-clip:text;background-clip:text;color:transparent;

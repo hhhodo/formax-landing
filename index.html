@@ -224,16 +224,18 @@ Footer   — 908px — 4-4-4 + giant edge-to-edge wordmark
     </div>
   </section>
 
-  <!-- QUOTE — Figma 142:1088 -->
+  <!-- QUOTE — Figma 142:1088. Eyebrow label + text both live INSIDE the pinned
+       container now — the label used to sit outside it and had already scrolled
+       off screen by the time the fill sequence reached it. Card (pin) stays put
+       on screen while the section's own background scrolls underneath it; the
+       eyebrow then the 3 lines fill in order, driven by scroll position. -->
   <section class="quote">
-    <div class="container quote__top">
-      <span class="mark" aria-hidden="true"></span>
-      <span class="label quote-eyebrow">한 세대에 한 번 오는 기회</span>
-    </div>
-    <!-- text stays PINNED (sticky) while the wrap's extra height gives the fill
-         animation room to actually finish before the section scrolls away -->
     <div class="quote__pin-wrap">
       <div class="container quote__pin">
+        <div class="quote__top">
+          <span class="mark" aria-hidden="true"></span>
+          <span class="label quote-eyebrow">한 세대에 한 번 오는 기회</span>
+        </div>
         <p class="quote__text">
           <span class="q-line">제조업의 디지털 전환은 이 시대 가장 확실한 <em>투자 기회</em>입니다.</span>
           <span class="q-line">데이터로 연결된 공장이 산업의 표준 인프라가 되는 흐름은,</span>
