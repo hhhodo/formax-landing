@@ -40,85 +40,19 @@
   let lastFill3 = -1;
   let lastNavSolid = null;
   let ticking = false;
-  let quoteLocked = false;
-  let quotePlayed = false;
-  let quoteAccum = 0; // "virtual" scroll distance fed by wheel/touch/key while locked
-  const QUOTE_DRIVE_PX = 1200; // wheel/touch px needed to fill all 4 pieces
-
   const quoteEyebrow = document.querySelector('.quote-eyebrow');
   const seg = (t, i) => Math.round(Math.min(1, Math.max(0, t * 4 - i)) * 100);
+  let lastQ0 = -1, lastQ1 = -1, lastQ2 = -1, lastQ3 = -1;
   const setQuoteFill = (t) => {
     // t: 0..1 overall, 4 pieces in reading order — eyebrow label first, then the
-    // three body lines.
-    if (quoteEyebrow) quoteEyebrow.style.setProperty('--quote-fill0', `${seg(t, 0)}%`);
-    quoteText.style.setProperty('--quote-fill1', `${seg(t, 1)}%`);
-    quoteText.style.setProperty('--quote-fill2', `${seg(t, 2)}%`);
-    quoteText.style.setProperty('--quote-fill3', `${seg(t, 3)}%`);
+    // three body lines. Same continuous scroll-position-driven approach as the CTA
+    // title (no lock) — kept consistent so the two don't feel like different features.
+    const q0 = seg(t, 0), q1 = seg(t, 1), q2 = seg(t, 2), q3 = seg(t, 3);
+    if (q0 !== lastQ0 && quoteEyebrow) { lastQ0 = q0; quoteEyebrow.style.setProperty('--quote-fill0', `${q0}%`); }
+    if (q1 !== lastQ1) { lastQ1 = q1; quoteText.style.setProperty('--quote-fill1', `${q1}%`); }
+    if (q2 !== lastQ2) { lastQ2 = q2; quoteText.style.setProperty('--quote-fill2', `${q2}%`); }
+    if (q3 !== lastQ3) { lastQ3 = q3; quoteText.style.setProperty('--quote-fill3', `${q3}%`); }
   };
-
-  // Scroll is blocked by intercepting the input events themselves (wheel/touch/key)
-  // instead of touching html/body overflow — an overflow:hidden attempt broke the
-  // sticky nav's positioning (it vanished) the instant it engaged. This way nothing
-  // about the page's own layout ever changes during the lock.
-  let touchStartY = 0;
-  let quoteLockTimer = null;
-  // e.deltaY's UNIT depends on e.deltaMode: 0 = pixels (Chrome default), 1 = lines
-  // (Firefox with a regular mouse wheel — deltaY is just ~1-3), 2 = pages. Treating
-  // line/page mode as if it were pixels made each wheel tick contribute almost
-  // nothing, so filling the full drive distance took hundreds of scrolls — read as
-  // "broken" rather than just slow.
-  const normalizeWheel = (e) => {
-    if (e.deltaMode === 1) return e.deltaY * 18;
-    if (e.deltaMode === 2) return e.deltaY * window.innerHeight;
-    return e.deltaY;
-  };
-  const onWheel = (e) => {
-    e.preventDefault();
-    quoteAccum = Math.min(QUOTE_DRIVE_PX, Math.max(0, quoteAccum + normalizeWheel(e)));
-    setQuoteFill(quoteAccum / QUOTE_DRIVE_PX);
-    if (quoteAccum >= QUOTE_DRIVE_PX) finishQuoteLock();
-  };
-  const onTouchStart = (e) => { touchStartY = e.touches[0].clientY; };
-  const onTouchMove = (e) => {
-    e.preventDefault();
-    const y = e.touches[0].clientY;
-    const delta = touchStartY - y;
-    touchStartY = y;
-    quoteAccum = Math.min(QUOTE_DRIVE_PX, Math.max(0, quoteAccum + delta * 2));
-    setQuoteFill(quoteAccum / QUOTE_DRIVE_PX);
-    if (quoteAccum >= QUOTE_DRIVE_PX) finishQuoteLock();
-  };
-  const onKey = (e) => {
-    if (!['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', ' '].includes(e.key)) return;
-    e.preventDefault();
-    const dir = e.key === 'ArrowUp' ? -1 : 1;
-    quoteAccum = Math.min(QUOTE_DRIVE_PX, Math.max(0, quoteAccum + dir * 120));
-    setQuoteFill(quoteAccum / QUOTE_DRIVE_PX);
-    if (quoteAccum >= QUOTE_DRIVE_PX) finishQuoteLock();
-  };
-  function startQuoteLock() {
-    quoteLocked = true;
-    window.addEventListener('wheel', onWheel, { passive: false });
-    window.addEventListener('touchstart', onTouchStart, { passive: true });
-    window.addEventListener('touchmove', onTouchMove, { passive: false });
-    window.addEventListener('keydown', onKey);
-    // failsafe: whatever else might go wrong, the page must never get permanently
-    // stuck unable to scroll — force-finish after 6s no matter what state we're in
-    quoteLockTimer = setTimeout(() => {
-      quoteAccum = QUOTE_DRIVE_PX;
-      setQuoteFill(1);
-      finishQuoteLock();
-    }, 6000);
-  }
-  function finishQuoteLock() {
-    quotePlayed = true;
-    quoteLocked = false;
-    if (quoteLockTimer) { clearTimeout(quoteLockTimer); quoteLockTimer = null; }
-    window.removeEventListener('wheel', onWheel);
-    window.removeEventListener('touchstart', onTouchStart);
-    window.removeEventListener('touchmove', onTouchMove);
-    window.removeEventListener('keydown', onKey);
-  }
 
   if (reduceMotion) {
     stackRows.forEach(({ row }) => row.style.setProperty('--fill', '100%'));
@@ -139,6 +73,7 @@
   let ctaTitleRange = 1;
   let ctaCoverRange = 1;
   let quotePinStart = 0;
+  let quoteFillRange = 1;
   // captured before any --cta-pad override exists, so this reads the CSS fallback
   // (calc(var(--u)*2)) resolved to real px — can't parse --u itself via
   // getComputedStyle since custom properties return their literal authored string,
@@ -173,6 +108,7 @@
     }
     if (quotePin) {
       quotePinStart = absoluteTop(quotePin) - stickyTopPx;
+      quoteFillRange = Math.max(1, window.innerHeight * 1.2);
     }
   };
   recomputeLayout();
@@ -213,14 +149,11 @@
       }
     }
 
-    // Quote text: scroll STOPS the instant the pinned text reaches the top (plain
-    // scrollY threshold check — no IntersectionObserver, which is what caused a
-    // self-retriggering flicker bug elsewhere in this file's history). While locked,
-    // the eyebrow + 3 body lines fill in order as the user keeps scrolling/swiping —
-    // driven by accumulated wheel/touch/key input, not a fixed timer, so it still
-    // reads as a genuine scroll-driven animation instead of something automatic.
-    if (!reduceMotion && quoteText && !quotePlayed && !quoteLocked && scrollY >= quotePinStart) {
-      startQuoteLock();
+    // Quote text: pinned (sticky) but scroll is NOT blocked — same continuous
+    // scroll-position-driven fill as the CTA title, so the two behave consistently.
+    if (!reduceMotion && quoteText) {
+      const qt = Math.min(1, Math.max(0, (scrollY - quotePinStart) / quoteFillRange));
+      setQuoteFill(qt);
     }
 
     // x-ray wipe: only the part of the product image the CTA card currently covers
