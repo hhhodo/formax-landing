@@ -68,6 +68,10 @@
   // getComputedStyle since custom properties return their literal authored string,
   // not the resolved clamp() value.
   const ctaBasePadPx = ctaCard ? parseFloat(getComputedStyle(ctaCard).paddingLeft) || 28 : 28;
+  // the enclosing .container's own fixed side padding (--gutter) — the card's
+  // negative margin needs to counteract exactly this much to actually reach the edge
+  const ctaContainer = ctaCard ? ctaCard.closest('.container') : null;
+  const ctaGutterPx = ctaContainer ? parseFloat(getComputedStyle(ctaContainer).paddingLeft) || 28 : 28;
 
   const absoluteTop = (el) => {
     let top = 0;
@@ -194,6 +198,8 @@
         ctaCard.style.setProperty('--cta-cover', `${coverPx}px`);
         const padPx = Math.round(ctaBasePadPx * (1 - coverProgress));
         ctaCard.style.setProperty('--cta-pad', `${padPx}px`);
+        const marginPx = Math.round(-ctaGutterPx * coverProgress);
+        ctaCard.style.setProperty('--cta-margin', `${marginPx}px`);
       }
     }
   };

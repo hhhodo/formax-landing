@@ -248,6 +248,11 @@ img{display:block;max-width:100%;}
   /* --cta-pad shrinks with scroll (js/main.js) so the left/right margin closes up
      as the card grows toward full-bleed, instead of staying fixed forever */
   padding-inline:var(--cta-pad, calc(var(--u) * 2));
+  /* the enclosing .container still has its own fixed padding-inline:var(--gutter) —
+     shrinking --cta-pad alone can't reach past that. --cta-margin is a negative
+     margin (0 -> -gutter) that pulls the card out through the container's own
+     padding as it grows, so it actually reaches the true screen edge. */
+  margin-inline:var(--cta-margin, 0px);
   background:#0a0605;}
 /* cover: a plain block sitting flush above the card's own top edge, growing taller as
    the user keeps scrolling near the end of the pin range (--cta-cover, px, written every
