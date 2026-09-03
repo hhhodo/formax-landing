@@ -61,9 +61,20 @@
   // sticky nav's positioning (it vanished) the instant it engaged. This way nothing
   // about the page's own layout ever changes during the lock.
   let touchStartY = 0;
+  let quoteLockTimer = null;
+  // e.deltaY's UNIT depends on e.deltaMode: 0 = pixels (Chrome default), 1 = lines
+  // (Firefox with a regular mouse wheel — deltaY is just ~1-3), 2 = pages. Treating
+  // line/page mode as if it were pixels made each wheel tick contribute almost
+  // nothing, so filling the full drive distance took hundreds of scrolls — read as
+  // "broken" rather than just slow.
+  const normalizeWheel = (e) => {
+    if (e.deltaMode === 1) return e.deltaY * 18;
+    if (e.deltaMode === 2) return e.deltaY * window.innerHeight;
+    return e.deltaY;
+  };
   const onWheel = (e) => {
     e.preventDefault();
-    quoteAccum = Math.min(QUOTE_DRIVE_PX, Math.max(0, quoteAccum + e.deltaY));
+    quoteAccum = Math.min(QUOTE_DRIVE_PX, Math.max(0, quoteAccum + normalizeWheel(e)));
     setQuoteFill(quoteAccum / QUOTE_DRIVE_PX);
     if (quoteAccum >= QUOTE_DRIVE_PX) finishQuoteLock();
   };
@@ -91,10 +102,18 @@
     window.addEventListener('touchstart', onTouchStart, { passive: true });
     window.addEventListener('touchmove', onTouchMove, { passive: false });
     window.addEventListener('keydown', onKey);
+    // failsafe: whatever else might go wrong, the page must never get permanently
+    // stuck unable to scroll — force-finish after 6s no matter what state we're in
+    quoteLockTimer = setTimeout(() => {
+      quoteAccum = QUOTE_DRIVE_PX;
+      setQuoteFill(1);
+      finishQuoteLock();
+    }, 6000);
   }
   function finishQuoteLock() {
     quotePlayed = true;
     quoteLocked = false;
+    if (quoteLockTimer) { clearTimeout(quoteLockTimer); quoteLockTimer = null; }
     window.removeEventListener('wheel', onWheel);
     window.removeEventListener('touchstart', onTouchStart);
     window.removeEventListener('touchmove', onTouchMove);
