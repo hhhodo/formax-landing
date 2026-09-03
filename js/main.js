@@ -38,11 +38,34 @@
   let lastFill1 = -1;
   let lastFill2 = -1;
   let lastFill3 = -1;
-  let lastQFill1 = -1;
-  let lastQFill2 = -1;
-  let lastQFill3 = -1;
   let lastNavSolid = null;
   let ticking = false;
+  let quoteLocked = false;
+  let quotePlayed = false;
+
+  // Generic scroll lock: overflow:hidden blocks scrolling without touching anyone's
+  // layout (a body{position:fixed} version was tried elsewhere in this file's history
+  // and it broke sticky positioning the instant it engaged — don't repeat that).
+  const preventKey = (e) => {
+    if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', ' ', 'Home', 'End'].includes(e.key)) {
+      e.preventDefault();
+    }
+  };
+  const preventWheel = (e) => { e.preventDefault(); };
+  const lockScroll = () => {
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('wheel', preventWheel, { passive: false });
+    window.addEventListener('touchmove', preventWheel, { passive: false });
+    window.addEventListener('keydown', preventKey);
+  };
+  const unlockScroll = () => {
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
+    window.removeEventListener('wheel', preventWheel);
+    window.removeEventListener('touchmove', preventWheel);
+    window.removeEventListener('keydown', preventKey);
+  };
 
   if (reduceMotion) {
     stackRows.forEach(({ row }) => row.style.setProperty('--fill', '100%'));
@@ -62,7 +85,6 @@
   let ctaTitleRange = 1;
   let ctaCoverRange = 1;
   let quotePinStart = 0;
-  let quoteFillRange = 1;
   // captured before any --cta-pad override exists, so this reads the CSS fallback
   // (calc(var(--u)*2)) resolved to real px — can't parse --u itself via
   // getComputedStyle since custom properties return their literal authored string,
@@ -95,10 +117,8 @@
       ctaTitleEnd = ctaPinStart + ctaTitleRange;
       ctaCoverRange = Math.max(1, ctaPinEnd - ctaTitleEnd);
     }
-    if (quotePin && quoteWrap) {
+    if (quotePin) {
       quotePinStart = absoluteTop(quotePin) - stickyTopPx;
-      const quotePinEnd = absoluteTop(quoteWrap) + quoteWrap.offsetHeight - quotePin.offsetHeight - stickyTopPx;
-      quoteFillRange = Math.max(1, Math.min(window.innerHeight * 1.5, quotePinEnd - quotePinStart));
     }
   };
   recomputeLayout();
@@ -139,18 +159,30 @@
       }
     }
 
-    // Quote text: PINNED (sticky) while this plays, so it can't scroll away before
-    // finishing. getBoundingClientRect() would freeze while stuck (same trap as the
-    // CTA card), so this is driven by absolute scroll position instead, same as the
-    // CTA title fill.
-    if (!reduceMotion && quoteText) {
-      const qp = Math.min(1, Math.max(0, (scrollY - quotePinStart) / quoteFillRange));
-      const qf1 = Math.round(Math.min(1, qp * 3) * 100);
-      const qf2 = Math.round(Math.min(1, Math.max(0, qp * 3 - 1)) * 100);
-      const qf3 = Math.round(Math.min(1, Math.max(0, qp * 3 - 2)) * 100);
-      if (qf1 !== lastQFill1) { lastQFill1 = qf1; quoteText.style.setProperty('--quote-fill1', `${qf1}%`); }
-      if (qf2 !== lastQFill2) { lastQFill2 = qf2; quoteText.style.setProperty('--quote-fill2', `${qf2}%`); }
-      if (qf3 !== lastQFill3) { lastQFill3 = qf3; quoteText.style.setProperty('--quote-fill3', `${qf3}%`); }
+    // Quote text: scroll STOPS the instant the pinned text reaches the top (plain
+    // scrollY threshold check here — no IntersectionObserver, which is what caused
+    // the self-retriggering flicker bug elsewhere in this file's history). While
+    // locked, the 3 lines fill one-by-one on a fixed timer (scroll is blocked, so
+    // scroll position can't drive it); once done, scroll unlocks and continues.
+    if (!reduceMotion && quoteText && !quotePlayed && !quoteLocked && scrollY >= quotePinStart) {
+      quoteLocked = true;
+      lockScroll();
+      const QUOTE_ANIM_MS = 2400;
+      const start = performance.now();
+      const step = (now) => {
+        const t = Math.min(1, (now - start) / QUOTE_ANIM_MS);
+        quoteText.style.setProperty('--quote-fill1', `${Math.round(Math.min(1, t * 3) * 100)}%`);
+        quoteText.style.setProperty('--quote-fill2', `${Math.round(Math.min(1, Math.max(0, t * 3 - 1)) * 100)}%`);
+        quoteText.style.setProperty('--quote-fill3', `${Math.round(Math.min(1, Math.max(0, t * 3 - 2)) * 100)}%`);
+        if (t < 1) {
+          requestAnimationFrame(step);
+        } else {
+          quotePlayed = true;
+          quoteLocked = false;
+          unlockScroll();
+        }
+      };
+      requestAnimationFrame(step);
     }
 
     // x-ray wipe: only the part of the product image the CTA card currently covers
