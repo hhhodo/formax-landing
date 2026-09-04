@@ -220,34 +220,62 @@
     stackLineArt.addEventListener('load', () => { recomputeLayout(); onFrame(); });
   }
 
-  // ---------- contact title: dot hops letter-to-letter, left to right ----------
-  // each letter owns its own dot (a ::before centered exactly on that letter's
-  // own span via left:50%), staggered by --i as an animation-delay multiplier —
-  // this avoids any cross-element rect math that could drift out of alignment.
+  // ---------- contact title: ONE dot hops letter-to-letter, left to right ----------
+  // a per-letter fade-in/out (one dot per span) read as separate dots blinking on
+  // and off instead of one point traveling — back to a single element that
+  // physically moves, using offsetLeft (pure layout, no scroll/viewport
+  // dependence) instead of getBoundingClientRect so the math can't drift.
   const contactTitle = document.getElementById('contactTitle');
-  if (contactTitle && !reduceMotion) {
-    const chars = [...contactTitle.textContent].map((ch, idx) => {
+  const contactDot = document.getElementById('contactDot');
+  if (contactTitle && contactDot && !reduceMotion) {
+    const NBSP = String.fromCharCode(160);
+    const chars = [...contactTitle.textContent].map((ch) => {
       const span = document.createElement('span');
-      span.className = 'ch';
-      span.style.setProperty('--i', idx);
       // a space alone inside an inline-block box is leading+trailing whitespace of
       // that box and gets collapsed to zero width — use a non-breaking space instead
-      span.textContent = ch === ' ' ? ' ' : ch;
+      span.textContent = ch === ' ' ? NBSP : ch;
       return span;
     });
     contactTitle.textContent = '';
     chars.forEach((span) => contactTitle.appendChild(span));
 
+    const HOP_MS = 500;
+    let i = 0;
+    let timer = null;
+    // contactTitle and contactDot share the same offsetParent (contact-inner), so
+    // title.offsetLeft + span.offsetLeft lines up directly with the coordinate
+    // space contactDot's own `left` is positioned in
+    const moveTo = (index) => {
+      const span = chars[index];
+      const x = contactTitle.offsetLeft + span.offsetLeft + span.offsetWidth / 2;
+      contactDot.style.left = `${x}px`;
+    };
+    const hop = () => {
+      const isLast = i === chars.length - 1;
+      moveTo(i);
+      contactDot.classList.remove('is-hopping', 'is-resting');
+      void contactDot.offsetWidth;
+      contactDot.classList.add('is-hopping');
+      if (isLast) {
+        clearInterval(timer);
+        // freeze mid-arc instead of dropping back to baseline once the last letter is reached
+        setTimeout(() => {
+          contactDot.classList.remove('is-hopping');
+          contactDot.classList.add('is-resting');
+        }, HOP_MS);
+      }
+      i += 1;
+    };
     // wait until the box has mostly scrolled into view before the sequence starts —
     // a center-line rootMargin trick fired too early (as soon as the tall section's
     // edge crossed the middle of the screen), finishing well before the user arrived
-    const play = () => contactTitle.classList.add('is-playing');
     if ('IntersectionObserver' in window) {
       const startObserver = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
-              play();
+              hop();
+              timer = setInterval(hop, HOP_MS);
               startObserver.disconnect();
             }
           });
@@ -256,8 +284,10 @@
       );
       startObserver.observe(contactTitle);
     } else {
-      play();
+      hop();
+      timer = setInterval(hop, HOP_MS);
     }
+    window.addEventListener('resize', () => moveTo(Math.min(i, chars.length - 1)));
   }
 
   // ---------- footer wordmark: font-size fitted to container width in JS ----------

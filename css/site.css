@@ -377,29 +377,15 @@ img{display:block;max-width:100%;}
 /* the dot-hop sequence assumes a single text line — wrapping to a 2nd line would
    make the dot jump backwards mid-sequence, reading as random rather than left-to-right */
 .contact-box__title{position:relative;font-size:var(--t-h2);font-weight:400;white-space:nowrap;}
-/* each letter owns its own dot (a ::before centered exactly above ITS span via
-   left:50%), so there is no cross-element measuring/positioning to drift out of
-   sync — only one letter's dot is visible at a time, staggered by --i via JS */
-.contact-box__title .ch{position:relative;display:inline-block;}
-.contact-box__title .ch::before{content:"";position:absolute;top:calc(var(--u) * -1.1);
-  left:50%;width:6px;height:6px;background:var(--accent);
-  transform:translate(-50%, 0);opacity:0;}
-.contact-box__title.is-playing .ch::before{
-  animation:contactDotHop .5s ease-in-out forwards;
-  animation-delay:calc(var(--i) * .5s);}
-.contact-box__title.is-playing .ch:last-child::before{animation-name:contactDotHopEnd;}
-@keyframes contactDotHop{
-  0%{opacity:0;transform:translate(-50%,0);}
-  15%{opacity:1;}
-  50%{transform:translate(-50%,-14px);}
-  85%{opacity:1;}
-  100%{opacity:0;transform:translate(-50%,0);}
-}
-@keyframes contactDotHopEnd{
-  0%{opacity:0;transform:translate(-50%,0);}
-  15%{opacity:1;}
-  100%{opacity:1;transform:translate(-50%,-14px);}
-}
+.contact-box__title .ch{display:inline-block;}
+/* ONE dot physically travels between letters (left transitions smoothly) while a
+   synced vertical arc runs on the same duration, so it reads as a single point
+   hopping continuously rather than separate dots blinking in and out per letter */
+.contact-dot{top:calc(var(--u) * -1.1);left:0;
+  transition:left .5s ease-in-out;}
+.contact-dot.is-hopping{animation:contactDotArc .5s ease-in-out;}
+.contact-dot.is-resting{transform:translateY(-14px);}
+@keyframes contactDotArc{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
 /* bigger, more visible CTA than the default .btn--light — small orange accent
    square sits inside the button's own padding instead of overhanging it */
 .btn--contact{height:calc(var(--u) * 1.7);font-size:18px;gap:calc(var(--u) * .5);
