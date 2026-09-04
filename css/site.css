@@ -283,12 +283,13 @@ img{display:block;max-width:100%;}
    ancestor is exactly what was silently disabling .quote__pin's position:sticky
    (a well-known sticky/overflow interaction), so the text just scrolled normally
    instead of pinning. Removed. */
+/* the Stack section's gradient (white -> orange -> black, top to bottom), reversed:
+   same stops, mirrored so this one runs black -> orange -> white instead */
 .quote{position:relative;min-height:var(--h-quote);color:var(--on-dark);
   padding-top:var(--space-12);
-  background:
-    radial-gradient(ellipse 78% 46% at 50% 66%,
-      #ffa04b 0%, #ff6d0e 18%, #d2560c 34%, #7c3409 52%, #2b1509 72%, #0b0705 88%),
-    #0b0705;}
+  background:linear-gradient(180deg,
+    #0a0605 0%, #2b1408 14%, #7b3409 28%, #d1560c 42%,
+    #ff6d0e 55%, #ff8a2b 68%, #f6b477 80%, #faead9 91%, #f7f7f5 100%);}
 .quote__top{position:relative;display:flex;align-items:center;justify-content:space-between;
   gap:var(--u);padding-block:calc(var(--u) * .8);}
 /* .quote__top now lives INSIDE .quote__pin (itself already a padded .container),
