@@ -48,6 +48,8 @@ Footer   — 908px — 4-4-4 + giant edge-to-edge wordmark
       <a href="#stack">솔루션</a>
       <a href="#cta">사업기회</a>
       <a href="#news">뉴스</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact">문의하기</a>
     </nav>
     <button class="nav__toggle" id="navToggle" aria-label="메뉴 열기" aria-expanded="false">
       <span></span><span></span><span></span>
@@ -343,45 +345,26 @@ Footer   — 908px — 4-4-4 + giant edge-to-edge wordmark
 
 <!-- FOOTER — Figma 142:1364 -->
 <footer class="footer">
-  <div class="container grid footer__grid">
-    <div class="gcell footer__col" style="grid-column:1/5">
-      <span class="mark" aria-hidden="true"></span>
-      <p class="footer__lead">현장 소식을 가장 먼저:</p>
-      <form class="footer__form" onsubmit="return false">
-        <input type="email" placeholder="이메일을 입력하세요" aria-label="이메일">
-        <button type="submit" class="btn btn--glass btn--sm">구독<i class="ico ico--glass"></i></button>
-      </form>
-      <p class="footer__note">FORMAX는 국내 118개 생산 라인에 <b>운영 데이터 인프라</b>를 공급하고 있습니다.</p>
+  <div class="container footer__grid">
+    <div class="footer__col">
+      <span class="label label--dim">CONTACT</span>
+      <ul class="footer__links">
+        <li><a href="tel:+82212345678">+82 2-1234-5678</a></li>
+        <li><a href="mailto:hello@formax.io">hello@formax.io</a></li>
+      </ul>
     </div>
 
-    <nav class="gcell footer__col" style="grid-column:5/9">
-      <span class="label label--dim">NAVIGATION</span>
+    <div class="footer__col footer__col--right">
+      <span class="label label--dim">SOCIAL</span>
       <ul class="footer__links">
-        <li><a href="#top">홈</a></li>
-        <li><a href="#platform">회사소개</a></li>
-        <li><a href="#contact">문의</a></li>
-        <li><a href="#cta">사업기회</a></li>
-        <li><a href="#stack">솔루션</a></li>
-        <li><a href="#news">뉴스</a></li>
+        <li><a href="#">LinkedIn</a></li>
+        <li><a href="#">YouTube</a></li>
+        <li><a href="#">Newsroom</a></li>
       </ul>
-      <span class="footer__legal"><a href="#">개인정보 처리방침</a><a href="#">이용약관</a></span>
-    </nav>
-
-    <nav class="gcell footer__col" style="grid-column:9/13">
-      <div class="footer__social">
-        <div>
-          <span class="label label--dim">SOCIAL</span>
-          <ul class="footer__links">
-            <li><a href="#">LinkedIn</a></li>
-            <li><a href="#">YouTube</a></li>
-            <li><a href="#">Newsroom</a></li>
-          </ul>
-        </div>
-        <a href="#top" class="footer__totop"><span class="label">맨 위로</span><i class="ico ico--glass"></i></a>
-      </div>
-      <span class="label label--dim">© 2026 FORMAX INC. ALL RIGHTS RESERVED</span>
-    </nav>
+    </div>
   </div>
+
+  <span class="label label--dim footer__copyright">© 2026 FORMAX INC. ALL RIGHTS RESERVED</span>
 
   <div class="footer__wordmark" aria-hidden="true">FORMAX</div>
 </footer>

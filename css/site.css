@@ -33,7 +33,7 @@
   --h-quote:  clamp(760px, 112.4vw, 2158px);
   --h-news:   clamp(520px, 44.0vw, 846px);
   --h-faq:    clamp(460px, 36.2vw, 694px);
-  --h-footer: clamp(560px, 47.3vw, 908px);
+  --h-footer: 650px;
 
   --u: clamp(14px, 1.46vw, 28px);   /* the design's base 28px unit */
 }
@@ -391,41 +391,24 @@ img{display:block;max-width:100%;}
 .btn--contact .btn__accent{width:calc(var(--u) * .64);height:calc(var(--u) * .64);
   background:var(--accent);}
 
-/* ---------- footer (Figma 142:1364) ----------
+/* ---------- footer (Figma 142:1364, pared down) ----------
    bright orange at the top, fading to black behind the giant wordmark */
-.footer{position:relative;min-height:var(--h-footer);color:var(--on-dark);overflow:hidden;
-  display:flex;flex-direction:column;padding-top:var(--space-12);
+.footer{position:relative;height:var(--h-footer);color:var(--on-dark);overflow:hidden;
+  display:flex;flex-direction:column;padding-top:var(--space-9);
   background:
     radial-gradient(ellipse 90% 62% at 50% -6%,
       #ffa04b 0%, #ff6d0e 16%, #cc540b 32%, #6d2f09 52%, #21120a 74%, #070505 92%),
     #070505;}
-.footer__grid{align-items:stretch;}
-.footer__col{position:relative;display:flex;flex-direction:column;gap:calc(var(--u) * .57);}
-.footer__col .mark{top:0;left:0;background:var(--on-dark);}
-.footer__lead{font-size:var(--t-card);font-weight:400;padding-top:calc(var(--u) * .8);}
-.footer__form{display:flex;align-items:center;gap:8px;
-  padding-bottom:calc(var(--u) * .57);border-bottom:1px solid rgba(243,243,243,.25);}
-.footer__form input{flex:1;min-width:0;background:none;border:0;color:var(--on-dark);
-  font:inherit;font-size:var(--t-body);font-weight:400;padding:0;}
-.footer__form input::placeholder{color:rgba(243,243,243,.55);}
-.footer__form input:focus{outline:none;}
-.footer__note{font-size:var(--t-label);text-transform:uppercase;
-  color:rgba(243,243,243,.6);margin-top:auto;}
-.footer__note b{color:var(--on-dark);font-weight:400;}
-.footer__links{display:grid;grid-template-columns:1fr 1fr;gap:4px calc(var(--u) * .57);}
+.footer__grid{display:flex;justify-content:space-between;gap:var(--u);}
+.footer__col{position:relative;display:flex;flex-direction:column;gap:calc(var(--u) * .43);}
+.footer__col--right{align-items:flex-end;text-align:right;}
+.footer__links{display:flex;flex-direction:column;gap:4px;}
 .footer__links a{font-size:var(--t-body);font-weight:400;color:var(--on-dark);}
 .footer__links a:hover{text-decoration:underline;}
-.footer__legal{display:flex;gap:calc(var(--u) * .43);margin-top:auto;
-  font-size:var(--t-label);text-transform:uppercase;color:rgba(243,243,243,.6);}
-.footer__social{display:flex;justify-content:space-between;gap:var(--u);}
-.footer__social > div{display:flex;flex-direction:column;gap:calc(var(--u) * .43);}
-.footer__social .footer__links{grid-template-columns:1fr;}
-.footer__totop{display:flex;flex-direction:column;align-items:flex-end;gap:calc(var(--u) * .43);
-  align-self:flex-end;}
-.footer__col:last-child > .label{margin-top:auto;}
+.footer__copyright{margin-top:auto;}
 
-.footer__wordmark{margin-top:auto;font-size:26.5vw;font-weight:400;
-  text-align:center;white-space:nowrap;
+.footer__wordmark{margin-top:auto;font-size:clamp(48px, 13vw, 190px);font-weight:400;
+  text-align:center;white-space:nowrap;line-height:1;
   background:linear-gradient(180deg, #ffb173 0%, #ff6d0e 42%, #b34c0b 72%, #4d2208 100%);
   -webkit-background-clip:text;background-clip:text;color:transparent;
   padding-top:calc(var(--u) * 1);}
@@ -433,7 +416,9 @@ img{display:block;max-width:100%;}
 /* ---------- responsive ---------- */
 @media (max-width:1024px){
   .platform__grid > .gcell,.stack__grid > .gcell,.news__head > .gcell,
-  .faq__head > .gcell,.faq__list,.footer__grid > .gcell{grid-column:1/13!important;}
+  .faq__head > .gcell,.faq__list{grid-column:1/13!important;}
+  .footer__grid{flex-direction:column;gap:calc(var(--u) * .86);}
+  .footer__col--right{align-items:flex-start;text-align:left;}
   .platform__cards{gap:var(--grid-gutter-lg);}
   /* single column: drop the x-ray overlay layer entirely and let the photo sit
      inline above the rows (the wipe only makes sense in the two-column pinned layout) */
@@ -448,7 +433,6 @@ img{display:block;max-width:100%;}
   .hero__foot{grid-template-columns:1fr;gap:calc(var(--u) * 1);}
   .hero__card{justify-self:start;width:100%;}
   .news__headbtn{justify-content:flex-start;}
-  .footer__grid > .gcell + .gcell{margin-top:calc(var(--u) * 1.5);}
 }
 @media (max-width:768px){
   /* solid bg + normal blending on mobile — the color-invert trick only makes sense
@@ -461,7 +445,6 @@ img{display:block;max-width:100%;}
   .nav__toggle{display:flex;}
   .hero__inner{padding-top:calc(var(--u) * 2.5);}
   .news__grid > .gcell{grid-column:1/13!important;}
-  .footer__links{grid-template-columns:1fr;}
   .frow summary{height:auto;padding-block:calc(var(--u) * .71);}
   .frow p{padding-left:calc(var(--u) * .71);}
 }

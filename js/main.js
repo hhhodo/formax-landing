@@ -259,8 +259,25 @@
       }
       i += 1;
     };
-    hop();
-    timer = setInterval(hop, HOP_MS);
+    // wait until the section is centered in the viewport before the sequence starts
+    if ('IntersectionObserver' in window) {
+      const startObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              hop();
+              timer = setInterval(hop, HOP_MS);
+              startObserver.disconnect();
+            }
+          });
+        },
+        { rootMargin: '-50% 0px -50% 0px', threshold: 0 }
+      );
+      startObserver.observe(contactInner);
+    } else {
+      hop();
+      timer = setInterval(hop, HOP_MS);
+    }
     window.addEventListener('resize', () => moveTo(Math.min(i, chars.length - 1)));
   }
 
