@@ -64,6 +64,7 @@ img{display:block;max-width:100%;}
 .btn--glass{background:rgba(240,239,238,.14);color:var(--on-dark);
   padding-inline:calc(var(--u) * .57);}
 .btn--tint{background:rgba(0,0,0,.1);color:var(--ink);padding-inline:calc(var(--u) * .57);}
+.btn--dark{background:var(--ink);color:var(--on-dark);padding-inline:calc(var(--u) * .57);}
 .btn--panel{background:rgba(255,255,255,.85);color:var(--ink);justify-content:space-between;
   width:100%;padding-inline:calc(var(--u) * .57);}
 .btn--sm{height:calc(var(--u) * 1.21);}
@@ -369,15 +370,12 @@ img{display:block;max-width:100%;}
    glow sits at the bottom of this section instead of the top */
 .contact-cta{position:relative;min-height:calc(var(--h-faq) * .9);display:flex;
   align-items:center;justify-content:center;padding-block:var(--space-11);
-  background:linear-gradient(180deg,
-    #ffcd9c 0%, #ffe3c2 30%, #fef7ee 65%, #f7f7f5 100%);}
-.contact-box{position:relative;width:100%;max-width:calc(var(--u) * 50);
-  margin-inline:auto;aspect-ratio:16/9;box-sizing:border-box;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--space-6);
-  text-align:center;color:var(--on-dark);
-  background:linear-gradient(180deg, rgba(41,39,38,.92) 0%, rgba(41,39,38,.4) 100%);
-  padding:var(--space-6) calc(var(--space-10) * 1.4);}
-.contact-box .mark{top:0;left:0;}
+  background:radial-gradient(140% 78% at 50% 114%,
+    #ffcd9c 0%, #ffe3c2 45%, #fef7ee 80%, #fbf8f4 100%);}
+.contact-inner{position:relative;width:100%;max-width:calc(var(--u) * 34);
+  margin-inline:auto;display:flex;flex-direction:column;align-items:center;
+  gap:var(--space-6);text-align:center;color:var(--ink);}
+.contact-inner .mark{top:0;left:50%;transform:translateX(-50%);}
 .contact-box__title{font-size:var(--t-h2);font-weight:400;}
 /* bigger, more visible CTA than the default .btn--light — small orange accent
    square sits inside the button's own padding instead of overhanging it */
