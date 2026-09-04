@@ -230,7 +230,9 @@
       const span = document.createElement('span');
       span.className = 'ch';
       span.style.setProperty('--i', idx);
-      span.textContent = ch === ' ' ? ' ' : ch;
+      // a space alone inside an inline-block box is leading+trailing whitespace of
+      // that box and gets collapsed to zero width — use a non-breaking space instead
+      span.textContent = ch === ' ' ? ' ' : ch;
       return span;
     });
     contactTitle.textContent = '';
