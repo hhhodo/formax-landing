@@ -348,7 +348,6 @@ img{display:block;max-width:100%;}
 .faq__head > .gcell:first-child{position:relative;}
 .faq__head .mark{top:0;left:0;}
 .faq__title{font-size:var(--t-h2);font-weight:400;padding-top:calc(var(--u) * 1);}
-.faq__headbtn{display:flex;align-items:center;justify-content:flex-end;gap:calc(var(--u) * .71);}
 .faq__list{display:flex;flex-direction:column;gap:4px;}
 .frow{background:rgba(0,0,0,.03);}
 .frow summary{list-style:none;display:flex;align-items:center;gap:var(--u);cursor:pointer;
@@ -364,6 +363,17 @@ img{display:block;max-width:100%;}
 .frow[open] .frow__ico::after{transform:scaleY(0);}
 .frow p{padding:0 calc(var(--u) * .71) calc(var(--u) * .71) calc(var(--u) * 2.5);
   font-size:var(--t-small);opacity:.6;max-width:70ch;}
+
+/* ---------- contact ---------- */
+.contact-cta{min-height:calc(var(--h-faq) * .74);display:flex;align-items:center;
+  justify-content:center;background:#f7f7f5;padding-block:var(--space-11);}
+.contact-box{position:relative;width:100%;max-width:calc(var(--u) * 26);
+  display:flex;flex-direction:column;align-items:center;gap:var(--space-6);
+  text-align:center;background:var(--ink);color:var(--on-dark);
+  padding:var(--space-10) var(--space-8);}
+.contact-box .mark--tl{top:0;left:0;}
+.contact-box .mark--br{bottom:0;right:0;}
+.contact-box__title{font-size:var(--t-h2);font-weight:400;}
 
 /* ---------- footer (Figma 142:1364) ----------
    bright orange at the top, fading to black behind the giant wordmark */
@@ -421,7 +431,7 @@ img{display:block;max-width:100%;}
   .quote__pin{position:static;}
   .hero__foot{grid-template-columns:1fr;gap:calc(var(--u) * 1);}
   .hero__card{justify-self:start;width:100%;}
-  .news__headbtn,.faq__headbtn{justify-content:flex-start;}
+  .news__headbtn{justify-content:flex-start;}
   .footer__grid > .gcell + .gcell{margin-top:calc(var(--u) * 1.5);}
 }
 @media (max-width:768px){
