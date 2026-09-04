@@ -253,12 +253,15 @@
     const hop = () => {
       const isLast = i === chars.length - 1;
       moveTo(i);
-      contactDot.classList.remove('is-hopping', 'is-resting');
+      contactDot.classList.remove('is-hopping', 'is-resting', 'is-last');
       void contactDot.offsetWidth;
+      if (isLast) contactDot.classList.add('is-last');
       contactDot.classList.add('is-hopping');
       if (isLast) {
         clearInterval(timer);
-        // freeze mid-arc instead of dropping back to baseline once the last letter is reached
+        // the last hop's keyframe already ENDS at the lifted position (see CSS
+        // .is-last), so swapping to .is-resting here lands on the same transform
+        // instead of snapping from baseline up to lifted
         setTimeout(() => {
           contactDot.classList.remove('is-hopping');
           contactDot.classList.add('is-resting');
