@@ -240,6 +240,9 @@
       const spanRect = span.getBoundingClientRect();
       const x = spanRect.left - innerRect.left + spanRect.width / 2;
       contactDot.style.left = `${x}px`;
+      contactDot.classList.remove('is-hopping');
+      void contactDot.offsetWidth;
+      contactDot.classList.add('is-hopping');
       i += 1;
     };
     hop();
