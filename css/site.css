@@ -297,12 +297,14 @@ img{display:block;max-width:100%;}
    every other section's gcell-based dot (their padding also comes from an ancestor) */
 .quote__top .mark{top:0;left:0;}
 /* eyebrow label fills first, ahead of the three body lines — same fill-clip technique.
-   mix-blend-mode:difference (same trick as the nav) means it auto-inverts against
-   whatever the background gradient is doing at that scroll position — needed now
-   that the background itself runs black->white instead of staying dark throughout. */
+   (mix-blend-mode:difference was tried here for auto-contrast against the shifting
+   background, but it conflicts with this same element's background-clip:text trick —
+   the blend swallowed the visible dim/bright seam, so the fill animation stopped
+   being visible at all. Reverted; plain white holds up fine since the text is pinned
+   near the top, where the background stays dark for all of the fill's duration.) */
 .quote-eyebrow{
   -webkit-background-clip:text;background-clip:text;color:transparent;
-  -webkit-text-fill-color:transparent;mix-blend-mode:difference;
+  -webkit-text-fill-color:transparent;
   background-image:linear-gradient(90deg, #fff var(--quote-fill0,0%), rgba(255,255,255,.5) var(--quote-fill0,0%));}
 /* pinned while the fill plays out — min-height gives it scroll room to hold instead
    of scrolling away before the animation finishes */
@@ -316,7 +318,7 @@ img{display:block;max-width:100%;}
    line-by-line as you scroll, driven by --quote-fill1/2/3 (js/main.js). */
 .q-line{display:block;
   -webkit-background-clip:text;background-clip:text;color:transparent;
-  -webkit-text-fill-color:transparent;mix-blend-mode:difference;}
+  -webkit-text-fill-color:transparent;}
 .q-line:nth-child(1){background-image:linear-gradient(90deg, #fff var(--quote-fill1,0%), rgba(255,255,255,.5) var(--quote-fill1,0%));}
 .q-line:nth-child(2){background-image:linear-gradient(90deg, #fff var(--quote-fill2,0%), rgba(255,255,255,.5) var(--quote-fill2,0%));}
 .q-line:nth-child(3){background-image:linear-gradient(90deg, #fff var(--quote-fill3,0%), rgba(255,255,255,.5) var(--quote-fill3,0%));}
