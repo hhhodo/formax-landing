@@ -364,15 +364,18 @@ img{display:block;max-width:100%;}
 .frow p{padding:0 calc(var(--u) * .71) calc(var(--u) * .71) calc(var(--u) * 2.5);
   font-size:var(--t-small);opacity:.6;max-width:70ch;}
 
-/* ---------- contact ---------- */
-.contact-cta{min-height:calc(var(--h-faq) * .74);display:flex;align-items:center;
-  justify-content:center;background:#f7f7f5;padding-block:var(--space-11);}
-.contact-box{position:relative;width:100%;max-width:calc(var(--u) * 26);
-  display:flex;flex-direction:column;align-items:center;gap:var(--space-6);
-  text-align:center;background:var(--ink);color:var(--on-dark);
-  padding:var(--space-10) var(--space-8);}
-.contact-box .mark--tl{top:0;left:0;}
-.contact-box .mark--br{bottom:0;right:0;}
+/* ---------- contact ----------
+   bg: the platform section's radial gradient, flipped top-to-bottom so the bright
+   glow sits at the bottom of this section instead of the top */
+.contact-cta{position:relative;min-height:calc(var(--h-faq) * .9);display:flex;
+  align-items:center;justify-content:center;padding-block:var(--space-11);
+  background:radial-gradient(140% 78% at 50% 114%,
+    #ffcd9c 0%, #ffe3c2 45%, #fef7ee 80%, #fbf8f4 100%);}
+.contact-box{position:relative;width:100%;
+  display:flex;align-items:center;justify-content:space-between;gap:var(--space-6);
+  background:rgba(41,39,38,.62);color:var(--on-dark);
+  padding:var(--space-9) var(--space-8);}
+.contact-box .mark{top:0;left:0;}
 .contact-box__title{font-size:var(--t-h2);font-weight:400;}
 
 /* ---------- footer (Figma 142:1364) ----------
@@ -448,4 +451,5 @@ img{display:block;max-width:100%;}
   .footer__links{grid-template-columns:1fr;}
   .frow summary{height:auto;padding-block:calc(var(--u) * .71);}
   .frow p{padding-left:calc(var(--u) * .71);}
+  .contact-box{flex-direction:column;align-items:flex-start;}
 }
