@@ -377,14 +377,29 @@ img{display:block;max-width:100%;}
 /* the dot-hop sequence assumes a single text line — wrapping to a 2nd line would
    make the dot jump backwards mid-sequence, reading as random rather than left-to-right */
 .contact-box__title{position:relative;font-size:var(--t-h2);font-weight:400;white-space:nowrap;}
-/* dot hops letter-to-letter across the title (left positioned in JS) — the
-   horizontal move and the vertical arc run on the SAME timing/duration so they
-   trace one parabola per hop, instead of two independent motions fighting */
-.contact-dot{top:calc(var(--u) * -1.1);left:0;
-  transition:left .5s ease-in-out;}
-.contact-dot.is-hopping{animation:contactDotArc .5s ease-in-out;}
-.contact-dot.is-resting{transform:translateY(-14px);}
-@keyframes contactDotArc{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
+/* each letter owns its own dot (a ::before centered exactly above ITS span via
+   left:50%), so there is no cross-element measuring/positioning to drift out of
+   sync — only one letter's dot is visible at a time, staggered by --i via JS */
+.contact-box__title .ch{position:relative;display:inline-block;}
+.contact-box__title .ch::before{content:"";position:absolute;top:calc(var(--u) * -1.1);
+  left:50%;width:6px;height:6px;background:var(--accent);
+  transform:translate(-50%, 0);opacity:0;}
+.contact-box__title.is-playing .ch::before{
+  animation:contactDotHop .5s ease-in-out forwards;
+  animation-delay:calc(var(--i) * .5s);}
+.contact-box__title.is-playing .ch:last-child::before{animation-name:contactDotHopEnd;}
+@keyframes contactDotHop{
+  0%{opacity:0;transform:translate(-50%,0);}
+  15%{opacity:1;}
+  50%{transform:translate(-50%,-14px);}
+  85%{opacity:1;}
+  100%{opacity:0;transform:translate(-50%,0);}
+}
+@keyframes contactDotHopEnd{
+  0%{opacity:0;transform:translate(-50%,0);}
+  15%{opacity:1;}
+  100%{opacity:1;transform:translate(-50%,-14px);}
+}
 /* bigger, more visible CTA than the default .btn--light — small orange accent
    square sits inside the button's own padding instead of overhanging it */
 .btn--contact{height:calc(var(--u) * 1.7);font-size:18px;gap:calc(var(--u) * .5);
@@ -403,15 +418,15 @@ img{display:block;max-width:100%;}
 .footer__grid{align-items:center;}
 .footer__col{position:relative;display:flex;align-items:center;gap:calc(var(--u) * .86);}
 .footer__col--right{justify-content:flex-end;}
-.footer__row{display:flex;align-items:center;gap:calc(var(--u) * .86);flex-wrap:wrap;}
+.footer__row{display:flex;align-items:center;gap:calc(var(--u) * .86);flex-wrap:nowrap;}
 .footer__row a{font-size:var(--t-body);font-weight:400;color:var(--on-dark);white-space:nowrap;}
 .footer__row a:hover{text-decoration:underline;}
-.footer__copyright{margin-top:calc(var(--u) * 1.5);}
 
-/* fixed-height box (not the whole footer) so the giant wordmark scales to
-   exactly fill 650px without depending on viewport width */
-.footer__wordmark{margin-top:auto;height:650px;display:flex;align-items:center;
-  justify-content:center;font-size:clamp(160px, 34vw, 500px);font-weight:400;
+/* fixed-height box (not the whole footer) — font-size is computed in JS to
+   exactly fill the container width at any viewport, so it never clips or
+   overflows sideways the way a flat vw-based size did on narrower/laptop widths */
+.footer__wordmark{margin-top:auto;height:650px;width:100%;display:flex;align-items:center;
+  justify-content:center;font-weight:400;
   line-height:1;white-space:nowrap;overflow:hidden;
   background:linear-gradient(180deg, #ffb173 0%, #ff6d0e 42%, #b34c0b 72%, #4d2208 100%);
   -webkit-background-clip:text;background-clip:text;color:transparent;}

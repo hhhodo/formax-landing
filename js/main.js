@@ -221,66 +221,59 @@
   }
 
   // ---------- contact title: dot hops letter-to-letter, left to right ----------
+  // each letter owns its own dot (a ::before centered exactly on that letter's
+  // own span via left:50%), staggered by --i as an animation-delay multiplier —
+  // this avoids any cross-element rect math that could drift out of alignment.
   const contactTitle = document.getElementById('contactTitle');
-  const contactDot = document.getElementById('contactDot');
-  const contactInner = contactDot ? contactDot.closest('.contact-inner') : null;
-  if (contactTitle && contactDot && contactInner && !reduceMotion) {
-    const chars = [...contactTitle.textContent].map((ch) => {
+  if (contactTitle && !reduceMotion) {
+    const chars = [...contactTitle.textContent].map((ch, idx) => {
       const span = document.createElement('span');
-      span.textContent = ch === ' ' ? ' ' : ch;
+      span.className = 'ch';
+      span.style.setProperty('--i', idx);
+      span.textContent = ch === ' ' ? ' ' : ch;
       return span;
     });
     contactTitle.textContent = '';
     chars.forEach((span) => contactTitle.appendChild(span));
 
-    const HOP_MS = 500;
-    let i = 0;
-    let timer = null;
-    const moveTo = (index) => {
-      const span = chars[index];
-      const innerRect = contactInner.getBoundingClientRect();
-      const spanRect = span.getBoundingClientRect();
-      const x = spanRect.left - innerRect.left + spanRect.width / 2;
-      contactDot.style.left = `${x}px`;
-    };
-    const hop = () => {
-      const isLast = i === chars.length - 1;
-      moveTo(i);
-      contactDot.classList.remove('is-hopping', 'is-resting');
-      void contactDot.offsetWidth;
-      contactDot.classList.add('is-hopping');
-      if (isLast) {
-        clearInterval(timer);
-        // freeze mid-arc instead of dropping back to baseline once the last letter is reached
-        setTimeout(() => {
-          contactDot.classList.remove('is-hopping');
-          contactDot.classList.add('is-resting');
-        }, HOP_MS);
-      }
-      i += 1;
-    };
     // wait until the box has mostly scrolled into view before the sequence starts —
     // a center-line rootMargin trick fired too early (as soon as the tall section's
     // edge crossed the middle of the screen), finishing well before the user arrived
+    const play = () => contactTitle.classList.add('is-playing');
     if ('IntersectionObserver' in window) {
       const startObserver = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
-              hop();
-              timer = setInterval(hop, HOP_MS);
+              play();
               startObserver.disconnect();
             }
           });
         },
         { threshold: 0.6 }
       );
-      startObserver.observe(contactInner);
+      startObserver.observe(contactTitle);
     } else {
-      hop();
-      timer = setInterval(hop, HOP_MS);
+      play();
     }
-    window.addEventListener('resize', () => moveTo(Math.min(i, chars.length - 1)));
+  }
+
+  // ---------- footer wordmark: font-size fitted to container width in JS ----------
+  // a flat vw-based clamp overflowed sideways at laptop widths (where the
+  // container is narrower relative to the viewport); measuring the actual
+  // rendered width and scaling from it keeps "FORMAX" filling the row at any width.
+  const footerWordmark = document.getElementById('footerWordmark');
+  if (footerWordmark) {
+    const BASE_SIZE = 500;
+    const fitWordmark = () => {
+      footerWordmark.style.fontSize = `${BASE_SIZE}px`;
+      const available = footerWordmark.clientWidth;
+      const natural = footerWordmark.scrollWidth;
+      const size = natural > available ? Math.floor(BASE_SIZE * (available / natural)) : BASE_SIZE;
+      footerWordmark.style.fontSize = `${size}px`;
+    };
+    fitWordmark();
+    window.addEventListener('resize', fitWordmark);
   }
 
   // ---------- generic reveal-on-scroll ----------
