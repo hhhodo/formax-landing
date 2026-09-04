@@ -380,8 +380,9 @@ img{display:block;max-width:100%;}
    horizontal move and the vertical arc run on the SAME timing/duration so they
    trace one parabola per hop, instead of two independent motions fighting */
 .contact-dot{top:calc(var(--u) * -1.1);left:0;
-  transition:left .26s ease-in-out;}
-.contact-dot.is-hopping{animation:contactDotArc .26s ease-in-out;}
+  transition:left .5s ease-in-out;}
+.contact-dot.is-hopping{animation:contactDotArc .5s ease-in-out;}
+.contact-dot.is-resting{transform:translateY(-14px);}
 @keyframes contactDotArc{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
 /* bigger, more visible CTA than the default .btn--light — small orange accent
    square sits inside the button's own padding instead of overhanging it */

@@ -233,21 +233,35 @@
     contactTitle.textContent = '';
     chars.forEach((span) => contactTitle.appendChild(span));
 
+    const HOP_MS = 500;
     let i = 0;
-    const hop = () => {
-      const span = chars[i % chars.length];
+    let timer = null;
+    const moveTo = (index) => {
+      const span = chars[index];
       const innerRect = contactInner.getBoundingClientRect();
       const spanRect = span.getBoundingClientRect();
       const x = spanRect.left - innerRect.left + spanRect.width / 2;
       contactDot.style.left = `${x}px`;
-      contactDot.classList.remove('is-hopping');
+    };
+    const hop = () => {
+      const isLast = i === chars.length - 1;
+      moveTo(i);
+      contactDot.classList.remove('is-hopping', 'is-resting');
       void contactDot.offsetWidth;
       contactDot.classList.add('is-hopping');
+      if (isLast) {
+        clearInterval(timer);
+        // freeze mid-arc instead of dropping back to baseline once the last letter is reached
+        setTimeout(() => {
+          contactDot.classList.remove('is-hopping');
+          contactDot.classList.add('is-resting');
+        }, HOP_MS);
+      }
       i += 1;
     };
     hop();
-    setInterval(hop, 260);
-    window.addEventListener('resize', hop);
+    timer = setInterval(hop, HOP_MS);
+    window.addEventListener('resize', () => moveTo(Math.min(i, chars.length - 1)));
   }
 
   // ---------- generic reveal-on-scroll ----------
