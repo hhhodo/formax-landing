@@ -268,7 +268,7 @@ img{display:block;max-width:100%;}
    another, driven by scroll (js/main.js sets --cta-fill1/2/3). Only once all three
    finish does the header-cover growth (--cta-cover) begin. */
 .stack__cta-title{position:relative;font-size:var(--t-h2);font-weight:400;
-  max-width:calc(530 / 1920 * 100vw);min-width:280px;}
+  min-width:280px;}
 .cta-line{display:block;
   -webkit-background-clip:text;background-clip:text;color:transparent;
   -webkit-text-fill-color:transparent;}
