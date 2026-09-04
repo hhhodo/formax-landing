@@ -259,7 +259,9 @@
       }
       i += 1;
     };
-    // wait until the section is centered in the viewport before the sequence starts
+    // wait until the box has mostly scrolled into view before the sequence starts —
+    // a center-line rootMargin trick fired too early (as soon as the tall section's
+    // edge crossed the middle of the screen), finishing well before the user arrived
     if ('IntersectionObserver' in window) {
       const startObserver = new IntersectionObserver(
         (entries) => {
@@ -271,7 +273,7 @@
             }
           });
         },
-        { rootMargin: '-50% 0px -50% 0px', threshold: 0 }
+        { threshold: 0.6 }
       );
       startObserver.observe(contactInner);
     } else {

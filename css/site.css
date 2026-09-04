@@ -33,7 +33,6 @@
   --h-quote:  clamp(760px, 112.4vw, 2158px);
   --h-news:   clamp(520px, 44.0vw, 846px);
   --h-faq:    clamp(460px, 36.2vw, 694px);
-  --h-footer: 650px;
 
   --u: clamp(14px, 1.46vw, 28px);   /* the design's base 28px unit */
 }
@@ -372,10 +371,12 @@ img{display:block;max-width:100%;}
   align-items:center;justify-content:center;padding-block:var(--space-11);
   background:radial-gradient(140% 78% at 50% 114%,
     #ffcd9c 0%, #ffe3c2 45%, #fef7ee 80%, #fbf8f4 100%);}
-.contact-inner{position:relative;width:100%;max-width:calc(var(--u) * 34);
+.contact-inner{position:relative;width:100%;max-width:none;
   margin-inline:auto;display:flex;flex-direction:column;align-items:center;
   gap:var(--space-6);text-align:center;color:var(--ink);}
-.contact-box__title{position:relative;font-size:var(--t-h2);font-weight:400;}
+/* the dot-hop sequence assumes a single text line — wrapping to a 2nd line would
+   make the dot jump backwards mid-sequence, reading as random rather than left-to-right */
+.contact-box__title{position:relative;font-size:var(--t-h2);font-weight:400;white-space:nowrap;}
 /* dot hops letter-to-letter across the title (left positioned in JS) — the
    horizontal move and the vertical arc run on the SAME timing/duration so they
    trace one parabola per hop, instead of two independent motions fighting */
@@ -393,32 +394,34 @@ img{display:block;max-width:100%;}
 
 /* ---------- footer (Figma 142:1364, pared down) ----------
    bright orange at the top, fading to black behind the giant wordmark */
-.footer{position:relative;height:var(--h-footer);color:var(--on-dark);overflow:hidden;
+.footer{position:relative;color:var(--on-dark);overflow:hidden;
   display:flex;flex-direction:column;padding-top:var(--space-9);
   background:
     radial-gradient(ellipse 90% 62% at 50% -6%,
       #ffa04b 0%, #ff6d0e 16%, #cc540b 32%, #6d2f09 52%, #21120a 74%, #070505 92%),
     #070505;}
-.footer__grid{display:flex;justify-content:space-between;gap:var(--u);}
-.footer__col{position:relative;display:flex;flex-direction:column;gap:calc(var(--u) * .43);}
-.footer__col--right{align-items:flex-end;text-align:right;}
-.footer__links{display:flex;flex-direction:column;gap:4px;}
-.footer__links a{font-size:var(--t-body);font-weight:400;color:var(--on-dark);}
-.footer__links a:hover{text-decoration:underline;}
-.footer__copyright{margin-top:auto;}
+.footer__grid{align-items:center;}
+.footer__col{position:relative;display:flex;align-items:center;gap:calc(var(--u) * .86);}
+.footer__col--right{justify-content:flex-end;}
+.footer__row{display:flex;align-items:center;gap:calc(var(--u) * .86);flex-wrap:wrap;}
+.footer__row a{font-size:var(--t-body);font-weight:400;color:var(--on-dark);white-space:nowrap;}
+.footer__row a:hover{text-decoration:underline;}
+.footer__copyright{margin-top:calc(var(--u) * 1.5);}
 
-.footer__wordmark{margin-top:auto;font-size:clamp(48px, 13vw, 190px);font-weight:400;
-  text-align:center;white-space:nowrap;line-height:1;
+/* fixed-height box (not the whole footer) so the giant wordmark scales to
+   exactly fill 650px without depending on viewport width */
+.footer__wordmark{margin-top:auto;height:650px;display:flex;align-items:center;
+  justify-content:center;font-size:clamp(160px, 34vw, 500px);font-weight:400;
+  line-height:1;white-space:nowrap;overflow:hidden;
   background:linear-gradient(180deg, #ffb173 0%, #ff6d0e 42%, #b34c0b 72%, #4d2208 100%);
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-  padding-top:calc(var(--u) * 1);}
+  -webkit-background-clip:text;background-clip:text;color:transparent;}
 
 /* ---------- responsive ---------- */
 @media (max-width:1024px){
   .platform__grid > .gcell,.stack__grid > .gcell,.news__head > .gcell,
-  .faq__head > .gcell,.faq__list{grid-column:1/13!important;}
-  .footer__grid{flex-direction:column;gap:calc(var(--u) * .86);}
-  .footer__col--right{align-items:flex-start;text-align:left;}
+  .faq__head > .gcell,.faq__list,.footer__grid > .gcell{grid-column:1/13!important;}
+  .footer__grid{row-gap:calc(var(--u) * .86);}
+  .footer__col--right{justify-content:flex-start;}
   .platform__cards{gap:var(--grid-gutter-lg);}
   /* single column: drop the x-ray overlay layer entirely and let the photo sit
      inline above the rows (the wipe only makes sense in the two-column pinned layout) */
