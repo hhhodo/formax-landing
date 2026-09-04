@@ -278,7 +278,12 @@ img{display:block;max-width:100%;}
 
 /* ---------- quote (Figma 142:1088) ----------
    text sits at the TOP; a huge orange bloom fills the rest of the (very tall) section */
-.quote{position:relative;min-height:var(--h-quote);color:var(--on-dark);overflow:hidden;
+/* overflow:hidden here used to clip the background bloom, but a plain CSS
+   `background` never overflows its own box anyway — and overflow:hidden on an
+   ancestor is exactly what was silently disabling .quote__pin's position:sticky
+   (a well-known sticky/overflow interaction), so the text just scrolled normally
+   instead of pinning. Removed. */
+.quote{position:relative;min-height:var(--h-quote);color:var(--on-dark);
   padding-top:var(--space-12);
   background:
     radial-gradient(ellipse 78% 46% at 50% 66%,
@@ -299,7 +304,7 @@ img{display:block;max-width:100%;}
    of scrolling away before the animation finishes */
 .quote__pin-wrap{position:relative;min-height:220vh;}
 .quote__pin{position:sticky;top:calc(var(--u) * 2.8);}
-.quote__text{max-width:calc(1000 / 1920 * 100vw);min-width:280px;
+.quote__text{min-width:280px;
   font-size:var(--t-quote);font-weight:400;padding-top:calc(var(--u) * 2.4);}
 .quote__text em{font-style:normal;}
 /* three sibling lines, same technique as the Stack/CTA titles (never nest a fill-clip
