@@ -369,9 +369,10 @@ img{display:block;max-width:100%;}
    glow sits at the bottom of this section instead of the top */
 .contact-cta{position:relative;min-height:calc(var(--h-faq) * .9);display:flex;
   align-items:center;justify-content:center;padding-block:var(--space-11);
-  background:#f7f7f5;}
-.contact-box{position:relative;width:100%;max-width:calc(var(--u) * 34);
-  aspect-ratio:16/9;box-sizing:border-box;
+  background:linear-gradient(180deg,
+    #ffcd9c 0%, #ffe3c2 30%, #fef7ee 65%, #f7f7f5 100%);}
+.contact-box{position:relative;width:100%;max-width:calc(var(--u) * 50);
+  margin-inline:auto;aspect-ratio:16/9;box-sizing:border-box;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--space-6);
   text-align:center;color:var(--on-dark);
   background:linear-gradient(180deg, rgba(41,39,38,.92) 0%, rgba(41,39,38,.4) 100%);
