@@ -369,19 +369,20 @@ img{display:block;max-width:100%;}
    glow sits at the bottom of this section instead of the top */
 .contact-cta{position:relative;min-height:calc(var(--h-faq) * .9);display:flex;
   align-items:center;justify-content:center;padding-block:var(--space-11);
-  background:radial-gradient(140% 78% at 50% 114%,
-    #ffcd9c 0%, #ffe3c2 45%, #fef7ee 80%, #fbf8f4 100%);}
+  background:linear-gradient(180deg,
+    #ffcd9c 0%, #ffe3c2 30%, #fef7ee 65%, #f7f7f5 100%);}
 .contact-box{position:relative;width:100%;
-  display:flex;flex-direction:column;align-items:flex-start;gap:var(--space-6);
-  background:rgba(41,39,38,.62);color:var(--on-dark);
-  padding:var(--space-9) var(--space-8);}
+  display:flex;flex-direction:column;align-items:center;gap:var(--space-6);
+  text-align:center;background:rgba(41,39,38,.62);color:var(--on-dark);
+  padding:var(--space-6) calc(var(--space-10) * 1.4);}
 .contact-box .mark{top:0;left:0;}
 .contact-box__title{font-size:var(--t-h2);font-weight:400;}
-/* bigger, more visible CTA than the default .btn--light — plain orange accent
-   block next to the label instead of the masked-icon treatment used elsewhere */
-.btn--contact{height:calc(var(--u) * 1.7);font-size:18px;padding-inline:calc(var(--u) * .86);}
-.btn--contact .btn__accent{width:calc(var(--u) * 1.4);height:100%;background:var(--accent);
-  margin-left:calc(var(--u) * .86);margin-right:calc(var(--u) * -.86);}
+/* bigger, more visible CTA than the default .btn--light — small orange accent
+   square sits inside the button's own padding instead of overhanging it */
+.btn--contact{height:calc(var(--u) * 1.7);font-size:18px;gap:calc(var(--u) * .5);
+  padding-inline:calc(var(--u) * .86);}
+.btn--contact .btn__accent{width:calc(var(--u) * .64);height:calc(var(--u) * .64);
+  background:var(--accent);}
 
 /* ---------- footer (Figma 142:1364) ----------
    bright orange at the top, fading to black behind the giant wordmark */
