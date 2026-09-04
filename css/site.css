@@ -375,8 +375,13 @@ img{display:block;max-width:100%;}
 .contact-inner{position:relative;width:100%;max-width:calc(var(--u) * 34);
   margin-inline:auto;display:flex;flex-direction:column;align-items:center;
   gap:var(--space-6);text-align:center;color:var(--ink);}
-.contact-inner .mark{top:0;left:50%;transform:translateX(-50%);}
-.contact-box__title{font-size:var(--t-h2);font-weight:400;}
+.contact-box__title{position:relative;font-size:var(--t-h2);font-weight:400;}
+/* dot hops letter-to-letter across the title (positioned in JS), with a
+   continuous vertical bounce running independently of the horizontal move */
+.contact-dot{top:calc(var(--u) * -1.1);left:0;
+  transition:left .26s cubic-bezier(.34,1.56,.64,1);
+  animation:contactDotBounce .52s ease-in-out infinite;}
+@keyframes contactDotBounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
 /* bigger, more visible CTA than the default .btn--light — small orange accent
    square sits inside the button's own padding instead of overhanging it */
 .btn--contact{height:calc(var(--u) * 1.7);font-size:18px;gap:calc(var(--u) * .5);

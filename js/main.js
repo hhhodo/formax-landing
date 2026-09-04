@@ -220,6 +220,33 @@
     stackLineArt.addEventListener('load', () => { recomputeLayout(); onFrame(); });
   }
 
+  // ---------- contact title: dot hops letter-to-letter, left to right ----------
+  const contactTitle = document.getElementById('contactTitle');
+  const contactDot = document.getElementById('contactDot');
+  const contactInner = contactDot ? contactDot.closest('.contact-inner') : null;
+  if (contactTitle && contactDot && contactInner && !reduceMotion) {
+    const chars = [...contactTitle.textContent].map((ch) => {
+      const span = document.createElement('span');
+      span.textContent = ch === ' ' ? ' ' : ch;
+      return span;
+    });
+    contactTitle.textContent = '';
+    chars.forEach((span) => contactTitle.appendChild(span));
+
+    let i = 0;
+    const hop = () => {
+      const span = chars[i % chars.length];
+      const innerRect = contactInner.getBoundingClientRect();
+      const spanRect = span.getBoundingClientRect();
+      const x = spanRect.left - innerRect.left + spanRect.width / 2;
+      contactDot.style.left = `${x}px`;
+      i += 1;
+    };
+    hop();
+    setInterval(hop, 260);
+    window.addEventListener('resize', hop);
+  }
+
   // ---------- generic reveal-on-scroll ----------
   const revealTargets = document.querySelectorAll('[data-reveal]');
   if (reduceMotion || !('IntersectionObserver' in window)) {
