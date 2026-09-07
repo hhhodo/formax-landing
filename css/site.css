@@ -26,7 +26,11 @@
   --t-label:  16px;
 
   /* measured section heights (px @1920) */
-  --h-hero:   clamp(560px, 56.3vw, 1080px);
+  /* capped at 100vh too — the vw-only formula scales with WIDTH alone, so on a
+     wide-but-short laptop viewport (real browser window height minus tabs/toolbar
+     is often well under the width-driven target) the hero cards ended up pushed
+     below the fold, reading as "cut off" even though nothing was actually clipped */
+  --h-hero:   min(clamp(560px, 56.3vw, 1080px), 100vh);
   --h-plat:   clamp(560px, 52.1vw, 1001px);
   --h-stack:  clamp(760px, 80.2vw, 1540px);
   --h-cta:    clamp(460px, 42.5vw, 817px);
@@ -109,7 +113,7 @@ img{display:block;max-width:100%;}
       #ff8a2b 0%, #f2731a 14%, #c9550e 30%, #7d3a12 50%, #34201a 70%, #120d0c 86%, #0a0807 100%);}
 .hero__inner{position:relative;z-index:1;min-height:var(--h-hero);display:flex;flex-direction:column;
   justify-content:space-between;
-  padding-top:calc(var(--u) * 4);padding-bottom:calc(var(--u) * 1.5);}
+  padding-top:calc(var(--u) * 4);padding-bottom:calc(var(--u) * 3);}
 .hero__top{position:relative;max-width:calc(496 / 1920 * 100vw);min-width:300px;}
 .hero__top .mark{top:0;left:0;}
 .hero__title{font-size:var(--t-hero);font-weight:400;padding-top:calc(var(--u) * .5);}
