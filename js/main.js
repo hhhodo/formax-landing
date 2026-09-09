@@ -295,20 +295,37 @@
 
   // ---------- footer wordmark: font-size fitted to container width in JS ----------
   // a flat vw-based clamp overflowed sideways at laptop widths (where the
-  // container is narrower relative to the viewport); measuring the actual
-  // rendered width and scaling from it keeps "FORMAX" filling the row at any width.
+  // container is narrower relative to the viewport). A single-shot "measure at
+  // size X, scale by the ratio" approach turned out to be unreliable too — text
+  // width vs font-size isn't purely proportional here (scrollWidth floors at the
+  // container's own clientWidth once the text no longer overflows, and glyph
+  // sub-pixel rounding adds a small offset on top), so the computed ratio
+  // consistently undershot and still overflowed. Binary-search on the real
+  // measurement instead: no assumption about the shape of that relationship,
+  // it just converges on the largest size that actually fits.
   const footerWordmark = document.getElementById('footerWordmark');
   if (footerWordmark) {
-    const BASE_SIZE = 500;
     const fitWordmark = () => {
-      footerWordmark.style.fontSize = `${BASE_SIZE}px`;
-      const available = footerWordmark.clientWidth;
-      const natural = footerWordmark.scrollWidth;
-      const size = natural > available ? Math.floor(BASE_SIZE * (available / natural)) : BASE_SIZE;
-      footerWordmark.style.fontSize = `${size}px`;
+      let lo = 10;
+      let hi = 900;
+      for (let i = 0; i < 20; i += 1) {
+        const mid = Math.floor((lo + hi) / 2);
+        footerWordmark.style.fontSize = `${mid}px`;
+        if (footerWordmark.scrollWidth <= footerWordmark.clientWidth) {
+          lo = mid;
+        } else {
+          hi = mid - 1;
+        }
+      }
+      footerWordmark.style.fontSize = `${lo}px`;
     };
     fitWordmark();
     window.addEventListener('resize', fitWordmark);
+    // re-fit once the real webfont has swapped in, in case fallback-font metrics
+    // were used for the first pass
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(fitWordmark);
+    }
   }
 
   // ---------- generic reveal-on-scroll ----------
