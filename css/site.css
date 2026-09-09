@@ -467,8 +467,13 @@ img{display:block;max-width:100%;}
      title readable while letting the image (and its line-art reveal) show
      through. z-index above .stack__visual--line (3) so the title renders OVER
      the wireframe lines instead of underneath them. */
+  /* full-bleed from the start, not something that grows into it over a long
+     scroll — the desktop --cta-pad/--cta-margin grow animation needs a lot of
+     scroll distance to finish shrinking, so on mobile the box just sat inset
+     with visible side gutters through most of its pin range. Literal 0/negative
+     values here (not var()) permanently override the JS-driven custom properties. */
   .stack__cta{background:linear-gradient(180deg, rgba(10,6,5,.25) 0%, rgba(10,6,5,.7) 100%);
-    z-index:4;}
+    z-index:4;padding-inline:0;margin-inline:calc(var(--gutter) * -1);}
   .quote__pin-wrap{min-height:auto;}
   .quote__pin{position:static;}
   .hero__foot{grid-template-columns:1fr;gap:calc(var(--u) * 1);}
