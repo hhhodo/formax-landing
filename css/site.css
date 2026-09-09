@@ -495,6 +495,8 @@ img{display:block;max-width:100%;}
   .nav__toggle{display:flex;}
   .hero__inner{padding-top:calc(var(--u) * 2.5);}
   .news__grid > .gcell{grid-column:1/13!important;}
+  .news__grid{row-gap:60px;}
+  .ncard{gap:12px;}
   .frow summary{height:auto;padding-block:calc(var(--u) * .71);}
   .frow p{padding-left:calc(var(--u) * .71);}
   /* these min-widths assumed roomier viewports — left as-is they run wider than
