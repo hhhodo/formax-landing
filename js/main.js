@@ -28,6 +28,7 @@
     last: -1,
   }));
   const stackLineArt = document.getElementById('stackLineArt');
+  const stackPhotoWrap = document.getElementById('stackPhotoWrap');
   const ctaCard = document.getElementById('cta');
   const ctaWrap = ctaCard ? ctaCard.closest('.stack__cta-wrap') : null;
   const quoteText = document.querySelector('.quote__text');
@@ -167,13 +168,20 @@
     // shows as line-art.
     if (stackLineArt && ctaCard) {
       if (stackedMedia.matches) {
-        // stacked layout: card/photo/line-art all pin to the same spot, so there's
-        // no "how far apart are they" to measure — wipe by scroll progress instead
-        const progress = Math.min(1, Math.max(0, (scrollY - ctaPinStart) / (ctaPinEnd - ctaPinStart || 1)));
+        // stacked layout: the photo is now a plain block BELOW the CTA text
+        // (not pinned/overlapping it), so the wipe is driven by how far the
+        // photo itself has scrolled through the viewport instead of the CTA's
+        // own pin range.
+        const lineRect = stackLineArt.getBoundingClientRect();
+        const progress = Math.min(1, Math.max(0, (vh - lineRect.top) / (vh + lineRect.height || 1)));
         const boundary = Math.round((1 - progress) * 100);
         if (boundary !== lastXray) {
           lastXray = boundary;
           stackLineArt.style.clipPath = `inset(${boundary}% 0 0 0)`;
+          // dark scrim revealed in sync (see site.css #stackPhotoWrap::after) —
+          // the line-art alone is just faint white strokes on transparent, so
+          // without this the photo never visibly "fills white"
+          if (stackPhotoWrap) stackPhotoWrap.style.setProperty('--xray-clip', `${boundary}%`);
         }
       } else {
         const imgRect = stackLineArt.getBoundingClientRect();
