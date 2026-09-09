@@ -469,8 +469,13 @@ img{display:block;max-width:100%;}
   .stack__imgwrap{max-width:none;width:100%;height:100%;}
   .stack__img{object-fit:cover;}
   /* opaque black would just hide the photo entirely — a dark scrim keeps the
-     title readable while letting the image (and its line-art reveal) show through */
-  .stack__cta{background:linear-gradient(180deg, rgba(10,6,5,.25) 0%, rgba(10,6,5,.7) 100%);}
+     title readable while letting the image (and its line-art reveal) show through.
+     z-index bumped above .stack__visual--line (3): the line-art sits in the SAME
+     spot as the text here (unlike desktop, where it's confined to its own side
+     column), so without this the white wireframe strokes rendered ON TOP of the
+     white title text, both nearly the same color — unreadable. */
+  .stack__cta{background:linear-gradient(180deg, rgba(10,6,5,.25) 0%, rgba(10,6,5,.7) 100%);
+    z-index:4;}
   .quote__pin-wrap{min-height:auto;}
   .quote__pin{position:static;}
   .hero__foot{grid-template-columns:1fr;gap:calc(var(--u) * 1);}
