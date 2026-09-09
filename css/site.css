@@ -77,7 +77,6 @@ img{display:block;max-width:100%;}
 .chip{display:inline-flex;align-items:center;justify-content:center;gap:4px;
   width:calc(var(--u) * 1.07);height:calc(var(--u) * .79);background:rgba(0,0,0,.1);
   font-size:var(--t-label);font-weight:400;color:rgba(0,0,0,.6);flex:none;}
-.chip i{width:4px;height:4px;background:rgba(0,0,0,.6);}
 
 /* ---------- topbar + nav (Figma 142:13 / 142:17) ---------- */
 .topbar{background:#0b0908;color:rgba(243,243,243,.55);}
