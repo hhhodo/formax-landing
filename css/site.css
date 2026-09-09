@@ -461,6 +461,21 @@ img{display:block;max-width:100%;}
   .news__headbtn{justify-content:flex-start;}
 }
 @media (max-width:768px){
+  /* the desktop title scale's CLAMPED FLOORS (46-100px hero, 34-78px h2, etc.) stop
+     shrinking well before phone widths, so on a narrow screen every heading renders
+     at its largest-allowed-for-desktop floor regardless — reads as oversized against
+     the rest of the page. Lowering the floors here (cascades to every element using
+     these tokens: hero title, every section's h2, CTA/quote titles, card titles)
+     keeps them proportionate without touching --t-body/--t-small/--t-label, which
+     stay fixed at 20/16px per the site's fixed-body-text rule. */
+  :root{
+    --t-hero: clamp(34px, 9vw, 46px);
+    --t-h2:   clamp(26px, 7vw, 34px);
+    --t-cta:  clamp(22px, 6vw, 28px);
+    --t-quote:clamp(20px, 5.5vw, 24px);
+    --t-card: clamp(20px, 5vw, 28px);
+  }
+  .srow__title{font-size:clamp(24px, 7vw, 32px);}
   /* solid bg + normal blending on mobile — the color-invert trick only makes sense
      against the thin transparent bar; the slide-out menu needs to stay readable */
   .nav{position:sticky;top:0;background:#0b0908;mix-blend-mode:normal;}
