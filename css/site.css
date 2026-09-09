@@ -402,10 +402,12 @@ img{display:block;max-width:100%;}
 @keyframes contactDotArcEnd{0%{transform:translateY(0);}50%,100%{transform:translateY(-14px);}}
 /* bigger, more visible CTA than the default .btn--light — small orange accent
    square sits inside the button's own padding instead of overhanging it */
-.btn--contact{height:calc(var(--u) * 1.7);font-size:18px;gap:calc(var(--u) * .5);
-  padding-inline:calc(var(--u) * .86);}
-.btn--contact .btn__accent{width:calc(var(--u) * .64);height:calc(var(--u) * .64);
-  background:var(--accent);}
+/* fixed px, not --u-scaled — the button's own font-size is already fixed at 18px
+   regardless of viewport, so scaling height/padding off --u (which shrinks toward
+   its 14px floor on mobile) left them out of proportion with that fixed text,
+   squashing the button flat on small screens instead of keeping the same shape */
+.btn--contact{height:48px;font-size:18px;gap:14px;padding-inline:24px;}
+.btn--contact .btn__accent{width:18px;height:18px;background:var(--accent);}
 
 /* ---------- footer (Figma 142:1364, pared down) ----------
    bright orange at the top, fading to black behind the giant wordmark */
