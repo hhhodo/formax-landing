@@ -228,15 +228,17 @@ img{display:block;max-width:100%;}
   -webkit-text-fill-color:transparent;}
 .srow__copy{font-size:24px;line-height:1.5;opacity:.6;max-width:56ch;}
 .stack .label{font-size:24px;}
-/* tone flip: rows over the light part of the gradient use dark text, rows over
-   the dark part use light text — this had collapsed into one rule covering every
-   row, so the bottom (dark-bg) rows were using near-invisible black-on-black dim text */
 /* dim colors are SOLID/opaque on purpose — the section background behind these rows
    is a continuous gradient (not a flat color), so an alpha-transparent dim color
    (e.g. rgba(0,0,0,.25)) blends with whatever's behind it and comes out a different
    apparent brightness at every row. A fixed opaque gray renders identically everywhere. */
-/* all rows unified to black text (no light/dark tone-flip by row position) */
 .srow{color:var(--ink);--fillcolor:#000;--dimcolor:rgba(0,0,0,.5);}
+/* the gradient has gone fully dark brown/black by the last row (PARTNERSHIP) —
+   black-on-near-black there was unreadable regardless of dim/fill state, reported
+   directly by the user's screenshot. Flips just this last row to light text; the
+   first three rows sit on light-to-bright-orange background where black still
+   reads fine, confirmed by rendering the section end to end. */
+.srow:last-child{color:var(--on-dark);--fillcolor:#fff;--dimcolor:rgba(255,255,255,.5);}
 :root{--product-w:760px;}
 .stack__img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;}
 /* line-art copy starts fully clipped away; JS sets clip-path every scroll frame to
