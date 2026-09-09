@@ -451,29 +451,34 @@ img{display:block;max-width:100%;}
      shrank to a sliver. Stack image-on-top instead, like every other card. */
   .pcard{flex-direction:column;}
   .pcard__img{order:-1;width:100%;aspect-ratio:16/9;}
-  /* ONE full-screen sticky box: photo, line-art and CTA text all share the same
-     grid cell (row 2, full width), all pinned to the same sticky position, so the
-     photo fills the box as its background with the title on top of it — instead
-     of two separate stacked blocks. !important needed because the desktop
-     grid-row (1/3 for the photo/line-art) is set via an inline style attribute,
-     which otherwise wins over any plain stylesheet rule. */
+  /* single column, stacked in plain reading order (Y-axis) — text card ABOVE,
+     photo BELOW it, as separate blocks, not layered/overlapping. !important
+     needed because the desktop grid-row (1/3 for the photo/line-art) is set via
+     an inline style attribute, which otherwise wins over any plain stylesheet rule. */
   .stack__list{grid-row:1!important;}
-  .stack__visual,.stack__cta-wrap{grid-row:2!important;}
-  .stack__visual{position:sticky;top:calc(var(--u) * 2.8);
-    height:calc(100vh - var(--u) * 2.8);padding-block:0;}
+  .stack__grid{row-gap:0;}
+  .stack__cta-wrap{grid-row:2!important;
+    min-height:0;margin-top:calc(var(--u) * 2);}
+  /* no gap and matching dark background/padding, flush against the card above —
+     one continuous box wrapping the title AND the photo, instead of two
+     disconnected floating blocks */
+  .stack__visual{grid-row:3!important;position:static;height:auto;
+    aspect-ratio:1/1;margin-top:0;background:#0a0605;
+    padding:0 calc(var(--u) * 1.5) calc(var(--u) * 1.5);box-sizing:border-box;}
   .stack__imgwrap{max-width:none;width:100%;height:100%;}
   .stack__img{object-fit:cover;}
-  /* opaque black would just hide the photo entirely — a dark scrim keeps the
-     title readable while letting the image (and its line-art reveal) show
-     through. z-index above .stack__visual--line (3) so the title renders OVER
-     the wireframe lines instead of underneath them. */
-  /* full-bleed from the start, not something that grows into it over a long
-     scroll — the desktop --cta-pad/--cta-margin grow animation needs a lot of
-     scroll distance to finish shrinking, so on mobile the box just sat inset
-     with visible side gutters through most of its pin range. Literal 0/negative
-     values here (not var()) permanently override the JS-driven custom properties. */
-  .stack__cta{background:linear-gradient(180deg, rgba(10,6,5,.25) 0%, rgba(10,6,5,.7) 100%);
-    z-index:4;padding-inline:0;margin-inline:calc(var(--gutter) * -1);}
+  /* plain normal-flow block sized to its own text, not a scroll-jacked reveal */
+  .stack__cta{position:static;height:auto;background:#0a0605;
+    padding:calc(var(--u) * 3) calc(var(--u) * 1.5) calc(var(--u) * 1.5);margin-inline:0;}
+  /* the line-art PNG is transparent except for its white stroke lines, so on its
+     own it barely reads against the bright metal photo — the "photo turns black"
+     drama on desktop actually comes from the CTA card's dark scrim sitting
+     between photo and line-art. This scrim recreates that darkening directly on
+     the photo block, revealed in sync with the line-art via --xray-clip. */
+  #stackPhotoWrap{position:relative;}
+  #stackPhotoWrap::after{content:"";position:absolute;inset:0;
+    background:rgba(10,6,5,.82);clip-path:inset(var(--xray-clip, 100%) 0 0 0);
+    pointer-events:none;}
   .quote__pin-wrap{min-height:auto;}
   .quote__pin{position:static;}
   .hero__foot{grid-template-columns:1fr;gap:calc(var(--u) * 1);}
