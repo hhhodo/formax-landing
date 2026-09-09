@@ -346,7 +346,7 @@ img{display:block;max-width:100%;}
 .ncard__img .mark{top:0;left:0;z-index:1;}
 .ncard__meta{display:flex;justify-content:space-between;width:100%;}
 .tag{display:inline-flex;align-items:center;
-  padding:8px 12px;border:1px solid rgba(0,0,0,.15);
+  padding:4px 8px;border:1px solid rgba(0,0,0,.15);
   font-size:var(--t-label);font-weight:400;text-transform:uppercase;}
 .ncard__title{font-size:var(--t-card);font-weight:400;}
 
