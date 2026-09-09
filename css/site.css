@@ -441,6 +441,11 @@ img{display:block;max-width:100%;}
   .footer__grid{row-gap:calc(var(--u) * .86);}
   .footer__col--right{justify-content:flex-start;padding-right:0;}
   .platform__cards{gap:var(--grid-gutter-lg);}
+  /* side-by-side text+image inside a full-width single column left almost no
+     room for either — text wrapped into awkward mid-word breaks and the image
+     shrank to a sliver. Stack image-on-top instead, like every other card. */
+  .pcard{flex-direction:column;}
+  .pcard__img{order:-1;width:100%;aspect-ratio:16/9;}
   /* single column: drop the x-ray overlay layer entirely and let the photo sit
      inline above the rows (the wipe only makes sense in the two-column pinned layout) */
   .stack__grid > .gcell{grid-row:auto!important;}
