@@ -457,8 +457,13 @@ img{display:block;max-width:100%;}
      directly on top of each other, so the CTA title sits over the pinned photo
      with the line-art wipe revealing through it as you scroll, matching the
      desktop composition instead of just placing the photo inline above the rows. */
-  .stack__list{grid-row:1;}
-  .stack__visual,.stack__cta-wrap{grid-row:2;}
+  /* !important needed: the desktop grid-row (1/3 for the photo/line-art) is set
+     via an inline style attribute, which otherwise wins over any plain stylesheet
+     rule — without it the photo stayed pinned across the SAME row range as the
+     text rows above, so it visibly overlapped/covered them mid-scroll instead of
+     starting only once the CTA row begins. */
+  .stack__list{grid-row:1!important;}
+  .stack__visual,.stack__cta-wrap{grid-row:2!important;}
   .stack__visual{position:sticky;top:calc(var(--u) * 2.8);
     height:calc(100vh - var(--u) * 2.8);padding-block:0;}
   .stack__imgwrap{max-width:none;width:100%;height:100%;}
