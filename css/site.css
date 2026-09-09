@@ -454,8 +454,10 @@ img{display:block;max-width:100%;}
   .stack__visual{order:-1;position:static;height:auto;padding-block:calc(var(--u) * 2);}
   .stack__visual--line{display:none;}
   .stack__imgwrap{max-width:340px;}
-  .stack__cta-wrap{min-height:auto;margin-top:calc(var(--u) * 2);}
-  .stack__cta{position:static;height:auto;padding-bottom:calc(var(--u) * 3);}
+  /* the CTA card's own sticky-pin-and-grow-to-full-bleed doesn't depend on the
+     two-column photo layout above — it was disabled here along with the x-ray
+     effect, but there's no reason it can't keep pinning and filling the screen
+     on its own at this width too, so it's left on the desktop rule now. */
   .quote__pin-wrap{min-height:auto;}
   .quote__pin{position:static;}
   .hero__foot{grid-template-columns:1fr;gap:calc(var(--u) * 1);}
