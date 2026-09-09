@@ -64,6 +64,13 @@
     }
   }
 
+  // below this width the CTA card, photo and line-art are stacked in one grid
+  // cell (see site.css) instead of sitting side by side, so the x-ray reveal
+  // switches from "how far the card's edge has moved past the photo's edge"
+  // (meaningless once both are pinned to the exact same position) to a plain
+  // scroll-progress wipe through the pin range.
+  const stackedMedia = window.matchMedia('(max-width:1024px)');
+
   // ---- cached (layout-dependent) values, recomputed only on load/resize ----
   const stickyTopPx = ctaCard ? parseFloat(getComputedStyle(ctaCard).top) || 0 : 0;
   let heroBottom = 0;
@@ -159,14 +166,25 @@
     // x-ray wipe: only the part of the product image the CTA card currently covers
     // shows as line-art.
     if (stackLineArt && ctaCard) {
-      const imgRect = stackLineArt.getBoundingClientRect();
-      if (imgRect.height && imgRect.bottom > -200 && imgRect.top < vh + 200) {
-        const cardTop = ctaCard.getBoundingClientRect().top;
-        let boundary = Math.round(cardTop - imgRect.top);
-        boundary = Math.min(Math.max(boundary, 0), Math.round(imgRect.height));
+      if (stackedMedia.matches) {
+        // stacked layout: card/photo/line-art all pin to the same spot, so there's
+        // no "how far apart are they" to measure — wipe by scroll progress instead
+        const progress = Math.min(1, Math.max(0, (scrollY - ctaPinStart) / (ctaPinEnd - ctaPinStart || 1)));
+        const boundary = Math.round((1 - progress) * 100);
         if (boundary !== lastXray) {
           lastXray = boundary;
-          stackLineArt.style.clipPath = `inset(${boundary}px 0 0 0)`;
+          stackLineArt.style.clipPath = `inset(${boundary}% 0 0 0)`;
+        }
+      } else {
+        const imgRect = stackLineArt.getBoundingClientRect();
+        if (imgRect.height && imgRect.bottom > -200 && imgRect.top < vh + 200) {
+          const cardTop = ctaCard.getBoundingClientRect().top;
+          let boundary = Math.round(cardTop - imgRect.top);
+          boundary = Math.min(Math.max(boundary, 0), Math.round(imgRect.height));
+          if (boundary !== lastXray) {
+            lastXray = boundary;
+            stackLineArt.style.clipPath = `inset(${boundary}px 0 0 0)`;
+          }
         }
       }
     }

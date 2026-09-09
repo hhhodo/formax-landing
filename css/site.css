@@ -448,16 +448,21 @@ img{display:block;max-width:100%;}
      shrank to a sliver. Stack image-on-top instead, like every other card. */
   .pcard{flex-direction:column;}
   .pcard__img{order:-1;width:100%;aspect-ratio:16/9;}
-  /* single column: drop the x-ray overlay layer entirely and let the photo sit
-     inline above the rows (the wipe only makes sense in the two-column pinned layout) */
-  .stack__grid > .gcell{grid-row:auto!important;}
-  .stack__visual{order:-1;position:static;height:auto;padding-block:calc(var(--u) * 2);}
-  .stack__visual--line{display:none;}
-  .stack__imgwrap{max-width:340px;}
-  /* the CTA card's own sticky-pin-and-grow-to-full-bleed doesn't depend on the
-     two-column photo layout above — it was disabled here along with the x-ray
-     effect, but there's no reason it can't keep pinning and filling the screen
-     on its own at this width too, so it's left on the desktop rule now. */
+  /* single column: text rows flow normally (row 1), but the photo, its line-art
+     twin, and the CTA card now share ONE grid cell (row 2, full width) instead of
+     sitting in separate columns — same sticky top/height on all three stacks them
+     directly on top of each other, so the CTA title sits over the pinned photo
+     with the line-art wipe revealing through it as you scroll, matching the
+     desktop composition instead of just placing the photo inline above the rows. */
+  .stack__list{grid-row:1;}
+  .stack__visual,.stack__cta-wrap{grid-row:2;}
+  .stack__visual{position:sticky;top:calc(var(--u) * 2.8);
+    height:calc(100vh - var(--u) * 2.8);padding-block:0;}
+  .stack__imgwrap{max-width:none;width:100%;height:100%;}
+  .stack__img{object-fit:cover;}
+  /* opaque black would just hide the photo entirely — a dark scrim keeps the
+     title readable while letting the image (and its line-art reveal) show through */
+  .stack__cta{background:linear-gradient(180deg, rgba(10,6,5,.25) 0%, rgba(10,6,5,.7) 100%);}
   .quote__pin-wrap{min-height:auto;}
   .quote__pin{position:static;}
   .hero__foot{grid-template-columns:1fr;gap:calc(var(--u) * 1);}
