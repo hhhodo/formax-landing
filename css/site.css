@@ -415,7 +415,12 @@ img{display:block;max-width:100%;}
     #070505;}
 .footer__grid{align-items:center;}
 .footer__col{position:relative;display:flex;align-items:center;gap:calc(var(--u) * .86);}
-.footer__col--right{justify-content:flex-end;}
+/* the nav's last link has its own padding-inline (it's a button-like hit target),
+   so its visible text sits inset from the container's true right edge — this
+   matches that same inset here, since the footer's plain anchors have no padding
+   of their own and were otherwise running all the way out to the edge, reading
+   as "spread further" than the header when the two are compared stacked. */
+.footer__col--right{justify-content:flex-end;padding-right:calc(var(--u) * .57);}
 .footer__row{display:flex;align-items:center;gap:calc(var(--u) * .86);flex-wrap:nowrap;}
 .footer__row a{font-size:var(--t-body);font-weight:400;color:var(--on-dark);white-space:nowrap;}
 .footer__row a:hover{text-decoration:underline;}
@@ -434,7 +439,7 @@ img{display:block;max-width:100%;}
   .platform__grid > .gcell,.stack__grid > .gcell,.news__head > .gcell,
   .faq__head > .gcell,.faq__list,.footer__grid > .gcell{grid-column:1/13!important;}
   .footer__grid{row-gap:calc(var(--u) * .86);}
-  .footer__col--right{justify-content:flex-start;}
+  .footer__col--right{justify-content:flex-start;padding-right:0;}
   .platform__cards{gap:var(--grid-gutter-lg);}
   /* single column: drop the x-ray overlay layer entirely and let the photo sit
      inline above the rows (the wipe only makes sense in the two-column pinned layout) */
